@@ -1,22 +1,27 @@
 # API JAVA OOP | Aplikasi Pemesanan Vila
 
-**Nama**: I Putu Raditya Dharma Yoga
-**NIM**: 2405551026	 
-**Kelas**: PBO D  
-
-**Nama**: Gerald Hizkia Turnip
-**NIM**: 2405551081  
-**Kelas**: PBO D  
-
-**Nama**: Elika Putri Wicaksana
-**NIM**: 2405551093  
-**Kelas**: PBO D  
-
-**Nama**: Mahaprama Danesh Hiswara
-**NIM**: 2405551094	  
-**Kelas**: PBO D  
-
 ---
+
+### Identitas Kami
+
+- **Nama:** i Putu Raditya Dharma Yoga  
+  **NIM:** 2405551026  
+  **Mata Kuliah:** Pemrograman Berorientasi Objek (PBO) D
+
+- **Nama:** Gerald Hizkia Turnip  
+  **NIM:** 2405551081  
+  **Mata Kuliah:** Pemrograman Berorientasi Objek (PBO) D
+  
+- **Nama:** Elika Putri Wicaksana  
+  **NIM:** 2405551093  
+  **Mata Kuliah:** Pemrograman Berorientasi Objek (PBO) D
+
+- **Nama:** Mahaprama Danesh Hiswara  
+  **NIM:** 2405551094  
+  **Mata Kuliah:** Pemrograman Berorientasi Objek (PBO) D
+    
+---
+
 
 ## 📌 Introducing
 
