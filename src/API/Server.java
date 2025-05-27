@@ -1,4 +1,4 @@
-package Tugas2;
+package API;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
@@ -34,7 +34,6 @@ public class Server {
         String path = uri.getPath();
         System.out.printf("path: %s\n", path);
 
-        // Handle request dan autentikasi dalam block try-catch dibawah. Tapi apa semua harus diletakkan disini?
         try {
             Map<String, Object> reqJsonMap = req.getJSON();
             System.out.println("first_name => " + reqJsonMap.get("first_name"));
@@ -44,7 +43,6 @@ public class Server {
             System.out.println(e.getMessage());
         }
 
-        // Handle response disini jika tidak ada yg menghandle
         if (!res.isSent()) {
             ObjectMapper objectMapper = new ObjectMapper();
             Map<String, Object> resJsonMap = new HashMap<>();
