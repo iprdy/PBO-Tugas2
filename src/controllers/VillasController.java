@@ -5,13 +5,12 @@ import models.Villas;
 import java.sql.*;
 
 public class VillasController {
+
     //POST /villas /menambahkan data vila
     public Villas createVilla(Villas villa) throws SQLException {
-        String sql = """
-                INSERT INTO villas (id, name, description, address) VALUES (?, ?, ?, ?)
-                """;
+        String sql = "INSERT INTO villas (id, name, description, address) VALUES (?, ?, ?, ?)";
 
-        try (Connection conn = DriverManager.getConnection("url database");
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
         PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             System.out.println("Has connected to the database");
 
