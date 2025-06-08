@@ -1,4 +1,5 @@
-import API.Server;
+package api;
+import api.Server;
 
 public class API {
 
