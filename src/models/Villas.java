@@ -17,15 +17,15 @@ public class Villas {
         return id;
     }
 
-    public void getName() {
+    public String getName() {
         return name;
     }
 
-    public void getDescription() {
+    public String getDescription() {
         return description;
     }
 
-    public void getAddress() {
+    public String getAddress() {
         return address;
     }
 
