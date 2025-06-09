@@ -154,6 +154,40 @@ public class VillasController {
         return reviews;
     }
 
+    // GET /villas?ci_date={checkin_date}&co_date={checkout_date} => Cari vila yang tersedia
+    public List<Villas> searchAvailableVillas(String checkinDate, String checkoutDate) throws SQLException {
+        List<Villas> available = new ArrayList<>();
+        String sql = """
+            SELECT DISTINCT v.* FROM villas v
+            JOIN room_types rt ON v.id = rt.villa
+            WHERE rt.id NOT IN (
+                SELECT b.room_type FROM bookings b
+                WHERE NOT (
+                    b.checkout_date <= ? OR b.checkin_date >= ?
+                )
+            )
+        """;
+
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            System.out.println("Connected to the database (availability)");
+            ps.setString(1, checkinDate);
+            ps.setString(2, checkoutDate);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Villas villa = new Villas(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("description"),
+                        rs.getString("address")
+                );
+                available.add(villa);
+            }
+        }
+        return available;
+    }
     
     // POST /villas => Menambahkan data vila
     public Villas createVilla(Villas villa) throws SQLException {
