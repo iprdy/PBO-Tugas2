@@ -72,6 +72,7 @@ public class VillasController {
         }
     }
 
+    //PUT /villas{id} => Mengubah data suatu villa
     public Villas updateVilla(Villas villa) throws SQLException {
         //ambil villa nya dari method get villa
 
@@ -97,6 +98,56 @@ public class VillasController {
         }
     }
 
+    //PUT /villas/{id}/rooms/{id} => Mengubah informasi kamar suatu villa
+    public RoomTypes updateVillasRoomTypes(RoomTypes roomtypes) throws SQLException {
+        //ambil roomtype dari method get roomtype
+
+        String sql = """
+                UPDATE villas SET 
+                villa = ?, 
+                name = ?, 
+                quantity = ?, 
+                capacity = ?, 
+                price = ?, 
+                bed_size = ?, 
+                has_desk = ?, 
+                has_ac = ?, 
+                has_tv = ?,
+                has_wifi = ?,
+                has_shower = ?,
+                has_hotwater = ?,
+                has_fridge = ?
+                WHERE id = ? 
+                """;
+
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
+        PreparedStatement ps = conn.prepareStatement(sql)) {
+            System.out.println("Has connected to the database");
+            ps.setInt(1, roomtypes.getVilla_id());
+            ps.setString(2, roomtypes.getName());
+            ps.setInt(3, roomtypes.getQuantity());
+            ps.setInt(4, roomtypes.getCapacity());
+            ps.setInt(5, roomtypes.getPrice());
+            ps.setString(6, roomtypes.getBed_size());
+            ps.setBoolean(7, roomtypes.isHas_desk());
+            ps.setBoolean(8, roomtypes.isHas_ac());
+            ps.setBoolean(9, roomtypes.isHas_tv());
+            ps.setBoolean(10, roomtypes.isHas_wifi());
+            ps.setBoolean(11, roomtypes.isHas_shower());
+            ps.setBoolean(12, roomtypes.isHas_hotwater());
+            ps.setBoolean(13, roomtypes.isHas_fridge());
+            ps.setInt(14, roomtypes.getId());
+
+            int affectedRows = ps.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("Failed to update room type villa");
+            }
+
+            return roomtypes; //Return data villa yang diupdate, nanti diganti
+        }
+    }
+
+    //DELETE /villas/{id} => Menghapus data suatu villa
     public void deleteVilla(int id) throws SQLException {
         //Get villa untuk mengecek apakah villa nya ada
 
