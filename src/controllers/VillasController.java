@@ -104,7 +104,7 @@ public class VillasController {
         //ambil roomtype dari method get roomtype
 
         String sql = """
-                UPDATE villas SET 
+                UPDATE room_types SET 
                 villa = ?, 
                 name = ?, 
                 quantity = ?, 
