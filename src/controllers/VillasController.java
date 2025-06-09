@@ -96,4 +96,17 @@ public class VillasController {
             return villa; //Ini harusnya get villa lagi biar dia ngereturn villa yang baru di update
         }
     }
+
+    public void deleteVilla(int id) throws SQLException {
+        //Get villa untuk mengecek apakah villa nya ada
+
+        String sql = "DELETE FROM villas WHERE id = ?";
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
+        PreparedStatement ps = conn.prepareStatement(sql)) {
+            System.out.println("Has connected to the database");
+
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        }
+    }
 }
