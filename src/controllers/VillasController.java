@@ -7,18 +7,19 @@ import java.sql.*;
 
 public class VillasController {
 
-    //POST /villas => menambahkan data vila
+    // POST /villas => Menambahkan data vila
     public Villas createVilla(Villas villa) throws SQLException {
         String sql = "INSERT INTO villas (id, name, description, address) VALUES (?, ?, ?, ?)";
 
         try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
-        PreparedStatement ps = conn.prepareStatement(sql)) {
-            System.out.println("Has connected to the database");
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            System.out.println("Connected to the database");
 
             ps.setInt(1, villa.getId());
-            ps.setString(1, villa.getName());
-            ps.setString(2, villa.getDescription());
-            ps.setString(3, villa.getAddress());
+            ps.setString(2, villa.getName());
+            ps.setString(3, villa.getDescription());
+            ps.setString(4, villa.getAddress());
 
             int affectedRows = ps.executeUpdate();
             if (affectedRows == 0) {
@@ -26,13 +27,12 @@ public class VillasController {
             }
 
             return villa;
-
         } catch (SQLException e) {
             System.out.println("Database error: " + e.getMessage());
             throw e;
         }
     }
-
+    
     //POST /villas/{id}/rooms => Menambahkan tipe kamar pada vila
     public RoomTypes createVillasRooms(RoomTypes roomtypes) throws SQLException {
         String sql = """
