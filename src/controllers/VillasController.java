@@ -7,6 +7,30 @@ import java.sql.*;
 
 public class VillasController {
 
+    // GET /villas => Menampilkan semua data vila
+    public List<Villas> getAllVillas() throws SQLException {
+        List<Villas> villas = new ArrayList<>();
+        String sql = "SELECT * FROM villas";
+
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            System.out.println("Connected to the database");
+
+            while (rs.next()) {
+                Villas villa = new Villas(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("description"),
+                        rs.getString("address")
+                );
+                villas.add(villa);
+            }
+        }
+        return villas;
+    }
+    
     // POST /villas => Menambahkan data vila
     public Villas createVilla(Villas villa) throws SQLException {
         String sql = "INSERT INTO villas (id, name, description, address) VALUES (?, ?, ?, ?)";
