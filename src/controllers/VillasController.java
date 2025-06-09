@@ -30,6 +30,31 @@ public class VillasController {
         }
         return villas;
     }
+
+    // GET /villas/{id} => Menampilkan detail data satu vila
+    public Villas getVillaById(int id) throws SQLException {
+        String sql = "SELECT * FROM villas WHERE id = ?";
+
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            System.out.println("Connected to the database");
+
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return new Villas(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("description"),
+                        rs.getString("address")
+                );
+            } else {
+                return null; // Bisa dilempar sebagai Exception oleh pemanggil jika null
+            }
+        }
+    }
     
     // POST /villas => Menambahkan data vila
     public Villas createVilla(Villas villa) throws SQLException {
