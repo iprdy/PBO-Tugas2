@@ -71,4 +71,29 @@ public class VillasController {
             throw e;
         }
     }
+
+    public Villas updateVilla(Villas villa) throws SQLException {
+        //ambil villa nya dari method get villa
+
+        String sql = """
+                UPDATE villas SET name = ?, description = ?, address = ? WHERE id = ?
+                """;
+
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
+        PreparedStatement ps = conn.prepareStatement(sql)) {
+            System.out.println("Has connected to the database");
+
+            ps.setString(1, villa.getName());
+            ps.setString(2, villa.getDescription());
+            ps.setString(3, villa.getAddress());
+            ps.setInt(4, villa.getId());
+
+            int affectedRows = ps.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("Failed to update villa");
+            }
+
+            return villa; //Ini harusnya get villa lagi biar dia ngereturn villa yang baru di update
+        }
+    }
 }
