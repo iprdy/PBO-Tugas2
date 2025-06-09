@@ -55,6 +55,42 @@ public class VillasController {
             }
         }
     }
+
+    // GET /villas/{id}/rooms => Menampilkan semua kamar dari suatu vila
+    public List<RoomTypes> getRoomsByVillaId(int villaId) throws SQLException {
+        List<RoomTypes> rooms = new ArrayList<>();
+        String sql = "SELECT * FROM room_types WHERE villa = ?";
+
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            System.out.println("Connected to the database");
+
+            ps.setInt(1, villaId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                RoomTypes room = new RoomTypes(
+                        rs.getInt("id"),
+                        rs.getInt("villa"),
+                        rs.getString("name"),
+                        rs.getInt("quantity"),
+                        rs.getInt("capacity"),
+                        rs.getInt("price"),
+                        rs.getString("bed_size"),
+                        rs.getBoolean("has_desk"),
+                        rs.getBoolean("has_ac"),
+                        rs.getBoolean("has_tv"),
+                        rs.getBoolean("has_wifi"),
+                        rs.getBoolean("has_shower"),
+                        rs.getBoolean("has_hotwater"),
+                        rs.getBoolean("has_fridge")
+                );
+                rooms.add(room);
+            }
+        }
+        return rooms;
+    }
     
     // POST /villas => Menambahkan data vila
     public Villas createVilla(Villas villa) throws SQLException {
