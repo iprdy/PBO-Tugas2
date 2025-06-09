@@ -124,6 +124,36 @@ public class VillasController {
         }
         return bookings;
     }
+
+    // GET /villas/{id}/reviews => Menampilkan semua review pada suatu vila
+    public List<String[]> getReviewsByVillaId(int villaId) throws SQLException {
+        List<String[]> reviews = new ArrayList<>();
+        String sql = """
+            SELECT rv.title, rv.content, rv.star
+            FROM reviews rv
+            JOIN bookings b ON rv.booking = b.id
+            JOIN room_types rt ON b.room_type = rt.id
+            WHERE rt.villa = ?
+        """;
+
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            System.out.println("Connected to the database");
+            ps.setInt(1, villaId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                reviews.add(new String[] {
+                    rs.getString("title"),
+                    rs.getString("content"),
+                    String.valueOf(rs.getInt("star"))
+                });
+            }
+        }
+        return reviews;
+    }
+
     
     // POST /villas => Menambahkan data vila
     public Villas createVilla(Villas villa) throws SQLException {
