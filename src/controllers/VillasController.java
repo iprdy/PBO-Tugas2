@@ -33,16 +33,18 @@ public class VillasController {
         }
     }
     
-    //POST /villas/{id}/rooms => Menambahkan tipe kamar pada vila
+    // POST /villas/{id}/rooms => Menambahkan tipe kamar pada vila
     public RoomTypes createVillasRooms(RoomTypes roomtypes) throws SQLException {
         String sql = """
-                INSERT INTO villasrooms (id, villa, name, quantity, capacity, price, bed_size, has_desk, has_ac, has_tv,has_wifi,has_shower,has_hotwater,has_fridge) 
+                INSERT INTO room_types (id, villa, name, quantity, capacity, price, bed_size, has_desk, has_ac, has_tv,
+                has_wifi, has_shower, has_hotwater, has_fridge)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """;
 
         try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
-        PreparedStatement ps = conn.prepareStatement(sql)) {
-            System.out.println("Has connected to the database");
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            System.out.println("Connected to the database");
 
             ps.setInt(1, roomtypes.getId());
             ps.setInt(2, roomtypes.getVilla_id());
@@ -61,11 +63,10 @@ public class VillasController {
 
             int affectedRows = ps.executeUpdate();
             if (affectedRows == 0) {
-                throw new SQLException("Failed to create room type villa");
+                throw new SQLException("Failed to create room type");
             }
 
             return roomtypes;
-
         } catch (SQLException e) {
             System.out.println("Database error: " + e.getMessage());
             throw e;
