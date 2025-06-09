@@ -91,6 +91,39 @@ public class VillasController {
         }
         return rooms;
     }
+
+    // GET /villas/{id}/bookings => Menampilkan semua booking pada suatu vila
+    public List<Bookings> getBookingsByVillaId(int villaId) throws SQLException {
+        List<Bookings> bookings = new ArrayList<>();
+        String sql = "SELECT b.* FROM bookings b JOIN room_types r ON b.room_type = r.id WHERE r.villa = ?";
+
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            System.out.println("Connected to the database");
+
+            ps.setInt(1, villaId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Bookings booking = new Bookings(
+                        rs.getInt("id"),
+                        rs.getInt("customer"),
+                        rs.getInt("room_type"),
+                        rs.getString("checkin_date"),
+                        rs.getString("checkout_date"),
+                        rs.getInt("price"),
+                        rs.getInt("voucher"),
+                        rs.getInt("final_price"),
+                        rs.getString("payment_status"),
+                        rs.getBoolean("has_checkedin"),
+                        rs.getBoolean("has_checkedout")
+                );
+                bookings.add(booking);
+            }
+        }
+        return bookings;
+    }
     
     // POST /villas => Menambahkan data vila
     public Villas createVilla(Villas villa) throws SQLException {
