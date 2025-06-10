@@ -20,9 +20,9 @@ public class BookingController {
             ObjectMapper mapper = new ObjectMapper();
             Booking booking = mapper.readValue(req.getBody(), Booking.class);
 
-            ps.setString(1, booking.getGuest());
-            ps.setString(2, booking.getVilla());
-            ps.setString(3, booking.getDate());
+//            ps.setString(1, booking.getGuest());
+//            ps.setString(2, booking.getVilla());
+//            ps.setString(3, booking.getDate());
 
             ps.executeUpdate();
             res.send("Booking created successfully");
@@ -38,13 +38,13 @@ public class BookingController {
             ResultSet rs = stmt.executeQuery("SELECT * FROM bookings");
 
             while (rs.next()) {
-                Booking b = new Booking(
-                        rs.getInt("id"),
-                        rs.getString("guest"),
-                        rs.getString("villa"),
-                        rs.getString("date")
-                );
-                bookings.add(b);
+//                Booking b = new Booking(
+//                        rs.getInt("id"),
+//                        rs.getString("guest"),
+//                        rs.getString("villa"),
+//                        rs.getString("date")
+//                );
+//                bookings.add(b);
             }
 
             ObjectMapper mapper = new ObjectMapper();
@@ -64,14 +64,14 @@ public class BookingController {
 
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                Booking b = new Booking(
-                        rs.getInt("id"),
-                        rs.getString("guest"),
-                        rs.getString("villa"),
-                        rs.getString("date")
-                );
+//                Booking b = new Booking(
+//                        rs.getInt("id"),
+//                        rs.getString("guest"),
+//                        rs.getString("villa"),
+//                        rs.getString("date")
+//                );
                 ObjectMapper mapper = new ObjectMapper();
-                res.json(mapper.writeValueAsString(b));
+//                res.json(mapper.writeValueAsString(b));
             } else {
                 res.send("Booking not found");
             }

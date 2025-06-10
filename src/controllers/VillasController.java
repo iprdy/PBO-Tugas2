@@ -1,13 +1,27 @@
 package controllers;
 
-import models.RoomTypes;
-import models.Villas;
-
-import java.sql.*;
+import com.fasterxml.jackson.databind.ObjectMapper; // untuk JSON serialization
+import com.sun.net.httpserver.HttpExchange;         // untuk handling HTTP request
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import models.RoomTypes;
+import models.Booking;
+import models.Villas;
+import api.Response;
+import java.sql.*;
 
 public class VillasController {
+
+    private Connection conn;
+
+    public VillasController(Connection conn) {
+        this.conn = conn;
+    }
 
     // GET /villas => Menampilkan semua data vila
     public List<Villas> getAllVillas() throws SQLException {
@@ -93,39 +107,6 @@ public class VillasController {
         }
         return rooms;
     }
-
-    // GET /villas/{id}/bookings => Menampilkan semua booking pada suatu vila
-//    public List<Bookings> getBookingsByVillaId(int villaId) throws SQLException {
-//        List<Bookings> bookings = new ArrayList<>();
-//        String sql = "SELECT b.* FROM bookings b JOIN room_types r ON b.room_type = r.id WHERE r.villa = ?";
-//
-//        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
-//             PreparedStatement ps = conn.prepareStatement(sql)) {
-//
-//            System.out.println("Connected to the database");
-//
-//            ps.setInt(1, villaId);
-//            ResultSet rs = ps.executeQuery();
-//
-//            while (rs.next()) {
-//                Bookings booking = new Bookings(
-//                        rs.getInt("id"),
-//                        rs.getInt("customer"),
-//                        rs.getInt("room_type"),
-//                        rs.getString("checkin_date"),
-//                        rs.getString("checkout_date"),
-//                        rs.getInt("price"),
-//                        rs.getInt("voucher"),
-//                        rs.getInt("final_price"),
-//                        rs.getString("payment_status"),
-//                        rs.getBoolean("has_checkedin"),
-//                        rs.getBoolean("has_checkedout")
-//                );
-//                bookings.add(booking);
-//            }
-//        }
-//        return bookings;
-//    }
 
     // GET /villas/{id}/reviews => Menampilkan semua review pada suatu vila
     public List<String[]> getReviewsByVillaId(int villaId) throws SQLException {
@@ -347,4 +328,46 @@ public class VillasController {
             System.out.println("Berhasil menghapus villa");
         }
     }
+
+    public void getBookingsByVillaId(HttpExchange exchange, int villaId) {
+        try {
+            PreparedStatement stmt = conn.prepareStatement(
+                    "SELECT b.* FROM bookings b " +
+                            "JOIN room_types r ON b.room_type = r.id " +
+                            "WHERE r.villa = ?"
+            );
+            stmt.setInt(1, villaId);
+
+            ResultSet rs = stmt.executeQuery();
+            List<Map<String, Object>> bookings = new ArrayList<>();
+            while (rs.next()) {
+                Map<String, Object> item = new HashMap<>();
+                item.put("id", rs.getInt("id"));
+                item.put("customer", rs.getInt("customer"));
+                item.put("room_type", rs.getInt("room_type"));
+                item.put("checkin_date", rs.getString("checkin_date"));
+                item.put("checkout_date", rs.getString("checkout_date"));
+                item.put("price", rs.getInt("price"));
+                item.put("voucher", rs.getObject("voucher"));
+                item.put("final_price", rs.getInt("final_price"));
+                item.put("payment_status", rs.getString("payment_status"));
+                item.put("has_checkedin", rs.getInt("has_checkedin"));
+                item.put("has_checkedout", rs.getInt("has_checkedout"));
+                bookings.add(item);
+            }
+
+            ObjectMapper mapper = new ObjectMapper();
+            String response = mapper.writeValueAsString(bookings);
+            Response res = new Response(exchange);
+            res.setBody(response);
+            res.send(200);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Response res = new Response(exchange);
+            res.setBody("{\"error\": \"" + e.getMessage() + "\"}");
+            res.send(500);
+        }
+    }
+
 }

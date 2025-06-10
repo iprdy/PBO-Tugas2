@@ -2,52 +2,45 @@ package models;
 
 public class Booking {
     private int id;
-    private String guest;
-    private String villa;
-    private String date;
+    private int customer;
+    private int roomType;
+    private String checkinDate;
+    private String checkoutDate;
+    private int price;
+    private Integer voucher; // Boleh null
+    private int finalPrice;
+    private String paymentStatus;
+    private boolean hasCheckedin;
+    private boolean hasCheckedout;
 
-    public Booking(int id, String guest, String villa, String date) {
-        this.id = id;
-        this.guest = guest;
-        this.villa = villa;
-        this.date = date;
+    public Booking(int customer, int roomType, String checkinDate, String checkoutDate,
+                   int price, Integer voucher, int finalPrice) {
+        this.customer = customer;
+        this.roomType = roomType;
+        this.checkinDate = checkinDate;
+        this.checkoutDate = checkoutDate;
+        this.price = price;
+        this.voucher = voucher;
+        this.finalPrice = finalPrice;
+        this.paymentStatus = "waiting";
+        this.hasCheckedin = false;
+        this.hasCheckedout = false;
     }
 
-    public Booking(String guest, String villa, String date) {
-        this.guest = guest;
-        this.villa = villa;
-        this.date = date;
-    }
+    // Getters
+    public int getCustomer() { return customer; }
+    public int getRoomType() { return roomType; }
+    public String getCheckinDate() { return checkinDate; }
+    public String getCheckoutDate() { return checkoutDate; }
+    public int getPrice() { return price; }
+    public Integer getVoucher() { return voucher; }
+    public int getFinalPrice() { return finalPrice; }
+    public String getPaymentStatus() { return paymentStatus; }
+    public boolean isHasCheckedin() { return hasCheckedin; }
+    public boolean isHasCheckedout() { return hasCheckedout; }
 
-    public int getId() {
-        return id;
-    }
-
-    public String getGuest() {
-        return guest;
-    }
-
-    public String getVilla() {
-        return villa;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setGuest(String guest) {
-        this.guest = guest;
-    }
-
-    public void setVilla(String villa) {
-        this.villa = villa;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
+    // Setters
+    public void setPaymentStatus(String paymentStatus) { this.paymentStatus = paymentStatus; }
+    public void setHasCheckedin(boolean hasCheckedin) { this.hasCheckedin = hasCheckedin; }
+    public void setHasCheckedout(boolean hasCheckedout) { this.hasCheckedout = hasCheckedout; }
 }
