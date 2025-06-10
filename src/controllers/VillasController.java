@@ -7,18 +7,201 @@ import java.sql.*;
 
 public class VillasController {
 
-    //POST /villas => menambahkan data vila
+    // GET /villas => Menampilkan semua data vila
+    public List<Villas> getAllVillas() throws SQLException {
+        List<Villas> villas = new ArrayList<>();
+        String sql = "SELECT * FROM villas";
+
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            System.out.println("Connected to the database");
+
+            while (rs.next()) {
+                Villas villa = new Villas(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("description"),
+                        rs.getString("address")
+                );
+                villas.add(villa);
+            }
+        }
+        return villas;
+    }
+
+    // GET /villas/{id} => Menampilkan detail data satu vila
+    public Villas getVillaById(int id) throws SQLException {
+        String sql = "SELECT * FROM villas WHERE id = ?";
+
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            System.out.println("Connected to the database");
+
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return new Villas(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("description"),
+                        rs.getString("address")
+                );
+            } else {
+                return null; // Bisa dilempar sebagai Exception oleh pemanggil jika null
+            }
+        }
+    }
+
+    // GET /villas/{id}/rooms => Menampilkan semua kamar dari suatu vila
+    public List<RoomTypes> getRoomsByVillaId(int villaId) throws SQLException {
+        List<RoomTypes> rooms = new ArrayList<>();
+        String sql = "SELECT * FROM room_types WHERE villa = ?";
+
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            System.out.println("Connected to the database");
+
+            ps.setInt(1, villaId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                RoomTypes room = new RoomTypes(
+                        rs.getInt("id"),
+                        rs.getInt("villa"),
+                        rs.getString("name"),
+                        rs.getInt("quantity"),
+                        rs.getInt("capacity"),
+                        rs.getInt("price"),
+                        rs.getString("bed_size"),
+                        rs.getBoolean("has_desk"),
+                        rs.getBoolean("has_ac"),
+                        rs.getBoolean("has_tv"),
+                        rs.getBoolean("has_wifi"),
+                        rs.getBoolean("has_shower"),
+                        rs.getBoolean("has_hotwater"),
+                        rs.getBoolean("has_fridge")
+                );
+                rooms.add(room);
+            }
+        }
+        return rooms;
+    }
+
+    // GET /villas/{id}/bookings => Menampilkan semua booking pada suatu vila
+    public List<Bookings> getBookingsByVillaId(int villaId) throws SQLException {
+        List<Bookings> bookings = new ArrayList<>();
+        String sql = "SELECT b.* FROM bookings b JOIN room_types r ON b.room_type = r.id WHERE r.villa = ?";
+
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            System.out.println("Connected to the database");
+
+            ps.setInt(1, villaId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Bookings booking = new Bookings(
+                        rs.getInt("id"),
+                        rs.getInt("customer"),
+                        rs.getInt("room_type"),
+                        rs.getString("checkin_date"),
+                        rs.getString("checkout_date"),
+                        rs.getInt("price"),
+                        rs.getInt("voucher"),
+                        rs.getInt("final_price"),
+                        rs.getString("payment_status"),
+                        rs.getBoolean("has_checkedin"),
+                        rs.getBoolean("has_checkedout")
+                );
+                bookings.add(booking);
+            }
+        }
+        return bookings;
+    }
+
+    // GET /villas/{id}/reviews => Menampilkan semua review pada suatu vila
+    public List<String[]> getReviewsByVillaId(int villaId) throws SQLException {
+        List<String[]> reviews = new ArrayList<>();
+        String sql = """
+            SELECT rv.title, rv.content, rv.star
+            FROM reviews rv
+            JOIN bookings b ON rv.booking = b.id
+            JOIN room_types rt ON b.room_type = rt.id
+            WHERE rt.villa = ?
+        """;
+
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            System.out.println("Connected to the database");
+            ps.setInt(1, villaId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                reviews.add(new String[] {
+                    rs.getString("title"),
+                    rs.getString("content"),
+                    String.valueOf(rs.getInt("star"))
+                });
+            }
+        }
+        return reviews;
+    }
+
+    // GET /villas?ci_date={checkin_date}&co_date={checkout_date} => Cari vila yang tersedia
+    public List<Villas> searchAvailableVillas(String checkinDate, String checkoutDate) throws SQLException {
+        List<Villas> available = new ArrayList<>();
+        String sql = """
+            SELECT DISTINCT v.* FROM villas v
+            JOIN room_types rt ON v.id = rt.villa
+            WHERE rt.id NOT IN (
+                SELECT b.room_type FROM bookings b
+                WHERE NOT (
+                    b.checkout_date <= ? OR b.checkin_date >= ?
+                )
+            )
+        """;
+
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            System.out.println("Connected to the database (availability)");
+            ps.setString(1, checkinDate);
+            ps.setString(2, checkoutDate);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Villas villa = new Villas(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("description"),
+                        rs.getString("address")
+                );
+                available.add(villa);
+            }
+        }
+        return available;
+    }
+    
+    // POST /villas => Menambahkan data vila
     public Villas createVilla(Villas villa) throws SQLException {
         String sql = "INSERT INTO villas (id, name, description, address) VALUES (?, ?, ?, ?)";
 
         try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
-        PreparedStatement ps = conn.prepareStatement(sql)) {
-            System.out.println("Has connected to the database");
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            System.out.println("Connected to the database");
 
             ps.setInt(1, villa.getId());
-            ps.setString(1, villa.getName());
-            ps.setString(2, villa.getDescription());
-            ps.setString(3, villa.getAddress());
+            ps.setString(2, villa.getName());
+            ps.setString(3, villa.getDescription());
+            ps.setString(4, villa.getAddress());
 
             int affectedRows = ps.executeUpdate();
             if (affectedRows == 0) {
@@ -26,23 +209,24 @@ public class VillasController {
             }
 
             return villa;
-
         } catch (SQLException e) {
             System.out.println("Database error: " + e.getMessage());
             throw e;
         }
     }
-
-    //POST /villas/{id}/rooms => Menambahkan tipe kamar pada vila
+    
+    // POST /villas/{id}/rooms => Menambahkan tipe kamar pada vila
     public RoomTypes createVillasRooms(RoomTypes roomtypes) throws SQLException {
         String sql = """
-                INSERT INTO villasrooms (id, villa, name, quantity, capacity, price, bed_size, has_desk, has_ac, has_tv,has_wifi,has_shower,has_hotwater,has_fridge) 
+                INSERT INTO room_types (id, villa, name, quantity, capacity, price, bed_size, has_desk, has_ac, has_tv,
+                has_wifi, has_shower, has_hotwater, has_fridge)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """;
 
         try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
-        PreparedStatement ps = conn.prepareStatement(sql)) {
-            System.out.println("Has connected to the database");
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            System.out.println("Connected to the database");
 
             ps.setInt(1, roomtypes.getId());
             ps.setInt(2, roomtypes.getVilla_id());
@@ -61,11 +245,10 @@ public class VillasController {
 
             int affectedRows = ps.executeUpdate();
             if (affectedRows == 0) {
-                throw new SQLException("Failed to create room type villa");
+                throw new SQLException("Failed to create room type");
             }
 
             return roomtypes;
-
         } catch (SQLException e) {
             System.out.println("Database error: " + e.getMessage());
             throw e;
@@ -103,7 +286,7 @@ public class VillasController {
         //ambil roomtype dari method get roomtype
 
         String sql = """
-                UPDATE villas SET 
+                UPDATE room_types SET 
                 villa = ?, 
                 name = ?, 
                 quantity = ?, 
