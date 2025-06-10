@@ -1,143 +1,169 @@
 package controllers;
 
+import api.Request;
+import api.Response;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
 import models.Review;
-import utils.JsonUtils;
-import utils.RequestValidator;
 
-import java.io.IOException;
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class ReviewController {
+
     private Connection conn;
 
     public ReviewController(Connection conn) {
         this.conn = conn;
     }
 
-    // GET /villas/{villaId}/reviews
-    public void getReviewsByVilla(HttpExchange exchange, int villaId) throws IOException {
+    public void getReviewsByVillaId(HttpExchange httpExchange, int villaId) {
+        Request req = new Request(httpExchange);
+        Response res = new Response(httpExchange);
+
         try {
-            List<Review> reviews = new ArrayList<>();
-            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM reviews WHERE villa_id = ?");
+            String sql = "SELECT * FROM reviews WHERE booking = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, villaId);
             ResultSet rs = stmt.executeQuery();
 
-            while (rs.next()) {
-                reviews.add(new Review(
-                        rs.getInt("id"),
-                        rs.getInt("customer_id"),
-                        rs.getInt("villa_id"),
-                        rs.getInt("booking_id"),
-                        rs.getString("comment"),
-                        rs.getInt("rating")
-                ));
-            }
-
-            JsonUtils.sendJsonResponse(exchange, 200, reviews);
-        } catch (Exception e) {
-            JsonUtils.sendError(exchange, 500, "Gagal mengambil review");
-        }
-    }
-
-    // GET /customers/{customerId}/reviews
-    public void getReviewsByCustomer(HttpExchange exchange, int customerId) throws IOException {
-        try {
             List<Review> reviews = new ArrayList<>();
-            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM reviews WHERE customer_id = ?");
-            stmt.setInt(1, customerId);
-            ResultSet rs = stmt.executeQuery();
-
             while (rs.next()) {
-                reviews.add(new Review(
-                        rs.getInt("id"),
-                        rs.getInt("customer_id"),
-                        rs.getInt("villa_id"),
-                        rs.getInt("booking_id"),
-                        rs.getString("comment"),
-                        rs.getInt("rating")
-                ));
+                Review review = new Review(
+                        rs.getInt("booking"),
+                        rs.getInt("star"),
+                        rs.getString("title"),
+                        rs.getString("content")
+                );
+                reviews.add(review);
             }
 
-            JsonUtils.sendJsonResponse(exchange, 200, reviews);
+            ObjectMapper objectMapper = new ObjectMapper();
+            String json = objectMapper.writeValueAsString(reviews);
+            res.json(json);
         } catch (Exception e) {
-            JsonUtils.sendError(exchange, 500, "Gagal mengambil review customer");
+            res.error(e.getMessage());
         }
     }
 
-    // POST /customers/{cid}/bookings/{bid}/reviews
-    public void addReview(HttpExchange exchange, int customerId, int bookingId, int villaId) throws IOException {
-        try {
-            Map<String, Object> body = JsonUtils.parseJson(exchange.getRequestBody());
-            String comment = (String) body.get("comment");
-            int rating = (int) body.get("rating");
+    public static void create(Request req, Response res) {
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db")) {
+            Map<String, Object> json = req.getJSON();
 
-            if (!RequestValidator.isValidRating(rating) || comment == null || comment.trim().isEmpty()) {
-                JsonUtils.sendError(exchange, 400, "Data review tidak valid");
-                return;
-            }
+            int booking = (int) json.get("booking");
+            int star = (int) json.get("star");
+            String title = (String) json.get("title");
+            String content = (String) json.get("content");
 
-            String sql = "INSERT INTO reviews (customer_id, villa_id, booking_id, comment, rating) VALUES (?, ?, ?, ?, ?)";
+            Review review = new Review(booking, star, title, content);
+
+            String sql = "INSERT INTO reviews (booking, star, title, content) VALUES (?, ?, ?, ?)";
             PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setInt(1, customerId);
-            stmt.setInt(2, villaId);
-            stmt.setInt(3, bookingId);
-            stmt.setString(4, comment);
-            stmt.setInt(5, rating);
+            stmt.setInt(1, review.getBooking());
+            stmt.setInt(2, review.getStar());
+            stmt.setString(3, review.getTitle());
+            stmt.setString(4, review.getContent());
             stmt.executeUpdate();
 
-            JsonUtils.sendJsonResponse(exchange, 201, Map.of("message", "Review berhasil ditambahkan"));
+            res.send("Review created");
         } catch (Exception e) {
-            JsonUtils.sendError(exchange, 500, "Gagal menambahkan review");
+            res.error(e.getMessage());
         }
     }
 
-    // PUT /reviews/{id}
-    public void updateReview(HttpExchange exchange, int reviewId) throws IOException {
-        try {
-            Map<String, Object> body = JsonUtils.parseJson(exchange.getRequestBody());
-            String comment = (String) body.get("comment");
-            int rating = (int) body.get("rating");
+    public static void getAll(Request req, Response res) {
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db")) {
+            String sql = "SELECT * FROM reviews";
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
 
-            if (!RequestValidator.isValidRating(rating) || comment == null || comment.trim().isEmpty()) {
-                JsonUtils.sendError(exchange, 400, "Data update review tidak valid");
-                return;
+            List<Review> reviews = new ArrayList<>();
+            while (rs.next()) {
+                Review review = new Review(
+                        rs.getInt("booking"),
+                        rs.getInt("star"),
+                        rs.getString("title"),
+                        rs.getString("content")
+                );
+                reviews.add(review);
             }
 
-            String sql = "UPDATE reviews SET comment = ?, rating = ? WHERE id = ?";
+            ObjectMapper objectMapper = new ObjectMapper();
+            res.json(objectMapper.writeValueAsString(reviews));
+        } catch (Exception e) {
+            res.error(e.getMessage());
+        }
+    }
+
+    public static void getOne(Request req, Response res) {
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db")) {
+            int booking = Integer.parseInt(req.getParam("booking"));
+            String sql = "SELECT * FROM reviews WHERE booking = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setString(1, comment);
-            stmt.setInt(2, rating);
-            stmt.setInt(3, reviewId);
-            int rowsAffected = stmt.executeUpdate();
+            stmt.setInt(1, booking);
+            ResultSet rs = stmt.executeQuery();
 
-            if (rowsAffected == 0) {
-                JsonUtils.sendError(exchange, 404, "Review tidak ditemukan");
-                return;
+            if (rs.next()) {
+                Review review = new Review(
+                        rs.getInt("booking"),
+                        rs.getInt("star"),
+                        rs.getString("title"),
+                        rs.getString("content")
+                );
+                ObjectMapper objectMapper = new ObjectMapper();
+                res.json(objectMapper.writeValueAsString(review));
+            } else {
+                res.send("Review not found");
             }
-
-            JsonUtils.sendJsonResponse(exchange, 200, Map.of("message", "Review berhasil diupdate"));
         } catch (Exception e) {
-            JsonUtils.sendError(exchange, 500, "Gagal update review");
+            res.error(e.getMessage());
         }
     }
 
-    // DELETE /reviews/{id}
-    public void deleteReview(HttpExchange exchange, int reviewId) throws IOException {
-        try {
-            PreparedStatement stmt = conn.prepareStatement("DELETE FROM reviews WHERE id = ?");
-            stmt.setInt(1, reviewId);
-            int rowsDeleted = stmt.executeUpdate();
+    public static void update(Request req, Response res) {
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db")) {
+            Map<String, Object> json = req.getJSON();
 
-            if (rowsDeleted == 0) {
-                JsonUtils.sendError(exchange, 404, "Review tidak ditemukan");
-                return;
+            int booking = (int) json.get("booking");
+            int star = (int) json.get("star");
+            String title = (String) json.get("title");
+            String content = (String) json.get("content");
+
+            String sql = "UPDATE reviews SET star = ?, title = ?, content = ? WHERE booking = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, star);
+            ps.setString(2, title);
+            ps.setString(3, content);
+            ps.setInt(4, booking);
+            int rows = ps.executeUpdate();
+
+            if (rows > 0) {
+                res.send("Review updated");
+            } else {
+                res.send("Review not found");
             }
-
-            JsonUtils.sendJsonResponse(exchange, 200, Map.of("message", "Review berhasil dihapus"));
         } catch (Exception e) {
-            JsonUtils.sendError(exchange, 500, "Gagal menghapus review");
+            res.error(e.getMessage());
+        }
+    }
+
+    public static void delete(Request req, Response res) {
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db")) {
+            int booking = Integer.parseInt(req.getParam("booking"));
+            String sql = "DELETE FROM reviews WHERE booking = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, booking);
+            int rows = ps.executeUpdate();
+
+            if (rows > 0) {
+                res.send("Review deleted");
+            } else {
+                res.send("Review not found");
+            }
+        } catch (Exception e) {
+            res.error(e.getMessage());
         }
     }
 }

@@ -5,6 +5,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import controllers.VillasController;
+import controllers.ReviewController;
 import models.RoomTypes;
 import models.Villas;
 
@@ -12,6 +13,8 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.URI;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,6 +31,10 @@ public class Server {
         server = HttpServer.create(new InetSocketAddress(port), 128);
         server.createContext("/", new RequestHandler());
         server.start();
+        System.out.println("Server started at http://localhost:" + port);
+
+        // Tambahkan log lokasi file DB
+        System.out.println("DB path: " + new java.io.File("villa_booking.db").getAbsolutePath());
     }
 
     public static void processHttpExchange(HttpExchange httpExchange) {
@@ -40,49 +47,40 @@ public class Server {
         System.out.printf("method: %s\npath: %s\n", method, path);
 
         try {
-            if(method.equals("POST")) {
+            if (method.equals("GET") && path.matches("/villas/\\d+/reviews")) {
+                String[] split = path.split("/");
+                int villaId = Integer.parseInt(split[2]);
+
+                String dbPath = "../villa_booking.db"; // relatif dari folder src
+                Connection conn = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
+                ReviewController reviewController = new ReviewController(conn);
+                reviewController.getReviewsByVillaId(httpExchange, villaId);
+                return;
+            }
+
+            if (method.equals("POST")) {
                 if (path.equals("/villas")) {
                     ObjectMapper mapper = new ObjectMapper();
                     InputStream is = httpExchange.getRequestBody();
                     Villas villas = mapper.readValue(is, Villas.class);
                     VillasController vc = new VillasController();
                     vc.createVilla(villas);
+
+                    // Tambahkan log untuk debug
+                    System.out.println("Received POST /villas with data: " + villas.getName());
                 } else if (path.matches("/villas/\\d+/rooms$")) {
                     String[] split = path.split("/");
                     ObjectMapper mapper = new ObjectMapper();
                     InputStream is = httpExchange.getRequestBody();
                     RoomTypes roomtypes = mapper.readValue(is, RoomTypes.class);
-                    roomtypes.setVilla_id(Integer.parseInt(split[2]));
+                    roomtypes.setId(Integer.parseInt(split[2]));
                     VillasController vc = new VillasController();
                     vc.createVillasRooms(roomtypes);
                 }
-            } else if(method.equals("PUT")) {
-                    if(path.matches("/villas/\\d+")) {
-                        String[] split = path.split("/");
-                        ObjectMapper mapper = new ObjectMapper();
-                        InputStream is = httpExchange.getRequestBody();
-                        Villas villas = mapper.readValue(is, Villas.class);
-                        villas.setId(Integer.parseInt(split[2]));
-                        VillasController vc = new VillasController();
-                        vc.updateVilla(villas);
-                    }
-                    if(path.matches("/villas/\\d+/rooms/\\d+$")) {
-                        String[] split = path.split("/");
-                        ObjectMapper mapper = new ObjectMapper();
-                        InputStream is = httpExchange.getRequestBody();
-                        RoomTypes roomtypes = mapper.readValue(is, RoomTypes.class);
-                        roomtypes.setId(Integer.parseInt(split[2]));
-                        roomtypes.setVilla_id(Integer.parseInt(split[4]));
-                        VillasController vc = new VillasController();
-                        vc.updateVillasRoomTypes(roomtypes);
-                    }
             }
-//            Map<String, Object> reqJsonMap = req.getJSON();
-//            System.out.println("first_name => " + reqJsonMap.get("first_name"));
-//            System.out.println("email => " + reqJsonMap.get("email"));
-//            System.out.println("Done!");
+
         } catch(Exception e) {
-            System.out.println(e.getMessage());
+            System.out.println("Exception: " + e.getMessage());
         }
 
         if (!res.isSent()) {
@@ -94,14 +92,21 @@ public class Server {
             try {
                 resJson = objectMapper.writeValueAsString(resJsonMap);
             } catch(Exception e) {
-                System.out.println(e.getMessage());
+                System.out.println("Serialization error: " + e.getMessage());
             }
             res.setBody(resJson);
             res.send(HttpURLConnection.HTTP_OK);
-            return;
         }
 
         httpExchange.close();
+    }
+
+    public static void main(String[] args) {
+        try {
+            new Server(8080); // Jalankan server di port 8080
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
 

@@ -14,7 +14,7 @@ public class VillasController {
         List<Villas> villas = new ArrayList<>();
         String sql = "SELECT * FROM villas";
 
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db");
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
 
@@ -37,7 +37,7 @@ public class VillasController {
     public Villas getVillaById(int id) throws SQLException {
         String sql = "SELECT * FROM villas WHERE id = ?";
 
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db");
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             System.out.println("Connected to the database");
@@ -63,7 +63,7 @@ public class VillasController {
         List<RoomTypes> rooms = new ArrayList<>();
         String sql = "SELECT * FROM room_types WHERE villa = ?";
 
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db");
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             System.out.println("Connected to the database");
@@ -138,7 +138,7 @@ public class VillasController {
             WHERE rt.villa = ?
         """;
 
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db");
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             System.out.println("Connected to the database");
@@ -170,7 +170,7 @@ public class VillasController {
             )
         """;
 
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db");
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             System.out.println("Connected to the database (availability)");
@@ -195,7 +195,7 @@ public class VillasController {
     public Villas createVilla(Villas villa) throws SQLException {
         String sql = "INSERT INTO villas (id, name, description, address) VALUES (?, ?, ?, ?)";
 
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db");
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             System.out.println("Connected to the database");
@@ -227,7 +227,7 @@ public class VillasController {
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """;
 
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db");
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             System.out.println("Connected to the database");
@@ -267,7 +267,7 @@ public class VillasController {
                 UPDATE villas SET name = ?, description = ?, address = ? WHERE id = ?
                 """;
 
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db");
         PreparedStatement ps = conn.prepareStatement(sql)) {
             System.out.println("Has connected to the database");
 
@@ -307,7 +307,7 @@ public class VillasController {
                 WHERE id = ? 
                 """;
 
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db");
         PreparedStatement ps = conn.prepareStatement(sql)) {
             System.out.println("Has connected to the database");
             ps.setInt(1, roomtypes.getVilla_id());
@@ -341,7 +341,7 @@ public class VillasController {
         //Get villa untuk mengecek apakah villanya ada
 
         String sql = "DELETE from room_types WHERE id = ?";
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db");
              PreparedStatement ps = conn.prepareStatement(sql)) {
             System.out.println("Has connected to the database");
 
@@ -355,7 +355,7 @@ public class VillasController {
         //Get villa untuk mengecek apakah villa nya ada
 
         String sql = "DELETE FROM villas WHERE id = ?";
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db");
         PreparedStatement ps = conn.prepareStatement(sql)) {
             System.out.println("Has connected to the database");
 
