@@ -59,6 +59,7 @@ public class Server {
             }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
             // Endpoint: villas/{id}/bookings
             if (method.equals("GET") && path.matches("/villas/\\d+/bookings")) {
                 String[] split = path.split("/");
@@ -72,6 +73,9 @@ public class Server {
 
 
             if (method.equals("POST")) {
+=======
+            if(method.equals("POST")) {
+>>>>>>> origin/main
 =======
             if(method.equals("POST")) {
 >>>>>>> origin/main
