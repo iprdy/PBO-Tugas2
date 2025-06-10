@@ -5,6 +5,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import controllers.VillasController;
+import models.RoomTypes;
 import models.Villas;
 
 import java.io.InputStream;
@@ -48,9 +49,13 @@ public class Server {
                     vc.createVilla(villas);
                 } else if(path.matches("/villas/\\d+/rooms$")) {
                     String[] split = path.split("/");
-
+                    ObjectMapper mapper = new ObjectMapper();
+                    InputStream is = httpExchange.getRequestBody();
+                    RoomTypes roomtypes = mapper.readValue(is, RoomTypes.class);
+                    roomtypes.setId(Integer.parseInt(split[2]));
+                    VillasController vc = new VillasController();
+                    vc.createVillasRooms(roomtypes);
                 }
-
             }
 //            Map<String, Object> reqJsonMap = req.getJSON();
 //            System.out.println("first_name => " + reqJsonMap.get("first_name"));
