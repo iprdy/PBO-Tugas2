@@ -70,6 +70,46 @@ public class Server {
                 res.send(HttpURLConnection.HTTP_OK);
             }
 
+            if (method.equals("GET") && path.matches("/villas/\\d+$")) {
+                Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db");
+                String[] split = path.split("/");
+                VillasController vc = new VillasController(conn);
+                Villas villas = vc.getVillaById(Integer.parseInt(split[2]));
+
+                ObjectMapper objectMapper = new ObjectMapper();
+                Map<String, Object> resJsonMap = new HashMap<>();
+                resJsonMap.put("message", villas);
+                String resJson = "";
+
+                try {
+                    resJson = objectMapper.writeValueAsString(resJsonMap);
+                } catch(Exception e) {
+                    System.out.println("Serialization error: " + e.getMessage());
+                }
+                res.setBody(resJson);
+                res.send(HttpURLConnection.HTTP_OK);
+            }
+
+            if (method.equals("GET") && path.matches("/villas/\\d+/rooms$")) {
+                Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db");
+                String[] split = path.split("/");
+                VillasController vc = new VillasController(conn);
+                List<RoomTypes> villaRoomTypes = vc.getRoomsByVillaId(Integer.parseInt(split[2]));
+
+                ObjectMapper objectMapper = new ObjectMapper();
+                Map<String, Object> resJsonMap = new HashMap<>();
+                resJsonMap.put("message", villaRoomTypes);
+                String resJson = "";
+
+                try {
+                    resJson = objectMapper.writeValueAsString(resJsonMap);
+                } catch(Exception e) {
+                    System.out.println("Serialization error: " + e.getMessage());
+                }
+                res.setBody(resJson);
+                res.send(HttpURLConnection.HTTP_OK);
+            }
+
             if (method.equals("GET") && path.matches("/villas/\\d+/reviews")) {
                 String[] split = path.split("/");
                 int villaId = Integer.parseInt(split[2]);
