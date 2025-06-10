@@ -58,24 +58,50 @@ public class Server {
                 return;
             }
 
-            if (method.equals("POST")) {
+            if(method.equals("POST")) {
                 if (path.equals("/villas")) {
                     ObjectMapper mapper = new ObjectMapper();
                     InputStream is = httpExchange.getRequestBody();
                     Villas villas = mapper.readValue(is, Villas.class);
                     VillasController vc = new VillasController();
                     vc.createVilla(villas);
-
-                    // Tambahkan log untuk debug
-                    System.out.println("Received POST /villas with data: " + villas.getName());
                 } else if (path.matches("/villas/\\d+/rooms$")) {
                     String[] split = path.split("/");
                     ObjectMapper mapper = new ObjectMapper();
                     InputStream is = httpExchange.getRequestBody();
                     RoomTypes roomtypes = mapper.readValue(is, RoomTypes.class);
-                    roomtypes.setId(Integer.parseInt(split[2]));
+                    roomtypes.setVilla_id(Integer.parseInt(split[2]));
                     VillasController vc = new VillasController();
                     vc.createVillasRooms(roomtypes);
+                }
+            } else if(method.equals("PUT")) {
+                if(path.matches("/villas/\\d+")) {
+                    String[] split = path.split("/");
+                    ObjectMapper mapper = new ObjectMapper();
+                    InputStream is = httpExchange.getRequestBody();
+                    Villas villas = mapper.readValue(is, Villas.class);
+                    villas.setId(Integer.parseInt(split[2]));
+                    VillasController vc = new VillasController();
+                    vc.updateVilla(villas);
+                } else if (path.matches("/villas/\\d+/rooms/\\d+$")) {
+                    String[] split = path.split("/");
+                    ObjectMapper mapper = new ObjectMapper();
+                    InputStream is = httpExchange.getRequestBody();
+                    RoomTypes roomtypes = mapper.readValue(is, RoomTypes.class);
+                    roomtypes.setId(Integer.parseInt(split[2]));
+                    roomtypes.setVilla_id(Integer.parseInt(split[4]));
+                    VillasController vc = new VillasController();
+                    vc.updateVillasRoomTypes(roomtypes);
+                }
+            } else if(method.equals("DELETE")) {
+                if(path.matches("/villas/\\d+/rooms/\\d+$")) {
+                    String[] split = path.split("/");
+                    VillasController vc = new VillasController();
+                    vc.deleteVillaRoomTypes(Integer.parseInt(split[4]));
+                } else if (path.matches("/villas/\\d")) {
+                    String[] split = path.split("/");
+                    VillasController vc = new VillasController();
+                    vc.deleteVilla(Integer.parseInt(split[2]));
                 }
             }
 
