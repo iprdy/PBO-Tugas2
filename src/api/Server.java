@@ -4,10 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
-import controllers.VillasController;
-import models.Villas;
 
-import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.URI;
@@ -32,31 +29,16 @@ public class Server {
     public static void processHttpExchange(HttpExchange httpExchange) {
         Request req = new Request(httpExchange);
         Response res = new Response(httpExchange);
+
         URI uri = httpExchange.getRequestURI();
         String path = uri.getPath();
-        String method = req.getRequestMethod();
-
-        System.out.printf("method: %s\npath: %s\n", method, path);
+        System.out.printf("path: %s\n", path);
 
         try {
-            if(method.equals("POST")) {
-                if(path.equals("/villas")) {
-                    ObjectMapper mapper = new ObjectMapper();
-                    InputStream is = httpExchange.getRequestBody();
-                    Villas villas = mapper.readValue(is, Villas.class);
-                    VillasController vc = new VillasController();
-                    vc.createVilla(villas);
-                } else if(path.matches("/villas/\\d+/rooms$")) {
-                    String[] split = path.split("/");
-
-
-                }
-
-            }
-//            Map<String, Object> reqJsonMap = req.getJSON();
-//            System.out.println("first_name => " + reqJsonMap.get("first_name"));
-//            System.out.println("email => " + reqJsonMap.get("email"));
-//            System.out.println("Done!");
+            Map<String, Object> reqJsonMap = req.getJSON();
+            System.out.println("first_name => " + reqJsonMap.get("first_name"));
+            System.out.println("email => " + reqJsonMap.get("email"));
+            System.out.println("Done!");
         } catch(Exception e) {
             System.out.println(e.getMessage());
         }
