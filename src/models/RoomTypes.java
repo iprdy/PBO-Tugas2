@@ -16,6 +16,25 @@ public class RoomTypes {
     private boolean has_hotwater;
     private boolean has_fridge;
 
+    public RoomTypes() {}
+
+    public RoomTypes(int id, int villa_id, String name, int quantity, int capacity, int price, String bed_size, boolean has_desk, boolean has_ac, boolean has_tv, boolean has_wifi, boolean has_shower, boolean has_hotwater, boolean has_fridge) {
+        this.id = id;
+        this.villa_id = villa_id;
+        this.name = name;
+        this.quantity = quantity;
+        this.capacity = capacity;
+        this.price = price;
+        this.bed_size = bed_size;
+        this.has_desk = has_desk;
+        this.has_ac = has_ac;
+        this.has_tv = has_tv;
+        this.has_wifi = has_wifi;
+        this.has_shower = has_shower;
+        this.has_hotwater = has_hotwater;
+        this.has_fridge = has_fridge;
+    }
+
     public int getId() {
         return id;
     }

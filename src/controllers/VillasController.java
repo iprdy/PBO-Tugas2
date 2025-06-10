@@ -4,6 +4,8 @@ import models.RoomTypes;
 import models.Villas;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class VillasController {
 
@@ -93,37 +95,37 @@ public class VillasController {
     }
 
     // GET /villas/{id}/bookings => Menampilkan semua booking pada suatu vila
-    public List<Bookings> getBookingsByVillaId(int villaId) throws SQLException {
-        List<Bookings> bookings = new ArrayList<>();
-        String sql = "SELECT b.* FROM bookings b JOIN room_types r ON b.room_type = r.id WHERE r.villa = ?";
-
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            System.out.println("Connected to the database");
-
-            ps.setInt(1, villaId);
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                Bookings booking = new Bookings(
-                        rs.getInt("id"),
-                        rs.getInt("customer"),
-                        rs.getInt("room_type"),
-                        rs.getString("checkin_date"),
-                        rs.getString("checkout_date"),
-                        rs.getInt("price"),
-                        rs.getInt("voucher"),
-                        rs.getInt("final_price"),
-                        rs.getString("payment_status"),
-                        rs.getBoolean("has_checkedin"),
-                        rs.getBoolean("has_checkedout")
-                );
-                bookings.add(booking);
-            }
-        }
-        return bookings;
-    }
+//    public List<Bookings> getBookingsByVillaId(int villaId) throws SQLException {
+//        List<Bookings> bookings = new ArrayList<>();
+//        String sql = "SELECT b.* FROM bookings b JOIN room_types r ON b.room_type = r.id WHERE r.villa = ?";
+//
+//        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
+//             PreparedStatement ps = conn.prepareStatement(sql)) {
+//
+//            System.out.println("Connected to the database");
+//
+//            ps.setInt(1, villaId);
+//            ResultSet rs = ps.executeQuery();
+//
+//            while (rs.next()) {
+//                Bookings booking = new Bookings(
+//                        rs.getInt("id"),
+//                        rs.getInt("customer"),
+//                        rs.getInt("room_type"),
+//                        rs.getString("checkin_date"),
+//                        rs.getString("checkout_date"),
+//                        rs.getInt("price"),
+//                        rs.getInt("voucher"),
+//                        rs.getInt("final_price"),
+//                        rs.getString("payment_status"),
+//                        rs.getBoolean("has_checkedin"),
+//                        rs.getBoolean("has_checkedout")
+//                );
+//                bookings.add(booking);
+//            }
+//        }
+//        return bookings;
+//    }
 
     // GET /villas/{id}/reviews => Menampilkan semua review pada suatu vila
     public List<String[]> getReviewsByVillaId(int villaId) throws SQLException {
@@ -208,6 +210,8 @@ public class VillasController {
                 throw new SQLException("Failed to create villa");
             }
 
+            System.out.println("Berhasil membuat villa");
+
             return villa;
         } catch (SQLException e) {
             System.out.println("Database error: " + e.getMessage());
@@ -247,6 +251,8 @@ public class VillasController {
             if (affectedRows == 0) {
                 throw new SQLException("Failed to create room type");
             }
+
+            System.out.println("Berhasil membuat roomtype untuk villa");
 
             return roomtypes;
         } catch (SQLException e) {
