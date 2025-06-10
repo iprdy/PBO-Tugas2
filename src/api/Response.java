@@ -4,19 +4,19 @@ import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 
 import java.io.IOException;
-import java.io.PrintStream;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
 public class Response {
 
     private HttpExchange httpExchange;
     private Headers headers;
-    private StringBuilder stringBuilder;
+    private StringBuilder stringBuilder = new StringBuilder();
     private boolean isSent;
 
     public Response(HttpExchange httpExchange) {
         this.httpExchange = httpExchange;
-        this.stringBuilder = new StringBuilder();
+        this.headers = httpExchange.getResponseHeaders();
         this.isSent = false;
     }
 
@@ -27,27 +27,40 @@ public class Response {
 
     public void send(int status) {
         try {
-            this.httpExchange.getResponseHeaders().add("Content-Type", "application/json; charset=utf-8");
-            this.httpExchange.sendResponseHeaders(status, 0);
+            headers.add("Content-Type", "application/json; charset=utf-8");
+            byte[] responseBytes = stringBuilder.toString().getBytes(StandardCharsets.UTF_8);
 
-            String body = stringBuilder.toString();
-            PrintStream out = new PrintStream(this.httpExchange.getResponseBody());
-            out.write(body.getBytes(StandardCharsets.UTF_8));
+            httpExchange.sendResponseHeaders(status, responseBytes.length);
+
+            OutputStream out = httpExchange.getResponseBody();
+            out.write(responseBytes);
             out.flush();
         } catch (IOException ioe) {
             System.err.println("Problem encountered when sending response.");
             ioe.printStackTrace();
-            return;
         } finally {
-            this.httpExchange.close();
+            httpExchange.close();
         }
         this.isSent = true;
     }
 
+    public void send(String body) {
+        setBody(body);
+        send(200); // default ke 200 OK
+    }
+
+    public void json(String jsonString) {
+        this.setBody(jsonString);
+        send(200); // status OK
+    }
+
+    public void error(String message) {
+        this.setBody("{\"error\": \"" + message.replace("\"", "\\\"") + "\"}");
+        send(500); // status 500 Internal Server Error
+    }
+
+
     public boolean isSent() {
-        if (this.httpExchange.getResponseCode() != -1)
-            this.isSent = true;
-        return isSent;
+        return this.isSent;
     }
 }
-

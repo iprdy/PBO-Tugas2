@@ -21,10 +21,19 @@ public class Request {
     private String rawBody;
 
     private String jsonBody;
+    private Map<String, String> params = new HashMap<>();
+
+    public void setParam(String key, String value) {
+        this.params.put(key, value);
+    }
 
     public Request(HttpExchange httpExchange) {
         this.httpExchange = httpExchange;
         this.headers = httpExchange.getRequestHeaders();
+    }
+
+    public String getParam(String key) {
+        return this.params.getOrDefault(key, null);
     }
 
     public String getBody() {
