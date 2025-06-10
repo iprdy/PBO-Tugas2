@@ -58,6 +58,18 @@ public class Server {
                 return;
             }
 
+            // Endpoint: villas/{id}/bookings
+            if (method.equals("GET") && path.matches("/villas/\\d+/bookings")) {
+                String[] split = path.split("/");
+                int villaId = Integer.parseInt(split[2]);
+
+                Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
+                VillasController vc = new VillasController(conn);
+                vc.getBookingsByVillaId(httpExchange, villaId);
+                return;
+            }
+
+
             if (method.equals("POST")) {
                 if (path.equals("/villas")) {
                     ObjectMapper mapper = new ObjectMapper();
