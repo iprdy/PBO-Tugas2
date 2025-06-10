@@ -16,14 +16,16 @@ public class VillasController {
             System.out.println("Has connected to the database");
 
             ps.setInt(1, villa.getId());
-            ps.setString(1, villa.getName());
-            ps.setString(2, villa.getDescription());
-            ps.setString(3, villa.getAddress());
+            ps.setString(2, villa.getName());
+            ps.setString(3, villa.getDescription());
+            ps.setString(4, villa.getAddress());
 
             int affectedRows = ps.executeUpdate();
             if (affectedRows == 0) {
                 throw new SQLException("Failed to create villa");
             }
+
+            System.out.println("Berhasil menambahkan villa ke database");
 
             return villa;
 
