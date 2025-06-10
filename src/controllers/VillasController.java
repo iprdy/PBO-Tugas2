@@ -262,9 +262,7 @@ public class VillasController {
     }
 
     //PUT /villas{id} => Mengubah data suatu villa
-    public Villas updateVilla(Villas villa) throws SQLException {
-        //ambil villa nya dari method get villa
-
+    public Villas updateVilla(Villas newVilla) throws SQLException {
         String sql = """
                 UPDATE villas SET name = ?, description = ?, address = ? WHERE id = ?
                 """;
@@ -273,17 +271,19 @@ public class VillasController {
         PreparedStatement ps = conn.prepareStatement(sql)) {
             System.out.println("Has connected to the database");
 
-            ps.setString(1, villa.getName());
-            ps.setString(2, villa.getDescription());
-            ps.setString(3, villa.getAddress());
-            ps.setInt(4, villa.getId());
+            ps.setString(1, newVilla.getName());
+            ps.setString(2, newVilla.getDescription());
+            ps.setString(3, newVilla.getAddress());
+            ps.setInt(4, newVilla.getId());
 
             int affectedRows = ps.executeUpdate();
             if (affectedRows == 0) {
                 throw new SQLException("Failed to update villa");
             }
 
-            return villa; //Ini harusnya get villa lagi biar dia ngereturn villa yang baru di update
+            System.out.println("Villa dengan id: " + newVilla.getId() + " berhasil di update");
+
+            return newVilla;
         }
     }
 
