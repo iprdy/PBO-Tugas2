@@ -289,8 +289,6 @@ public class VillasController {
 
     //PUT /villas/{id}/rooms/{id} => Mengubah informasi kamar suatu villa
     public RoomTypes updateVillasRoomTypes(RoomTypes roomtypes) throws SQLException {
-        //ambil roomtype dari method get roomtype
-
         String sql = """
                 UPDATE room_types SET 
                 villa = ?, 
@@ -332,7 +330,9 @@ public class VillasController {
                 throw new SQLException("Failed to update room type villa");
             }
 
-            return roomtypes; //Return data villa yang diupdate, nanti diganti
+            System.out.println("Tipe ruangan pada villa " + roomtypes.getVilla_id() + " berhasil di update");
+
+            return roomtypes;
         }
     }
 

@@ -66,6 +66,16 @@ public class Server {
                         VillasController vc = new VillasController();
                         vc.updateVilla(villas);
                     }
+                    if(path.matches("/villas/\\d+/rooms/\\d+$")) {
+                        String[] split = path.split("/");
+                        ObjectMapper mapper = new ObjectMapper();
+                        InputStream is = httpExchange.getRequestBody();
+                        RoomTypes roomtypes = mapper.readValue(is, RoomTypes.class);
+                        roomtypes.setId(Integer.parseInt(split[2]));
+                        roomtypes.setVilla_id(Integer.parseInt(split[4]));
+                        VillasController vc = new VillasController();
+                        vc.updateVillasRoomTypes(roomtypes);
+                    }
             }
 //            Map<String, Object> reqJsonMap = req.getJSON();
 //            System.out.println("first_name => " + reqJsonMap.get("first_name"));
