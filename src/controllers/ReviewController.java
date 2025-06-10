@@ -10,81 +10,55 @@ import java.sql.*;
 import java.util.*;
 
 public class ReviewController {
-    private Connection conn;
+    private final Connection conn;
 
     public ReviewController(Connection conn) {
         this.conn = conn;
     }
 
-    // GET /villas/{villaId}/reviews
-    public void getReviewsByVilla(HttpExchange exchange, int villaId) throws IOException {
+    // GET /bookings/{bookingId}/review
+    public void getReviewByBooking(HttpExchange exchange, int bookingId) throws IOException {
         try {
-            List<Review> reviews = new ArrayList<>();
-            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM reviews WHERE villa_id = ?");
-            stmt.setInt(1, villaId);
+            String sql = "SELECT * FROM reviews WHERE booking = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, bookingId);
             ResultSet rs = stmt.executeQuery();
 
-            while (rs.next()) {
-                reviews.add(new Review(
-                        rs.getInt("id"),
-                        rs.getInt("customer_id"),
-                        rs.getInt("villa_id"),
-                        rs.getInt("booking_id"),
-                        rs.getString("comment"),
-                        rs.getInt("rating")
-                ));
+            if (rs.next()) {
+                Review review = new Review(
+                        rs.getInt("booking"),
+                        rs.getInt("star"),
+                        rs.getString("title"),
+                        rs.getString("content")
+                );
+                JsonUtils.sendJsonResponse(exchange, 200, review);
+            } else {
+                JsonUtils.sendError(exchange, 404, "Review tidak ditemukan");
             }
-
-            JsonUtils.sendJsonResponse(exchange, 200, reviews);
         } catch (Exception e) {
             JsonUtils.sendError(exchange, 500, "Gagal mengambil review");
         }
     }
 
-    // GET /customers/{customerId}/reviews
-    public void getReviewsByCustomer(HttpExchange exchange, int customerId) throws IOException {
-        try {
-            List<Review> reviews = new ArrayList<>();
-            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM reviews WHERE customer_id = ?");
-            stmt.setInt(1, customerId);
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                reviews.add(new Review(
-                        rs.getInt("id"),
-                        rs.getInt("customer_id"),
-                        rs.getInt("villa_id"),
-                        rs.getInt("booking_id"),
-                        rs.getString("comment"),
-                        rs.getInt("rating")
-                ));
-            }
-
-            JsonUtils.sendJsonResponse(exchange, 200, reviews);
-        } catch (Exception e) {
-            JsonUtils.sendError(exchange, 500, "Gagal mengambil review customer");
-        }
-    }
-
-    // POST /customers/{cid}/bookings/{bid}/reviews
-    public void addReview(HttpExchange exchange, int customerId, int bookingId, int villaId) throws IOException {
+    // POST /bookings/{bookingId}/review
+    public void addReview(HttpExchange exchange, int bookingId) throws IOException {
         try {
             Map<String, Object> body = JsonUtils.parseJson(exchange.getRequestBody());
-            String comment = (String) body.get("comment");
-            int rating = (int) body.get("rating");
+            String title = (String) body.get("title");
+            String content = (String) body.get("content");
+            int star = (int) body.get("star");
 
-            if (!RequestValidator.isValidRating(rating) || comment == null || comment.trim().isEmpty()) {
+            if (!RequestValidator.isValidRating(star) || title == null || title.isBlank() || content == null || content.isBlank()) {
                 JsonUtils.sendError(exchange, 400, "Data review tidak valid");
                 return;
             }
 
-            String sql = "INSERT INTO reviews (customer_id, villa_id, booking_id, comment, rating) VALUES (?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO reviews (booking, star, title, content) VALUES (?, ?, ?, ?)";
             PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setInt(1, customerId);
-            stmt.setInt(2, villaId);
-            stmt.setInt(3, bookingId);
-            stmt.setString(4, comment);
-            stmt.setInt(5, rating);
+            stmt.setInt(1, bookingId);
+            stmt.setInt(2, star);
+            stmt.setString(3, title);
+            stmt.setString(4, content);
             stmt.executeUpdate();
 
             JsonUtils.sendJsonResponse(exchange, 201, Map.of("message", "Review berhasil ditambahkan"));
@@ -93,49 +67,50 @@ public class ReviewController {
         }
     }
 
-    // PUT /reviews/{id}
-    public void updateReview(HttpExchange exchange, int reviewId) throws IOException {
+    // PUT /reviews/{bookingId}
+    public void updateReview(HttpExchange exchange, int bookingId) throws IOException {
         try {
             Map<String, Object> body = JsonUtils.parseJson(exchange.getRequestBody());
-            String comment = (String) body.get("comment");
-            int rating = (int) body.get("rating");
+            String title = (String) body.get("title");
+            String content = (String) body.get("content");
+            int star = (int) body.get("star");
 
-            if (!RequestValidator.isValidRating(rating) || comment == null || comment.trim().isEmpty()) {
-                JsonUtils.sendError(exchange, 400, "Data update review tidak valid");
+            if (!RequestValidator.isValidRating(star) || title == null || title.isBlank() || content == null || content.isBlank()) {
+                JsonUtils.sendError(exchange, 400, "Data review tidak valid");
                 return;
             }
 
-            String sql = "UPDATE reviews SET comment = ?, rating = ? WHERE id = ?";
+            String sql = "UPDATE reviews SET star = ?, title = ?, content = ? WHERE booking = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setString(1, comment);
-            stmt.setInt(2, rating);
-            stmt.setInt(3, reviewId);
-            int rowsAffected = stmt.executeUpdate();
+            stmt.setInt(1, star);
+            stmt.setString(2, title);
+            stmt.setString(3, content);
+            stmt.setInt(4, bookingId);
+            int rows = stmt.executeUpdate();
 
-            if (rowsAffected == 0) {
+            if (rows == 0) {
                 JsonUtils.sendError(exchange, 404, "Review tidak ditemukan");
-                return;
+            } else {
+                JsonUtils.sendJsonResponse(exchange, 200, Map.of("message", "Review berhasil diperbarui"));
             }
-
-            JsonUtils.sendJsonResponse(exchange, 200, Map.of("message", "Review berhasil diupdate"));
         } catch (Exception e) {
-            JsonUtils.sendError(exchange, 500, "Gagal update review");
+            JsonUtils.sendError(exchange, 500, "Gagal memperbarui review");
         }
     }
 
-    // DELETE /reviews/{id}
-    public void deleteReview(HttpExchange exchange, int reviewId) throws IOException {
+    // DELETE /reviews/{bookingId}
+    public void deleteReview(HttpExchange exchange, int bookingId) throws IOException {
         try {
-            PreparedStatement stmt = conn.prepareStatement("DELETE FROM reviews WHERE id = ?");
-            stmt.setInt(1, reviewId);
-            int rowsDeleted = stmt.executeUpdate();
+            String sql = "DELETE FROM reviews WHERE booking = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, bookingId);
+            int rows = stmt.executeUpdate();
 
-            if (rowsDeleted == 0) {
+            if (rows == 0) {
                 JsonUtils.sendError(exchange, 404, "Review tidak ditemukan");
-                return;
+            } else {
+                JsonUtils.sendJsonResponse(exchange, 200, Map.of("message", "Review berhasil dihapus"));
             }
-
-            JsonUtils.sendJsonResponse(exchange, 200, Map.of("message", "Review berhasil dihapus"));
         } catch (Exception e) {
             JsonUtils.sendError(exchange, 500, "Gagal menghapus review");
         }
