@@ -6,9 +6,11 @@ import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import controllers.VillasController;
 import controllers.ReviewController;
+import controllers.CustomerController;
 import models.RoomTypes;
 import models.Booking;
 import models.Villas;
+import models.Customer;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -197,6 +199,13 @@ public class Server {
                     VillasController vc = new VillasController(conn);
                     vc.deleteVilla(Integer.parseInt(split[2]));
                 }
+            }
+
+            if (method.equals("GET") && path.equals("/customers")) {
+                Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db");
+                CustomerController customerController = new CustomerController(conn);
+                customerController.getAllCustomers(httpExchange);
+                return;
             }
 
         } catch(Exception e) {
