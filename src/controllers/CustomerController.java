@@ -155,4 +155,39 @@ public class CustomerController {
             res.error("Failed to fetch customers: " + e.getMessage());
         }
     }
+
+    // GET /customer/{id} -> detail satu customer
+    public void getCustomerById(HttpExchange httpExchange) {
+        Request req = new Request(httpExchange);
+        Response res = new Response(httpExchange);
+
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db")) {
+            // Ambil ID dari path
+            String[] pathParts = httpExchange.getRequestURI().getPath().split("/");
+            int customerId = Integer.parseInt(pathParts[2]);
+
+            String sql = "SELECT * FROM customers WHERE id = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, customerId);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                Customer customer = new Customer(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("email"),
+                        rs.getString("phone")
+                );
+
+                ObjectMapper objectMapper = new ObjectMapper();
+                String json = objectMapper.writeValueAsString(customer);
+                res.json(json);
+            } else {
+                res.error("Customer not found");
+            }
+
+        } catch (Exception e) {
+            res.error("Failed to fetch customer: " + e.getMessage());
+        }
+    }
 }
