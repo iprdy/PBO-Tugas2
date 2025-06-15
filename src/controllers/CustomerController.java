@@ -63,6 +63,70 @@ public class CustomerController {
         }
     }
 
+    // POST /customer/{id}/bookings => Customer melakukan pemesanan vila
+    public void postBookingForCustomer(HttpExchange httpExchange) {
+        Request req = new Request(httpExchange);
+        Response res = new Response(httpExchange);
+
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db")) {
+            // Ambil customer ID dari URL
+            String[] pathParts = httpExchange.getRequestURI().getPath().split("/");
+            int customerId = Integer.parseInt(pathParts[2]);
+
+            // Ambil body dari request dan parsing jadi objek Booking
+            ObjectMapper objectMapper = new ObjectMapper();
+            Booking bookingData = objectMapper.readValue(req.body(), Booking.class);
+
+            // Siapkan SQL INSERT
+            String sql = """
+            INSERT INTO bookings (customer, room_type, checkin_date, checkout_date, price, voucher, final_price, payment_status, has_checkedin, has_checkedout)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """;
+
+            PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps.setInt(1, customerId);
+            ps.setInt(2, bookingData.getRoomType());
+            ps.setString(3, bookingData.getCheckinDate());
+            ps.setString(4, bookingData.getCheckoutDate());
+            ps.setInt(5, bookingData.getPrice());
+
+            if (bookingData.getVoucher() != null) {
+                ps.setInt(6, bookingData.getVoucher());
+            } else {
+                ps.setNull(6, Types.INTEGER);
+            }
+
+            ps.setInt(7, bookingData.getFinalPrice());
+            ps.setString(8, "waiting"); // default
+            ps.setBoolean(9, false);    // default hasCheckedin
+            ps.setBoolean(10, false);   // default hasCheckedout
+
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected == 0) {
+                res.error("Failed to insert booking");
+                return;
+            }
+
+            ResultSet generatedKeys = ps.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                int newId = generatedKeys.getInt(1);
+                bookingData.setId(newId);
+            }
+
+            bookingData.setPaymentStatus("waiting");
+            bookingData.setHasCheckedin(false);
+            bookingData.setHasCheckedout(false);
+            bookingData.setId(bookingData.getId()); // agar id terisi
+
+            String json = objectMapper.writeValueAsString(bookingData);
+            res.json(json);
+
+        } catch (Exception e) {
+            res.error("Failed to create booking: " + e.getMessage());
+        }
+    }
+
+
     public void getAllCustomers(HttpExchange httpExchange) {
         Request req = new Request(httpExchange);
         Response res = new Response(httpExchange);
