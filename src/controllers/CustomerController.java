@@ -262,7 +262,7 @@ public class CustomerController {
         }
     }
 
-    // GET /customer/{id}/reviews -> daftar review yang diberikan oleh customer
+    // GET /customers/{id}/reviews -> daftar review yang diberikan oleh customer
     public void getReviewsByCustomerId(HttpExchange httpExchange) {
         Request req = new Request(httpExchange);
         Response res = new Response(httpExchange);
