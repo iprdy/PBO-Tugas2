@@ -1,10 +1,15 @@
 package models;
 
+import java.util.List;
+
 public class Customer {
     private int id;
     private String name;
     private String email;
     private String phone;
+
+    private List<Booking> bookings;
+
 
     // Constructor default (diperlukan saat parsing dari JSON / ResultSet tanpa parameter)
     public Customer() {}
@@ -34,6 +39,10 @@ public class Customer {
         return phone;
     }
 
+    public List<Booking> getBookings() {
+        return bookings;
+    }
+
     // Setter
     public void setId(int id) {
         this.id = id;
@@ -50,4 +59,9 @@ public class Customer {
     public void setPhone(String phone) {
         this.phone = phone;
     }
+
+    public void setBookings(List<Booking> bookings) {
+        this.bookings = bookings;
+    }
+
 }
