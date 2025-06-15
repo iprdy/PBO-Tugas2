@@ -165,7 +165,7 @@ public class Server {
                     Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db");
                     VillasController vc = new VillasController(conn);
                     vc.createVillasRooms(roomtypes);
-                } else if (path.equals("/customer")) {
+                } else if (path.equals("/customers")) {
                     ObjectMapper mapper = new ObjectMapper();
                     InputStream is = httpExchange.getRequestBody();
                     Customer customer = mapper.readValue(is, Customer.class);
@@ -193,6 +193,11 @@ public class Server {
                     Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db");
                     VillasController vc = new VillasController(conn);
                     vc.updateVillasRoomTypes(roomtypes);
+                } else if (path.matches("/customers/\\d+")) {
+                    Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db");
+                    CustomerController cc = new CustomerController(conn);
+                    cc.updateCustomer(httpExchange);
+                    return;
                 }
             } else if(method.equals("DELETE")) {
                 if(path.matches("/villas/\\d+/rooms/\\d+$")) {
@@ -215,7 +220,7 @@ public class Server {
                 return;
             }
 
-            if (method.equals("GET") && path.matches("/customer/\\d+$")) {
+            if (method.equals("GET") && path.matches("/customers/\\d+$")) {
                 Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db");
                 CustomerController cc = new CustomerController(conn);
                 cc.getCustomerById(httpExchange);
