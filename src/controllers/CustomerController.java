@@ -75,7 +75,7 @@ public class CustomerController {
 
             // Ambil body dari request dan parsing jadi objek Booking
             ObjectMapper objectMapper = new ObjectMapper();
-            Booking bookingData = objectMapper.readValue(req.body(), Booking.class);
+            Booking bookingData = objectMapper.readValue(req.getBody(), Booking.class);
 
             // Siapkan SQL INSERT
             String sql = """
