@@ -156,7 +156,7 @@ public class CustomerController {
         }
     }
 
-    // GET /customer/{id} -> detail satu customer
+    // GET /customers/{id} -> detail satu customer
     public void getCustomerById(HttpExchange httpExchange) {
         Request req = new Request(httpExchange);
         Response res = new Response(httpExchange);
@@ -191,7 +191,7 @@ public class CustomerController {
         }
     }
 
-    // POST /customer => menambahkan customer baru
+    // POST /customers -> menambahkan customer baru
     public void postCustomer(HttpExchange httpExchange) {
         Request req = new Request(httpExchange);
         Response res = new Response(httpExchange);
@@ -222,6 +222,42 @@ public class CustomerController {
 
         } catch (Exception e) {
             res.error("Failed to create customer: " + e.getMessage());
+        }
+    }
+
+    // PUT /customers/{id} => mengubah data customer berdasarkan ID
+    public void updateCustomer(HttpExchange httpExchange) {
+        Request req = new Request(httpExchange);
+        Response res = new Response(httpExchange);
+
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db")) {
+            // Ambil ID dari path URL
+            String[] pathParts = httpExchange.getRequestURI().getPath().split("/");
+            int customerId = Integer.parseInt(pathParts[2]);
+
+            // Ambil body request dan parsing jadi Customer
+            ObjectMapper objectMapper = new ObjectMapper();
+            Customer updatedCustomer = objectMapper.readValue(req.getBody(), Customer.class);
+
+            String sql = "UPDATE customers SET name = ?, email = ?, phone = ? WHERE id = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, updatedCustomer.getName());
+            ps.setString(2, updatedCustomer.getEmail());
+            ps.setString(3, updatedCustomer.getPhone());
+            ps.setInt(4, customerId);
+
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected == 0) {
+                res.error("Customer with ID " + customerId + " not found or no changes made.");
+                return;
+            }
+
+            updatedCustomer.setId(customerId); // Set ID untuk response
+            String json = objectMapper.writeValueAsString(updatedCustomer);
+            res.json(json);
+
+        } catch (Exception e) {
+            res.error("Failed to update customer: " + e.getMessage());
         }
     }
 }
