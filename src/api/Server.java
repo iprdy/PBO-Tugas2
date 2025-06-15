@@ -208,6 +208,13 @@ public class Server {
                 return;
             }
 
+            if (method.equals("GET") && path.matches("/customer/\\d+$")) {
+                Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db");
+                CustomerController cc = new CustomerController(conn);
+                cc.getCustomerById(httpExchange);
+                return;
+            }
+
         } catch(Exception e) {
             System.out.println("Exception: " + e.getMessage());
         }
