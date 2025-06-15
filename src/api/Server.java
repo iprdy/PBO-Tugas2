@@ -165,6 +165,13 @@ public class Server {
                     Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db");
                     VillasController vc = new VillasController(conn);
                     vc.createVillasRooms(roomtypes);
+                } else if (path.equals("/customer")) {
+                    ObjectMapper mapper = new ObjectMapper();
+                    InputStream is = httpExchange.getRequestBody();
+                    Customer customer = mapper.readValue(is, Customer.class);
+                    Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db");
+                    CustomerController cc = new CustomerController(conn);
+                    cc.postCustomer(httpExchange);
                 }
             } else if(method.equals("PUT")) {
                 if(path.matches("/villas/\\d+")) {
