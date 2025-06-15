@@ -190,4 +190,38 @@ public class CustomerController {
             res.error("Failed to fetch customer: " + e.getMessage());
         }
     }
+
+    // POST /customer => menambahkan customer baru
+    public void postCustomer(HttpExchange httpExchange) {
+        Request req = new Request(httpExchange);
+        Response res = new Response(httpExchange);
+
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db")) {
+            ObjectMapper objectMapper = new ObjectMapper();
+            Customer customer = objectMapper.readValue(req.getBody(), Customer.class);
+
+            String sql = "INSERT INTO customers (name, email, phone) VALUES (?, ?, ?)";
+            PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, customer.getName());
+            ps.setString(2, customer.getEmail());
+            ps.setString(3, customer.getPhone());
+
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected == 0) {
+                res.error("Failed to insert customer");
+                return;
+            }
+
+            ResultSet generatedKeys = ps.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                customer.setId(generatedKeys.getInt(1));
+            }
+
+            String json = objectMapper.writeValueAsString(customer);
+            res.json(json);
+
+        } catch (Exception e) {
+            res.error("Failed to create customer: " + e.getMessage());
+        }
+    }
 }
