@@ -215,8 +215,23 @@ public class RouterController {
         }
     }
 
-    public static void handlePostCustomer(Response res) throws SQLException {
+    public static void handlePostCustomer(Response res, Request req) throws SQLException {
+        try {
+            CustomerController cc = new CustomerController();
+            String body = req.getBody();
+            Customer customer = mapper.readValue(body, Customer.class);
+            cc.postCustomer(customer);
 
+            ResponseController.sendJsonResponseWithMessage("Berhasil membuat customer", customer, res);
+        } catch (JsonMappingException e) {
+            ResponseController.sendErrorResponse(res, "Invalid data structure", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
+        } catch (JsonProcessingException e) {
+            ResponseController.sendErrorResponse(res, "Invalid JSON format", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
+        } catch (SQLException e) {
+            ResponseController.sendErrorResponse(res, "Database error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        } catch (Exception e) {
+            ResponseController.sendErrorResponse(res, "Unexpected error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        }
     }
 
     public static void handlePostCustomerIdBookings(String path, Response res) throws SQLException {

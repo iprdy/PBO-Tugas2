@@ -71,7 +71,7 @@ public class Router {
             }
 
             else if (path.matches("/customers")) {
-                RouterController.handlePostCustomer(res);
+                RouterController.handlePostCustomer(res, req);
             }
 
             else if (path.matches("/customers/\\d+/bookings")) {

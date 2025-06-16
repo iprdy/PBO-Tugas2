@@ -149,17 +149,8 @@ public class CustomerController {
     }
 
     // POST /customers -> menambahkan customer baru
-    public void postCustomer(HttpExchange httpExchange) {
-        System.out.println(">>> postCustomer() triggered");
-        Request req = new Request(httpExchange);
-        Response res = new Response(httpExchange);
-
+    public void postCustomer(Customer customer) throws SQLException {
         try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db")) {
-            ObjectMapper objectMapper = new ObjectMapper();
-            Customer customer = objectMapper.readValue(req.getBody(), Customer.class);
-
-            System.out.println("Parsed customer: " + customer.getName());
-
             String sql = "INSERT INTO customers (id, name, email, phone) VALUES (?, ?, ?, ?)";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, customer.getId());
@@ -167,17 +158,10 @@ public class CustomerController {
             ps.setString(3, customer.getEmail());
             ps.setString(4, customer.getPhone());
 
-            int rows = ps.executeUpdate();
-            System.out.println("Inserted rows: " + rows);
-
-            if (rows > 0) {
-                res.json("{\"message\": \"Customer added successfully\"}");
-            } else {
-                res.error("Failed to insert customer");
+            int affectedRows = ps.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("Failed to create customer");
             }
-        } catch (Exception e) {
-            System.out.println("Error in postCustomer: " + e.getMessage());
-            res.error("Failed to create customer: " + e.getMessage());
         }
     }
 
