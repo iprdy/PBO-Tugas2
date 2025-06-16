@@ -12,15 +12,8 @@ import java.util.*;
 
 public class CustomerController {
     //GET /customer/{id}/bookings => daftar booking yang telah dilakukan oleh seorang customer
-    public void getCustomerBookings(HttpExchange httpExchange) {
-        Request req = new Request(httpExchange);
-        Response res = new Response(httpExchange);
-
+    public List<Booking> getCustomerBookings(int customerId) throws SQLException {
         try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db")) {
-            // Ambil ID dari path
-            String[] pathParts = httpExchange.getRequestURI().getPath().split("/");
-            int customerId = Integer.parseInt(pathParts[2]);
-
             String sql = "SELECT * FROM bookings WHERE customer = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, customerId);
@@ -46,14 +39,7 @@ public class CustomerController {
                 booking.setHasCheckedout(rs.getBoolean("has_checkedout"));
                 bookings.add(booking);
             }
-
-
-            ObjectMapper objectMapper = new ObjectMapper();
-            String json = objectMapper.writeValueAsString(bookings);
-            res.json(json);
-
-        } catch (Exception e) {
-            res.error("Failed to fetch bookings: " + e.getMessage());
+            return bookings;
         }
     }
 

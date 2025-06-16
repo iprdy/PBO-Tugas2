@@ -69,4 +69,12 @@ public class RouterController {
 
         ResponseController.sendJsonResponse(customer, res);
     }
+
+    public static void handleGetCustomerIdBookings(String path, Response res) throws SQLException {
+        int id = Integer.parseInt(path.split("/")[2]);
+        CustomerController cc = new CustomerController();
+        List<Booking> bookings = cc.getCustomerBookings(id);
+
+        ResponseController.sendJsonResponse(bookings, res);
+    }
 }
