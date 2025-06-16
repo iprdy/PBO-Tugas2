@@ -50,6 +50,7 @@ public class Server {
         System.out.printf("method: %s\npath: %s\n", method, path);
 
         try {
+
             if (method.equals("GET") && path.equals("/villas")) {
                 Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db");
                 VillasController vc = new VillasController(conn);
@@ -221,12 +222,6 @@ public class Server {
         httpExchange.close();
     }
 
-    public static void main(String[] args) {
-        try {
-            new Server(8080); // Jalankan server di port 8080
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+
 }
 
