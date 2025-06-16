@@ -25,7 +25,7 @@ public class Router {
         }
 
         else if (path.matches("/villas/\\d+/rooms$")) {
-
+            RouterController.handleGetVillaIdRooms(path, res);
         }
 
         else if (path.matches("/villas/\\d+/bookings$")) {

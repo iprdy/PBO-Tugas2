@@ -2,6 +2,7 @@ package controllers;
 
 import api.Response;
 import models.Booking;
+import models.RoomTypes;
 import models.Villas;
 
 import java.io.IOException;
@@ -26,6 +27,15 @@ public class RouterController {
         ResponseController.sendJsonResponse(villa, res);
     }
 
+    public static void handleGetVillaIdRooms(String path, Response res) throws SQLException {
+        String[] split = path.split("/");
+        int id = Integer.parseInt(split[2]);
+        VillasController vc = new VillasController();
+        List<RoomTypes> rt = vc.getRoomsByVillaId(id);
+
+        ResponseController.sendJsonResponse(rt, res);
+    }
+
     public static void handleGetVillaIdBookings(String path, Response res) throws SQLException {
         String[] split = path.split("/");
         int id = Integer.parseInt(split[2]);
@@ -39,6 +49,6 @@ public class RouterController {
         String[] split = path.split("/");
         int id = Integer.parseInt(split[2]);
         VillasController vc = new VillasController();
-//        vc.getReviewsByVillaId();
+        vc.getReviewsByVillaId(id);
     }
 }
