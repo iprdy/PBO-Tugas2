@@ -11,13 +11,6 @@ import java.sql.*;
 import java.util.*;
 
 public class CustomerController {
-
-    private Connection conn;
-
-    public CustomerController(Connection conn) {
-        this.conn = conn;
-    }
-
     //GET /customer/{id}/bookings => daftar booking yang telah dilakukan oleh seorang customer
     public void getCustomerBookings(HttpExchange httpExchange) {
         Request req = new Request(httpExchange);
@@ -128,10 +121,7 @@ public class CustomerController {
     }
 
 
-    public void getAllCustomers(HttpExchange httpExchange) {
-        Request req = new Request(httpExchange);
-        Response res = new Response(httpExchange);
-
+    public List<Customer> getAllCustomers() throws SQLException {
         try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db")) {
             String sql = "SELECT * FROM customers";
             PreparedStatement stmt = conn.prepareStatement(sql);
@@ -147,13 +137,7 @@ public class CustomerController {
                 );
                 customers.add(customer);
             }
-
-            ObjectMapper objectMapper = new ObjectMapper();
-            String json = objectMapper.writeValueAsString(customers);
-            res.json(json);
-
-        } catch (Exception e) {
-            res.error("Failed to fetch customers: " + e.getMessage());
+            return customers;
         }
     }
 

@@ -1,21 +1,24 @@
 package controllers;
 
 import api.Response;
-import models.Booking;
-import models.RoomTypes;
-import models.Villas;
+import models.*;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class RouterController {
-    public static void handleGetAllVilla(Response res) throws SQLException {
-        VillasController vc = new VillasController();
-        List<Villas> villa = vc.getAllVillas();
+    public static void handleGetAllVilla(Response res) {
+        try {
+            VillasController vc = new VillasController();
+            List<Villas> villa = vc.getAllVillas();
 
-        ResponseController.sendJsonResponse(villa, res);
+            ResponseController.sendJsonResponse(villa, res);
+        } catch (SQLException e) {
+            ResponseController.sendErrorResponse(res, "Database error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        }
     }
 
     public static void handleGetVillaById(String path, Response res) throws SQLException {
@@ -49,6 +52,17 @@ public class RouterController {
         String[] split = path.split("/");
         int id = Integer.parseInt(split[2]);
         VillasController vc = new VillasController();
-        vc.getReviewsByVillaId(id);
+        List<Review> reviews = vc.getReviewsByVillaId(id);
+
+        ResponseController.sendJsonResponse(reviews, res);
+    }
+
+    public static void handleGetVillaCinCout(String path, Response res) throws SQLException {}
+
+    public static void handleGetAllCustomer(Response res) throws SQLException {
+        CustomerController cc = new CustomerController();
+        List<Customer> customers = cc.getAllCustomers();
+
+        ResponseController.sendJsonResponse(customers, res);
     }
 }
