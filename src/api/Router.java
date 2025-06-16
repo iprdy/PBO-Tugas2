@@ -1,21 +1,11 @@
 package api;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import controllers.ResponseController;
 import controllers.RouterController;
-import controllers.VillasController;
-import models.Villas;
 
 import java.net.HttpURLConnection;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class Router {
-    public static final ObjectMapper mapper = new ObjectMapper();
-
     public static void handleGetRequest(String path, Response res) {
         try {
             if (path.equals("/villas")) {
@@ -38,9 +28,9 @@ public class Router {
                 RouterController.handleGetVillaIdReviews(path, res);
             }
 
-            else if (path.matches("/villas?ci_date=\\d{4}-\\d{2}-\\d{2}&co_date=\\d{4}-\\d{2}-\\d{2}")) {
-
-            }
+//            else if (path.matches("/villas?ci_date=\\d{4}-\\d{2}-\\d{2}&co_date=\\d{4}-\\d{2}-\\d{2}")) {
+//
+//            }
 
             else if (path.equals("/customers")) {
                 RouterController.handleGetAllCustomer(res);
@@ -59,11 +49,41 @@ public class Router {
             }
 
             else if (path.equals("/vouchers")) {
-
+                RouterController.handleGetAllVouchers(res);
             }
 
             else if (path.matches("/vouchers/\\d+")) {
+                RouterController.handleGetVoucherById(path, res);
+            }
+        } catch (Exception e) {
+            ResponseController.sendErrorResponse(res, "Unexpected error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        }
+    }
 
+    public static void handlePostRequest(String path, Response res, Request req) {
+        try {
+            if (path.equals("/villas")) {
+                RouterController.handlePostVilla(res,req);
+            }
+
+            else if (path.matches("/villas/\\d+/rooms$")) {
+                RouterController.handlePostVillaIdRooms(path, res, req);
+            }
+
+            else if (path.matches("/customers")) {
+                RouterController.handlePostCustomer(res);
+            }
+
+            else if (path.matches("/customers/\\d+/bookings")) {
+                RouterController.handlePostCustomerIdBookings(path, res);
+            }
+
+            else if (path.matches("/customers/\\d+/bookings/\\d+/reviews")) {
+                RouterController.handlePostCustomerIdBookingsIdReviews(path, res);
+            }
+
+            else if (path.matches("/vouchers")) {
+                RouterController.handlePostVouchers(res);
             }
         } catch (Exception e) {
             ResponseController.sendErrorResponse(res, "Unexpected error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);

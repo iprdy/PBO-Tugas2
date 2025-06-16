@@ -227,13 +227,7 @@ public class VillasController {
             if (affectedRows == 0) {
                 throw new SQLException("Failed to create villa");
             }
-
-            System.out.println("Berhasil membuat villa");
-
             return villa;
-        } catch (SQLException e) {
-            System.out.println("Database error: " + e.getMessage());
-            throw e;
         }
     }
     
