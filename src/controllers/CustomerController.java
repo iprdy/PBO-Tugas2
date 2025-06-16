@@ -23,7 +23,7 @@ public class CustomerController {
         Request req = new Request(httpExchange);
         Response res = new Response(httpExchange);
 
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db")) {
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db")) {
             // Ambil ID dari path
             String[] pathParts = httpExchange.getRequestURI().getPath().split("/");
             int customerId = Integer.parseInt(pathParts[2]);
@@ -69,7 +69,7 @@ public class CustomerController {
         Request req = new Request(httpExchange);
         Response res = new Response(httpExchange);
 
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db")) {
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db")) {
             // Ambil customer ID dari URL
             String[] pathParts = httpExchange.getRequestURI().getPath().split("/");
             int customerId = Integer.parseInt(pathParts[2]);
@@ -132,7 +132,7 @@ public class CustomerController {
         Request req = new Request(httpExchange);
         Response res = new Response(httpExchange);
 
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db")) {
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db")) {
             String sql = "SELECT * FROM customers";
             PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
@@ -162,7 +162,7 @@ public class CustomerController {
         Request req = new Request(httpExchange);
         Response res = new Response(httpExchange);
 
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db")) {
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db")) {
             // Ambil ID dari path
             String[] pathParts = httpExchange.getRequestURI().getPath().split("/");
             int customerId = Integer.parseInt(pathParts[2]);
@@ -194,44 +194,45 @@ public class CustomerController {
 
     // POST /customers -> menambahkan customer baru
     public void postCustomer(HttpExchange httpExchange) {
+        System.out.println(">>> postCustomer() triggered");
         Request req = new Request(httpExchange);
         Response res = new Response(httpExchange);
 
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db")) {
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db")) {
             ObjectMapper objectMapper = new ObjectMapper();
             Customer customer = objectMapper.readValue(req.getBody(), Customer.class);
 
-            String sql = "INSERT INTO customers (name, email, phone) VALUES (?, ?, ?)";
-            PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, customer.getName());
-            ps.setString(2, customer.getEmail());
-            ps.setString(3, customer.getPhone());
+            System.out.println("Parsed customer: " + customer.getName());
 
-            int rowsAffected = ps.executeUpdate();
-            if (rowsAffected == 0) {
+            String sql = "INSERT INTO customers (id, name, email, phone) VALUES (?, ?, ?, ?)";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, customer.getId());
+            ps.setString(2, customer.getName());
+            ps.setString(3, customer.getEmail());
+            ps.setString(4, customer.getPhone());
+
+            int rows = ps.executeUpdate();
+            System.out.println("Inserted rows: " + rows);
+
+            if (rows > 0) {
+                res.json("{\"message\": \"Customer added successfully\"}");
+            } else {
                 res.error("Failed to insert customer");
-                return;
             }
-
-            ResultSet generatedKeys = ps.getGeneratedKeys();
-            if (generatedKeys.next()) {
-                customer.setId(generatedKeys.getInt(1));
-            }
-
-            String json = objectMapper.writeValueAsString(customer);
-            res.json(json);
-
         } catch (Exception e) {
+            System.out.println("Error in postCustomer: " + e.getMessage());
             res.error("Failed to create customer: " + e.getMessage());
         }
     }
+
+
 
     // PUT /customers/{id} -> mengubah data customer berdasarkan ID
     public void updateCustomer(HttpExchange httpExchange) {
         Request req = new Request(httpExchange);
         Response res = new Response(httpExchange);
 
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db")) {
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db")) {
             // Ambil ID dari path URL
             String[] pathParts = httpExchange.getRequestURI().getPath().split("/");
             int customerId = Integer.parseInt(pathParts[2]);
@@ -267,7 +268,7 @@ public class CustomerController {
         Request req = new Request(httpExchange);
         Response res = new Response(httpExchange);
 
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db")) {
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db")) {
             // Ambil customer ID dari URL
             String[] pathParts = httpExchange.getRequestURI().getPath().split("/");
             int customerId = Integer.parseInt(pathParts[2]);
