@@ -77,4 +77,12 @@ public class RouterController {
 
         ResponseController.sendJsonResponse(bookings, res);
     }
+
+    public static void handleGetCustomerIdReviews(String path, Response res) throws SQLException {
+        int id = Integer.parseInt(path.split("/")[2]);
+        CustomerController cc = new CustomerController();
+        List<Review> reviews = cc.getReviewsByCustomerId(id);
+
+        ResponseController.sendJsonResponse(reviews, res);
+    }
 }

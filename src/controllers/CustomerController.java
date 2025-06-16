@@ -220,15 +220,8 @@ public class CustomerController {
     }
 
     // GET /customers/{id}/reviews -> daftar review yang diberikan oleh customer
-    public void getReviewsByCustomerId(HttpExchange httpExchange) {
-        Request req = new Request(httpExchange);
-        Response res = new Response(httpExchange);
-
+    public List<Review> getReviewsByCustomerId(int customerId) throws SQLException {
         try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db")) {
-            // Ambil customer ID dari URL
-            String[] pathParts = httpExchange.getRequestURI().getPath().split("/");
-            int customerId = Integer.parseInt(pathParts[2]);
-
             // SQL: cari review yang berelasi dengan booking milik customer ini
             String sql = """
                 SELECT r.booking, r.star, r.title, r.content
@@ -251,13 +244,7 @@ public class CustomerController {
                 );
                 reviews.add(review);
             }
-
-            ObjectMapper objectMapper = new ObjectMapper();
-            String json = objectMapper.writeValueAsString(reviews);
-            res.json(json);
-
-        } catch (Exception e) {
-            res.error("Failed to fetch customer reviews: " + e.getMessage());
+            return reviews;
         }
     }
 }
