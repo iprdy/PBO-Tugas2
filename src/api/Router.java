@@ -47,7 +47,7 @@ public class Router {
             }
 
             else if (path.matches("/customers/\\d+")) {
-
+                RouterController.handleGetCustomerById(path, res);
             }
 
             else if (path.matches("/customers/\\d+/bookings")) {

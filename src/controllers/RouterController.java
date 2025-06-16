@@ -22,8 +22,7 @@ public class RouterController {
     }
 
     public static void handleGetVillaById(String path, Response res) throws SQLException {
-        String[] split = path.split("/");
-        int id = Integer.parseInt(split[2]);
+        int id = Integer.parseInt(path.split("/")[2]);
         VillasController vc = new VillasController();
         Villas villa = vc.getVillaById(id);
 
@@ -31,8 +30,7 @@ public class RouterController {
     }
 
     public static void handleGetVillaIdRooms(String path, Response res) throws SQLException {
-        String[] split = path.split("/");
-        int id = Integer.parseInt(split[2]);
+        int id = Integer.parseInt(path.split("/")[2]);
         VillasController vc = new VillasController();
         List<RoomTypes> rt = vc.getRoomsByVillaId(id);
 
@@ -40,8 +38,7 @@ public class RouterController {
     }
 
     public static void handleGetVillaIdBookings(String path, Response res) throws SQLException {
-        String[] split = path.split("/");
-        int id = Integer.parseInt(split[2]);
+        int id = Integer.parseInt(path.split("/")[2]);
         VillasController vc = new VillasController();
         List<Booking> bookings = vc.getBookingsByVillaId(id);
 
@@ -49,8 +46,7 @@ public class RouterController {
     }
 
     public static void handleGetVillaIdReviews(String path, Response res) throws SQLException {
-        String[] split = path.split("/");
-        int id = Integer.parseInt(split[2]);
+        int id = Integer.parseInt(path.split("/")[2]);
         VillasController vc = new VillasController();
         List<Review> reviews = vc.getReviewsByVillaId(id);
 
@@ -64,5 +60,13 @@ public class RouterController {
         List<Customer> customers = cc.getAllCustomers();
 
         ResponseController.sendJsonResponse(customers, res);
+    }
+
+    public static void handleGetCustomerById(String path, Response res) throws SQLException {
+        int id = Integer.parseInt(path.split("/")[2]);
+        CustomerController cc = new CustomerController();
+        Customer customer = cc.getCustomerById(id);
+
+        ResponseController.sendJsonResponse(customer, res);
     }
 }
