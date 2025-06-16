@@ -13,7 +13,9 @@ public class Booking {
     private boolean hasCheckedin;
     private boolean hasCheckedout;
 
-
+    public Booking() {
+        // Default constructor for Jackson
+    }
 
     public Booking(int customer, int roomType, String checkinDate, String checkoutDate,
                    int price, Integer voucher, int finalPrice) {
