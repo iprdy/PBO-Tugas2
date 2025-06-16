@@ -193,7 +193,26 @@ public class RouterController {
     }
 
     public static void handlePostVillaIdRooms(String path, Response res, Request req) {
+        try {
+            int id = Integer.parseInt(path.split("/")[2]);
+            VillasController vc = new VillasController();
+            String body = req.getBody();
+            RoomTypes rt = mapper.readValue(body, RoomTypes.class);
+            rt.setVilla_id(id);
+            vc.createVillasRooms(rt);
 
+            ResponseController.sendJsonResponseWithMessage("Berhasil membuat room type di villa dengan id " + id, rt, res);
+        } catch (NumberFormatException e) {
+            ResponseController.sendErrorResponse(res, "ID tidak valid", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
+        } catch (JsonMappingException e) {
+            ResponseController.sendErrorResponse(res, "Invalid data structure", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
+        } catch (JsonProcessingException e) {
+            ResponseController.sendErrorResponse(res, "Invalid JSON format", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
+        } catch (SQLException e) {
+            ResponseController.sendErrorResponse(res, "Database error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        } catch (Exception e) {
+            ResponseController.sendErrorResponse(res, "Unexpected error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        }
     }
 
     public static void handlePostCustomer(Response res) throws SQLException {

@@ -263,13 +263,7 @@ public class VillasController {
             if (affectedRows == 0) {
                 throw new SQLException("Failed to create room type");
             }
-
-            System.out.println("Berhasil membuat roomtype untuk villa");
-
             return roomtypes;
-        } catch (SQLException e) {
-            System.out.println("Database error: " + e.getMessage());
-            throw e;
         }
     }
 
