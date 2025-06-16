@@ -14,7 +14,7 @@ public class BookingController {
 
     public static void create(Request req, Response res) {
         try (Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db")) {
-            String sql = "INSERT INTO bookings (guest, villa, date) VALUES (?, ?, ?)";
+            String sql = "INSERT INTO bookings ";
             PreparedStatement ps = conn.prepareStatement(sql);
 
             ObjectMapper mapper = new ObjectMapper();
@@ -25,9 +25,9 @@ public class BookingController {
 //            ps.setString(3, booking.getDate());
 
             ps.executeUpdate();
-            res.send("Booking created successfully");
+            res.send("Booking berhasil dibuat");
         } catch (Exception e) {
-            res.send("Failed to create booking: " + e.getMessage());
+            res.send("Booking tidak berhasil dibuat: " + e.getMessage());
         }
     }
 
@@ -73,10 +73,10 @@ public class BookingController {
                 ObjectMapper mapper = new ObjectMapper();
 //                res.json(mapper.writeValueAsString(b));
             } else {
-                res.send("Booking not found");
+                res.send("Booking tidak ditemukan");
             }
         } catch (Exception e) {
-            res.send("Failed to retrieve booking: " + e.getMessage());
+            res.send("TIdak berhasil mengambil booking: " + e.getMessage());
         }
     }
 }
