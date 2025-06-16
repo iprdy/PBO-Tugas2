@@ -10,10 +10,12 @@ import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+
 public class BookingController {
 
     public static void create(Request req, Response res) {
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db")) {
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
+) {
             String sql = "INSERT INTO bookings ";
             PreparedStatement ps = conn.prepareStatement(sql);
 
@@ -33,7 +35,8 @@ public class BookingController {
 
     public static void getAll(Request req, Response res) {
         List<Booking> bookings = new ArrayList<>();
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db")) {
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
+) {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM bookings");
 
@@ -57,7 +60,8 @@ public class BookingController {
 
     public static void getById(Request req, Response res) {
         int id = Integer.parseInt(req.getParam("id"));
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db")) {
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
+) {
             String sql = "SELECT * FROM bookings WHERE id = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, id);
