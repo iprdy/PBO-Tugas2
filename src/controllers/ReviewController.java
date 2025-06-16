@@ -43,7 +43,7 @@ public class ReviewController {
                 ));
             }
 
-            if (!res.isSent()) {
+            if (res.isSent()) {
                 ObjectMapper objectMapper = new ObjectMapper();
                 Map<String, Object> resJsonMap = new HashMap<>();
                 resJsonMap.put("message", "Request success");
@@ -91,7 +91,7 @@ public class ReviewController {
                 reviews.add(review);
             }
 
-            if (!res.isSent()) {
+            if (res.isSent()) {
                 ObjectMapper objectMapper = new ObjectMapper();
                 Map<String, Object> resJsonMap = new HashMap<>();
                 resJsonMap.put("message", "Request success");

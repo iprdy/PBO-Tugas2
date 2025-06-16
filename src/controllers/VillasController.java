@@ -16,12 +16,6 @@ import api.Response;
 import java.sql.*;
 
 public class VillasController {
-    private Connection conn;
-
-    public VillasController(Connection conn) {
-        this.conn = conn;
-    }
-
     // GET /villas => Menampilkan semua data vila
     public List<Villas> getAllVillas() throws SQLException {
         List<Villas> villas = new ArrayList<>();

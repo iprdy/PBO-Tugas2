@@ -9,9 +9,9 @@ import java.nio.charset.StandardCharsets;
 
 public class Response {
 
-    private HttpExchange httpExchange;
-    private Headers headers;
-    private StringBuilder stringBuilder = new StringBuilder();
+    private final HttpExchange httpExchange;
+    private final Headers headers;
+    private final StringBuilder stringBuilder = new StringBuilder();
     private boolean isSent;
 
     public Response(HttpExchange httpExchange) {
@@ -61,6 +61,6 @@ public class Response {
 
 
     public boolean isSent() {
-        return this.isSent;
+        return !this.isSent;
     }
 }

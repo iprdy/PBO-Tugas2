@@ -8,9 +8,7 @@ import controllers.VillasController;
 import controllers.ReviewController;
 import controllers.CustomerController;
 import models.RoomTypes;
-import models.Booking;
 import models.Villas;
-import models.Customer;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -18,7 +16,6 @@ import java.net.InetSocketAddress;
 import java.net.URI;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,34 +46,14 @@ public class Server {
         String path = uri.getPath();
         String method = req.getRequestMethod();
 
-        System.out.printf("method: %s\npath: %s\n", method, path);
-
         try {
 
-            if (method.equals("GET") && path.equals("/villas")) {
-                Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
-                VillasController vc = new VillasController(conn);
-                List<Villas> villas = new ArrayList<>();
-                villas = vc.getAllVillas();
 
-                ObjectMapper objectMapper = new ObjectMapper();
-                Map<String, Object> resJsonMap = new HashMap<>();
-                resJsonMap.put("message", villas);
-                String resJson = "";
-
-                try {
-                    resJson = objectMapper.writeValueAsString(resJsonMap);
-                } catch(Exception e) {
-                    System.out.println("Serialization error: " + e.getMessage());
-                }
-                res.setBody(resJson);
-                res.send(HttpURLConnection.HTTP_OK);
-            }
 
             if (method.equals("GET") && path.matches("/villas/\\d+$")) {
                 Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
                 String[] split = path.split("/");
-                VillasController vc = new VillasController(conn);
+                VillasController vc = new VillasController();
                 Villas villas = vc.getVillaById(Integer.parseInt(split[2]));
 
                 ObjectMapper objectMapper = new ObjectMapper();
@@ -96,7 +73,7 @@ public class Server {
             if (method.equals("GET") && path.matches("/villas/\\d+/rooms$")) {
                 Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
                 String[] split = path.split("/");
-                VillasController vc = new VillasController(conn);
+                VillasController vc = new VillasController();
                 List<RoomTypes> villaRoomTypes = vc.getRoomsByVillaId(Integer.parseInt(split[2]));
 
                 ObjectMapper objectMapper = new ObjectMapper();
@@ -148,7 +125,7 @@ public class Server {
                 String[] split = path.split("/");
                 int villaId = Integer.parseInt(split[2]);
                 Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
-                VillasController vc = new VillasController(conn);
+                VillasController vc = new VillasController();
                 vc.getBookingsByVillaId(httpExchange, villaId);
                 return;
             }
@@ -168,7 +145,7 @@ public class Server {
                     InputStream is = httpExchange.getRequestBody();
                     Villas villas = mapper.readValue(is, Villas.class);
                     Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
-                    VillasController vc = new VillasController(conn);
+                    VillasController vc = new VillasController();
                     vc.createVilla(villas);
                 } else if (path.matches("/villas/\\d+/rooms$")) {
                     String[] split = path.split("/");
@@ -177,7 +154,7 @@ public class Server {
                     RoomTypes roomtypes = mapper.readValue(is, RoomTypes.class);
                     roomtypes.setVilla_id(Integer.parseInt(split[2]));
                     Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
-                    VillasController vc = new VillasController(conn);
+                    VillasController vc = new VillasController();
                     vc.createVillasRooms(roomtypes);
                 }
 //                else if (path.equals("/customers")) {
@@ -200,7 +177,7 @@ public class Server {
                     Villas villas = mapper.readValue(is, Villas.class);
                     villas.setId(Integer.parseInt(split[2]));
                     Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
-                    VillasController vc = new VillasController(conn);
+                    VillasController vc = new VillasController();
                     vc.updateVilla(villas);
                 } else if (path.matches("/villas/\\d+/rooms/\\d+$")) {
                     String[] split = path.split("/");
@@ -210,7 +187,7 @@ public class Server {
                     roomtypes.setId(Integer.parseInt(split[2]));
                     roomtypes.setVilla_id(Integer.parseInt(split[4]));
                     Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
-                    VillasController vc = new VillasController(conn);
+                    VillasController vc = new VillasController();
                     vc.updateVillasRoomTypes(roomtypes);
                 } else if (path.matches("/customers/\\d+")) {
                     Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
@@ -222,12 +199,12 @@ public class Server {
                 if(path.matches("/villas/\\d+/rooms/\\d+$")) {
                     String[] split = path.split("/");
                     Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
-                    VillasController vc = new VillasController(conn);
+                    VillasController vc = new VillasController();
                     vc.deleteVillaRoomTypes(Integer.parseInt(split[4]));
                 } else if (path.matches("/villas/\\d")) {
                     String[] split = path.split("/");
                     Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
-                    VillasController vc = new VillasController(conn);
+                    VillasController vc = new VillasController();
                     vc.deleteVilla(Integer.parseInt(split[2]));
                 }
             }
@@ -268,7 +245,7 @@ public class Server {
             System.out.println("Exception: " + e.getMessage());
         }
 
-        if (!res.isSent()) {
+        if (res.isSent()) {
             ObjectMapper objectMapper = new ObjectMapper();
             Map<String, Object> resJsonMap = new HashMap<>();
             resJsonMap.put("message", "Request Success");
