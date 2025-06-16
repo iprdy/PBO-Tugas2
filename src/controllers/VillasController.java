@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import models.Review;
 import models.RoomTypes;
 import models.Booking;
 import models.Villas;
@@ -141,10 +143,10 @@ public class VillasController {
 
 
     // GET /villas/{id}/reviews => Menampilkan semua review pada suatu vila
-    public List<String[]> getReviewsByVillaId(int villaId) throws SQLException {
-        List<String[]> reviews = new ArrayList<>();
+    public List<Review> getReviewsByVillaId(int villaId) throws SQLException {
+        List<Review> reviews = new ArrayList<>();
         String sql = """
-            SELECT rv.title, rv.content, rv.star
+            SELECT rv.booking, rv.star, rv.title, rv.content
             FROM reviews rv
             JOIN bookings b ON rv.booking = b.id
             JOIN room_types rt ON b.room_type = rt.id
@@ -159,11 +161,14 @@ public class VillasController {
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
-                reviews.add(new String[] {
-                    rs.getString("title"),
-                    rs.getString("content"),
-                    String.valueOf(rs.getInt("star"))
-                });
+                Review review = new Review(
+                        rs.getInt("booking"),
+                        rs.getInt("star"),
+                        rs.getString("title"),
+                        rs.getString("content")
+                );
+
+                reviews.add(review);
             }
         }
         return reviews;

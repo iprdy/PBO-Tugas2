@@ -17,11 +17,11 @@ public class Router {
 
     public static void handleGetRequest(String path, Response res) throws SQLException {
         if (path.equals("/villas")) {
-            RouterController.handleGetVillaById(res);
+            RouterController.handleGetAllVilla(res);
         }
 
         else if (path.matches("/villas/\\d+$")) {
-
+            RouterController.handleGetVillaById(path, res);
         }
 
         else if (path.matches("/villas/\\d+/rooms$")) {
