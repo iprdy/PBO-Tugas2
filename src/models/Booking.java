@@ -13,6 +13,8 @@ public class Booking {
     private boolean hasCheckedin;
     private boolean hasCheckedout;
 
+
+
     public Booking(int customer, int roomType, String checkinDate, String checkoutDate,
                    int price, Integer voucher, int finalPrice) {
         this.customer = customer;
@@ -38,9 +40,12 @@ public class Booking {
     public String getPaymentStatus() { return paymentStatus; }
     public boolean isHasCheckedin() { return hasCheckedin; }
     public boolean isHasCheckedout() { return hasCheckedout; }
+    public int getId() { return id; }
+
 
     // Setters
     public void setPaymentStatus(String paymentStatus) { this.paymentStatus = paymentStatus; }
     public void setHasCheckedin(boolean hasCheckedin) { this.hasCheckedin = hasCheckedin; }
     public void setHasCheckedout(boolean hasCheckedout) { this.hasCheckedout = hasCheckedout; }
+    public void setId(int id) { this.id = id;}
 }

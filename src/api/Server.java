@@ -6,9 +6,11 @@ import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import controllers.VillasController;
 import controllers.ReviewController;
+import controllers.CustomerController;
 import models.RoomTypes;
 import models.Booking;
 import models.Villas;
+import models.Customer;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -164,6 +166,13 @@ public class Server {
                     Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db");
                     VillasController vc = new VillasController(conn);
                     vc.createVillasRooms(roomtypes);
+                } else if (path.equals("/customers")) {
+                    ObjectMapper mapper = new ObjectMapper();
+                    InputStream is = httpExchange.getRequestBody();
+                    Customer customer = mapper.readValue(is, Customer.class);
+                    Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db");
+                    CustomerController cc = new CustomerController(conn);
+                    cc.postCustomer(httpExchange);
                 }
             } else if(method.equals("PUT")) {
                 if(path.matches("/villas/\\d+")) {
@@ -185,6 +194,11 @@ public class Server {
                     Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db");
                     VillasController vc = new VillasController(conn);
                     vc.updateVillasRoomTypes(roomtypes);
+                } else if (path.matches("/customers/\\d+")) {
+                    Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db");
+                    CustomerController cc = new CustomerController(conn);
+                    cc.updateCustomer(httpExchange);
+                    return;
                 }
             } else if(method.equals("DELETE")) {
                 if(path.matches("/villas/\\d+/rooms/\\d+$")) {
@@ -199,6 +213,28 @@ public class Server {
                     vc.deleteVilla(Integer.parseInt(split[2]));
                 }
             }
+
+            if (method.equals("GET") && path.equals("/customers")) {
+                Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db");
+                CustomerController customerController = new CustomerController(conn);
+                customerController.getAllCustomers(httpExchange);
+                return;
+            }
+
+            if (method.equals("GET") && path.matches("/customers/\\d+$")) {
+                Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db");
+                CustomerController cc = new CustomerController(conn);
+                cc.getCustomerById(httpExchange);
+                return;
+            }
+
+            if (method.equals("GET") && path.matches("/customers/\\d+/reviews")) {
+                Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db");
+                CustomerController cc = new CustomerController(conn);
+                cc.getReviewsByCustomerId(httpExchange);
+                return;
+            }
+
 
         } catch(Exception e) {
             System.out.println("Exception: " + e.getMessage());

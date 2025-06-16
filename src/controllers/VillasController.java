@@ -108,6 +108,45 @@ public class VillasController {
         return rooms;
     }
 
+
+    // GET /villas/{id}/bookings => Menampilkan semua booking pada suatu vila
+    public List<Booking> getBookingsByVillaId(int villaId) throws SQLException {
+        List<Booking> bookings = new ArrayList<>();
+        String sql = """
+            SELECT b.* FROM bookings b
+            JOIN room_types rt ON b.room_type = rt.id
+            WHERE rt.villa = ?
+        """;
+
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            System.out.println("Connected to the database");
+            ps.setInt(1, villaId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Booking booking = new Booking(
+                        rs.getInt("customer"),
+                        rs.getInt("room_type"),
+                        rs.getString("checkin_date"),
+                        rs.getString("checkout_date"),
+                        rs.getInt("price"),
+                        rs.getObject("voucher") != null ? rs.getInt("voucher") : null,
+                        rs.getInt("final_price")
+                );
+
+                booking.setPaymentStatus(rs.getString("payment_status"));
+                booking.setHasCheckedin(rs.getBoolean("has_checkedin"));
+                booking.setHasCheckedout(rs.getBoolean("has_checkedout"));
+                booking.setId(rs.getInt("id")); // Jika kamu sudah tambahkan setId
+                bookings.add(booking);
+            }
+        }
+        return bookings;
+    }
+
+
     // GET /villas/{id}/reviews => Menampilkan semua review pada suatu vila
     public List<String[]> getReviewsByVillaId(int villaId) throws SQLException {
         List<String[]> reviews = new ArrayList<>();
