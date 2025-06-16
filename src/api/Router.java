@@ -75,15 +75,15 @@ public class Router {
             }
 
             else if (path.matches("/customers/\\d+/bookings")) {
-                RouterController.handlePostCustomerIdBookings(path, res);
+                RouterController.handlePostCustomerIdBookings(path, res, req);
             }
 
             else if (path.matches("/customers/\\d+/bookings/\\d+/reviews")) {
-                RouterController.handlePostCustomerIdBookingsIdReviews(path, res);
+                RouterController.handlePostCustomerIdBookingsIdReviews(path, res, req);
             }
 
             else if (path.matches("/vouchers")) {
-                RouterController.handlePostVouchers(res);
+                RouterController.handlePostVouchers(res, req);
             }
         } catch (Exception e) {
             ResponseController.sendErrorResponse(res, "Unexpected error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);

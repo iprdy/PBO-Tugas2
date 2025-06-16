@@ -50,4 +50,5 @@ public class Booking {
     public void setHasCheckedin(boolean hasCheckedin) { this.hasCheckedin = hasCheckedin; }
     public void setHasCheckedout(boolean hasCheckedout) { this.hasCheckedout = hasCheckedout; }
     public void setId(int id) { this.id = id;}
+    public void setCustomer(int customer) { this.customer = customer; }
 }

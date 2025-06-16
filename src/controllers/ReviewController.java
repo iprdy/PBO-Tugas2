@@ -18,6 +18,10 @@ public class ReviewController {
         this.conn = conn;
     }
 
+    public ReviewController() {
+
+    }
+
     // GET villas/id/reviews
     public void getReviewsByVillaId(HttpExchange exchange, int villaId) throws IOException {
         Response res = new Response(exchange);
@@ -115,15 +119,8 @@ public class ReviewController {
     }
 
     // POST customers/id/booking/id/reviews
-    public void postReviewForBooking(HttpExchange httpExchange, int customerId, int bookingId) {
-        Request req = new Request(httpExchange);
-        Response res = new Response(httpExchange);
-
+    public void postReviewForBooking(Review reviewData, int customerId, int bookingId) throws SQLException {
         try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db")) {
-
-            ObjectMapper mapper = new ObjectMapper();
-            Review reviewData = mapper.readValue(req.getBody(), Review.class);
-
             String checkSql = "SELECT * FROM bookings WHERE id = ? AND customer = ?";
             PreparedStatement checkStmt = conn.prepareStatement(checkSql);
             checkStmt.setInt(1, bookingId);
@@ -131,8 +128,7 @@ public class ReviewController {
             ResultSet rs = checkStmt.executeQuery();
 
             if (!rs.next()) {
-                res.error("Booking not found or doesn't belong to customer.");
-                return;
+                throw new SQLException("Booking not found or doesn't belong to customer.");
             }
 
             String insertSql = "INSERT INTO reviews (booking, star, title, content) VALUES (?, ?, ?, ?)";
@@ -144,15 +140,8 @@ public class ReviewController {
 
             int rows = ps.executeUpdate();
             if (rows == 0) {
-                res.error("Failed to insert review");
-                return;
+                throw new SQLException("Failed to create review");
             }
-
-            res.json("{\"message\": \"Review successfully added\"}");
-
-        } catch (Exception e) {
-            res.error("Failed to create review: " + e.getMessage());
         }
     }
-
 }

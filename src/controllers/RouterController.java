@@ -7,13 +7,9 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import models.*;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class RouterController {
     public static ObjectMapper mapper = new ObjectMapper();
@@ -97,7 +93,7 @@ public class RouterController {
         }
     }
 
-    public static void handleGetVillaCinCout(String path, Response res) {}
+//    public static void handleGetVillaCinCout(String path, Response res) {}
 
     public static void handleGetAllCustomer(Response res) {
         try {
@@ -215,7 +211,7 @@ public class RouterController {
         }
     }
 
-    public static void handlePostCustomer(Response res, Request req) throws SQLException {
+    public static void handlePostCustomer(Response res, Request req) {
         try {
             CustomerController cc = new CustomerController();
             String body = req.getBody();
@@ -234,15 +230,53 @@ public class RouterController {
         }
     }
 
-    public static void handlePostCustomerIdBookings(String path, Response res) throws SQLException {
+    public static void handlePostCustomerIdBookings(String path, Response res, Request req) {
+        try {
+            int id = Integer.parseInt(path.split("/")[2]);
+            CustomerController cc = new CustomerController();
+            String body = req.getBody();
+            Booking booking = mapper.readValue(body, Booking.class);
+            booking.setCustomer(id);
+            cc.postBookingForCustomer(booking, id);
 
+            ResponseController.sendJsonResponseWithMessage("Berhasil membuat booking di costumer dengan id " + id, booking, res);
+        } catch (NumberFormatException e) {
+            ResponseController.sendErrorResponse(res, "ID tidak valid", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
+        } catch (JsonMappingException e) {
+            ResponseController.sendErrorResponse(res, "Invalid data structure", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
+        } catch (JsonProcessingException e) {
+            ResponseController.sendErrorResponse(res, "Invalid JSON format", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
+        } catch (SQLException e) {
+            ResponseController.sendErrorResponse(res, "Database error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        } catch (Exception e) {
+            ResponseController.sendErrorResponse(res, "Unexpected error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        }
     }
 
-    public static void handlePostCustomerIdBookingsIdReviews(String path, Response res) throws SQLException {
+    public static void handlePostCustomerIdBookingsIdReviews(String path, Response res, Request req) {
+        try {
+            int cid = Integer.parseInt(path.split("/")[2]);
+            int bid = Integer.parseInt(path.split("/")[4]);
+            ReviewController rc = new ReviewController();
+            String body = req.getBody();
+            Review review = mapper.readValue(body, Review.class);
+            rc.postReviewForBooking(review, cid, bid);
 
+            ResponseController.sendJsonResponseWithMessage("Berhasil membuat review di costumer dengan id " + cid + "dan booking dengan id " + bid, review, res);
+        } catch (NumberFormatException e) {
+            ResponseController.sendErrorResponse(res, "ID tidak valid", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
+        } catch (JsonMappingException e) {
+            ResponseController.sendErrorResponse(res, "Invalid data structure", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
+        } catch (JsonProcessingException e) {
+            ResponseController.sendErrorResponse(res, "Invalid JSON format", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
+        } catch (SQLException e) {
+            ResponseController.sendErrorResponse(res, "Database error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        } catch (Exception e) {
+            ResponseController.sendErrorResponse(res, "Unexpected error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        }
     }
 
-    public static void handlePostVouchers(Response res) throws SQLException {
+    public static void handlePostVouchers(Response res, Request req) throws SQLException {
 
     }
 }

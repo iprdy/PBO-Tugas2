@@ -44,19 +44,8 @@ public class CustomerController {
     }
 
     // POST /customer/{id}/bookings => Customer melakukan pemesanan vila
-    public void postBookingForCustomer(HttpExchange httpExchange) {
-        Request req = new Request(httpExchange);
-        Response res = new Response(httpExchange);
-
+    public void postBookingForCustomer(Booking bookingData, int customerId) throws SQLException {
         try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db")) {
-            // Ambil customer ID dari URL
-            String[] pathParts = httpExchange.getRequestURI().getPath().split("/");
-            int customerId = Integer.parseInt(pathParts[2]);
-
-            // Ambil body dari request dan parsing jadi objek Booking
-            ObjectMapper objectMapper = new ObjectMapper();
-            Booking bookingData = objectMapper.readValue(req.getBody(), Booking.class);
-
             // Siapkan SQL INSERT
             String sql = """
             INSERT INTO bookings (customer, room_type, checkin_date, checkout_date, price, voucher, final_price, payment_status, has_checkedin, has_checkedout)
@@ -83,8 +72,7 @@ public class CustomerController {
 
             int rowsAffected = ps.executeUpdate();
             if (rowsAffected == 0) {
-                res.error("Failed to insert booking");
-                return;
+                throw new SQLException("Failed to create booking");
             }
 
             ResultSet generatedKeys = ps.getGeneratedKeys();
@@ -97,12 +85,6 @@ public class CustomerController {
             bookingData.setHasCheckedin(false);
             bookingData.setHasCheckedout(false);
             bookingData.setId(bookingData.getId()); // agar id terisi
-
-            String json = objectMapper.writeValueAsString(bookingData);
-            res.json(json);
-
-        } catch (Exception e) {
-            res.error("Failed to create booking: " + e.getMessage());
         }
     }
 
