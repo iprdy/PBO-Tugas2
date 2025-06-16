@@ -6,78 +6,79 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
 import models.Review;
 
+import java.io.*;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.net.HttpURLConnection;
 
 public class ReviewController {
-
     private Connection conn;
 
     public ReviewController(Connection conn) {
         this.conn = conn;
     }
 
-    public void getReviewsByVillaId(HttpExchange httpExchange, int villaId) {
-        Request req = new Request(httpExchange);
-        Response res = new Response(httpExchange);
+    // GET villas/id/reviews
+    public void getReviewsByVillaId(HttpExchange exchange, int villaId) throws IOException {
+        Response res = new Response(exchange);
+        String sql = """
+        SELECT r.booking, r.star, r.title, r.content
+        FROM reviews r
+        JOIN bookings b ON r.booking = b.id
+        JOIN room_types rt ON b.room_type = rt.id
+        WHERE rt.villa = ?
+    """;
 
-        try {
-            String sql = "SELECT * FROM reviews WHERE booking = ?";
-            PreparedStatement stmt = conn.prepareStatement(sql);
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, villaId);
             ResultSet rs = stmt.executeQuery();
 
             List<Review> reviews = new ArrayList<>();
             while (rs.next()) {
-                Review review = new Review(
+                reviews.add(new Review(
                         rs.getInt("booking"),
                         rs.getInt("star"),
                         rs.getString("title"),
                         rs.getString("content")
-                );
-                reviews.add(review);
+                ));
             }
 
-            ObjectMapper objectMapper = new ObjectMapper();
-            String json = objectMapper.writeValueAsString(reviews);
-            res.json(json);
-        } catch (Exception e) {
-            res.error(e.getMessage());
+            if (!res.isSent()) {
+                ObjectMapper objectMapper = new ObjectMapper();
+                Map<String, Object> resJsonMap = new HashMap<>();
+                resJsonMap.put("message", "Request success");
+                resJsonMap.put("data", reviews);
+
+                String resJson = "";
+                try {
+                    resJson = objectMapper.writeValueAsString(resJsonMap);
+                } catch (Exception e) {
+                    System.out.println("Serialization error: " + e.getMessage());
+                }
+
+                res.setBody(resJson);
+                res.send(HttpURLConnection.HTTP_OK);
+            }
+
+        } catch (SQLException e) {
+            res.setBody("{\"message\":\"Database error: " + e.getMessage() + "\"}");
+            res.send(HttpURLConnection.HTTP_INTERNAL_ERROR);
         }
     }
 
-    public static void create(Request req, Response res) {
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db")) {
-            Map<String, Object> json = req.getJSON();
+    //  GET customers/id/reviews
+    public void getReviewsByCustomerId(HttpExchange exchange, int customerId) throws IOException {
+        Response res = new Response(exchange);
+        String sql = """
+        SELECT r.booking, r.star, r.title, r.content
+        FROM reviews r
+        JOIN bookings b ON r.booking = b.id
+        WHERE b.customer = ?
+    """;
 
-            int booking = (int) json.get("booking");
-            int star = (int) json.get("star");
-            String title = (String) json.get("title");
-            String content = (String) json.get("content");
-
-            Review review = new Review(booking, star, title, content);
-
-            String sql = "INSERT INTO reviews (booking, star, title, content) VALUES (?, ?, ?, ?)";
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setInt(1, review.getBooking());
-            stmt.setInt(2, review.getStar());
-            stmt.setString(3, review.getTitle());
-            stmt.setString(4, review.getContent());
-            stmt.executeUpdate();
-
-            res.send("Review created");
-        } catch (Exception e) {
-            res.error(e.getMessage());
-        }
-    }
-
-    public static void getAll(Request req, Response res) {
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db")) {
-            String sql = "SELECT * FROM reviews";
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, customerId);
+            ResultSet rs = stmt.executeQuery();
 
             List<Review> reviews = new ArrayList<>();
             while (rs.next()) {
@@ -90,80 +91,68 @@ public class ReviewController {
                 reviews.add(review);
             }
 
-            ObjectMapper objectMapper = new ObjectMapper();
-            res.json(objectMapper.writeValueAsString(reviews));
-        } catch (Exception e) {
-            res.error(e.getMessage());
-        }
-    }
-
-    public static void getOne(Request req, Response res) {
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db")) {
-            int booking = Integer.parseInt(req.getParam("booking"));
-            String sql = "SELECT * FROM reviews WHERE booking = ?";
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setInt(1, booking);
-            ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                Review review = new Review(
-                        rs.getInt("booking"),
-                        rs.getInt("star"),
-                        rs.getString("title"),
-                        rs.getString("content")
-                );
+            if (!res.isSent()) {
                 ObjectMapper objectMapper = new ObjectMapper();
-                res.json(objectMapper.writeValueAsString(review));
-            } else {
-                res.send("Review not found");
+                Map<String, Object> resJsonMap = new HashMap<>();
+                resJsonMap.put("message", "Request success");
+                resJsonMap.put("data", reviews);
+
+                String resJson = "";
+                try {
+                    resJson = objectMapper.writeValueAsString(resJsonMap);
+                } catch (Exception e) {
+                    System.out.println("Serialization error: " + e.getMessage());
+                }
+
+                res.setBody(resJson);
+                res.send(HttpURLConnection.HTTP_OK);
             }
-        } catch (Exception e) {
-            res.error(e.getMessage());
+
+        } catch (SQLException e) {
+            res.setBody("{\"message\": \"Database error: " + e.getMessage() + "\"}");
+            res.send(HttpURLConnection.HTTP_INTERNAL_ERROR);
         }
     }
 
-    public static void update(Request req, Response res) {
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db")) {
-            Map<String, Object> json = req.getJSON();
+    // POST customers/id/booking/id/reviews
+    public void postReviewForBooking(HttpExchange httpExchange, int customerId, int bookingId) {
+        Request req = new Request(httpExchange);
+        Response res = new Response(httpExchange);
 
-            int booking = (int) json.get("booking");
-            int star = (int) json.get("star");
-            String title = (String) json.get("title");
-            String content = (String) json.get("content");
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db")) {
 
-            String sql = "UPDATE reviews SET star = ?, title = ?, content = ? WHERE booking = ?";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, star);
-            ps.setString(2, title);
-            ps.setString(3, content);
-            ps.setInt(4, booking);
+            ObjectMapper mapper = new ObjectMapper();
+            Review reviewData = mapper.readValue(req.getBody(), Review.class);
+
+            String checkSql = "SELECT * FROM bookings WHERE id = ? AND customer = ?";
+            PreparedStatement checkStmt = conn.prepareStatement(checkSql);
+            checkStmt.setInt(1, bookingId);
+            checkStmt.setInt(2, customerId);
+            ResultSet rs = checkStmt.executeQuery();
+
+            if (!rs.next()) {
+                res.error("Booking not found or doesn't belong to customer.");
+                return;
+            }
+
+            String insertSql = "INSERT INTO reviews (booking, star, title, content) VALUES (?, ?, ?, ?)";
+            PreparedStatement ps = conn.prepareStatement(insertSql);
+            ps.setInt(1, bookingId);
+            ps.setInt(2, reviewData.getStar());
+            ps.setString(3, reviewData.getTitle());
+            ps.setString(4, reviewData.getContent());
+
             int rows = ps.executeUpdate();
-
-            if (rows > 0) {
-                res.send("Review updated");
-            } else {
-                res.send("Review not found");
+            if (rows == 0) {
+                res.error("Failed to insert review");
+                return;
             }
+
+            res.json("{\"message\": \"Review successfully added\"}");
+
         } catch (Exception e) {
-            res.error(e.getMessage());
+            res.error("Failed to create review: " + e.getMessage());
         }
     }
 
-    public static void delete(Request req, Response res) {
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db")) {
-            int booking = Integer.parseInt(req.getParam("booking"));
-            String sql = "DELETE FROM reviews WHERE booking = ?";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, booking);
-            int rows = ps.executeUpdate();
-
-            if (rows > 0) {
-                res.send("Review deleted");
-            } else {
-                res.send("Review not found");
-            }
-        } catch (Exception e) {
-            res.error(e.getMessage());
-        }
-    }
 }
