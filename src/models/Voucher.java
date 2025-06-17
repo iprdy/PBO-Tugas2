@@ -17,4 +17,29 @@ public class Voucher {
         this.startDate = startDate;
         this.endDate = endDate;
     }
+
+    // Getter
+    public int getId() {
+        return id;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public double getDiscount() {
+        return discount;
+    }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
 }
