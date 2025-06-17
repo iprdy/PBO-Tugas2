@@ -381,7 +381,19 @@ public class RouterController {
     }
 
     public static void handleDeleteVillaById(String path, Response res) throws SQLException {
+        try {
+            VillasController vc = new VillasController();
+            int id = Integer.parseInt(path.split("/")[2]);
+            vc.deleteVilla(id);
 
+            ResponseController.sendJsonResponseWithMessage("Berhasil menghapus villa dengan id " + id, res);
+        } catch (NumberFormatException e) {
+            ResponseController.sendErrorResponse(res, "ID tidak valid", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
+        } catch (SQLException e) {
+            ResponseController.sendErrorResponse(res, "Database error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        } catch (Exception e) {
+            ResponseController.sendErrorResponse(res, "Unexpected error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        }
     }
 
     public static void handleDeleteVoucherById(String path, Response res) throws SQLException {

@@ -317,48 +317,6 @@ public class VillasController {
 
             ps.setInt(1, id);
             ps.executeUpdate();
-            System.out.println("Berhasil menghapus villa");
         }
     }
-
-//    public void getBookingsByVillaId(HttpExchange exchange, int villaId) {
-//        try {
-//            PreparedStatement stmt = conn.prepareStatement(
-//                    "SELECT b.* FROM bookings b " +
-//                            "JOIN room_types r ON b.room_type = r.id " +
-//                            "WHERE r.villa = ?"
-//            );
-//            stmt.setInt(1, villaId);
-//
-//            ResultSet rs = stmt.executeQuery();
-//            List<Map<String, Object>> bookings = new ArrayList<>();
-//            while (rs.next()) {
-//                Map<String, Object> item = new HashMap<>();
-//                item.put("id", rs.getInt("id"));
-//                item.put("customer", rs.getInt("customer"));
-//                item.put("room_type", rs.getInt("room_type"));
-//                item.put("checkin_date", rs.getString("checkin_date"));
-//                item.put("checkout_date", rs.getString("checkout_date"));
-//                item.put("price", rs.getInt("price"));
-//                item.put("voucher", rs.getObject("voucher"));
-//                item.put("final_price", rs.getInt("final_price"));
-//                item.put("payment_status", rs.getString("payment_status"));
-//                item.put("has_checkedin", rs.getInt("has_checkedin"));
-//                item.put("has_checkedout", rs.getInt("has_checkedout"));
-//                bookings.add(item);
-//            }
-//
-//            ObjectMapper mapper = new ObjectMapper();
-//            String response = mapper.writeValueAsString(bookings);
-//            Response res = new Response(exchange);
-//            res.setBody(response);
-//            res.send(200);
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            Response res = new Response(exchange);
-//            res.setBody("{\"error\": \"" + e.getMessage() + "\"}");
-//            res.send(500);
-//        }
-//    }
 }
