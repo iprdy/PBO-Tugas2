@@ -80,8 +80,8 @@ public class RouterController {
     public static void handleGetVillaIdReviews(String path, Response res) {
         try {
             int id = Integer.parseInt(path.split("/")[2]);
-            VillasController vc = new VillasController();
-            List<Review> reviews = vc.getReviewsByVillaId(id);
+            ReviewController rc = new ReviewController();
+            List<Review> reviews = rc.getReviewsByVillaId(id);
 
             ResponseController.sendJsonResponse(reviews, res);
         } catch (NumberFormatException e) {
@@ -143,8 +143,8 @@ public class RouterController {
     public static void handleGetCustomerIdReviews(String path, Response res) {
         try {
             int id = Integer.parseInt(path.split("/")[2]);
-            CustomerController cc = new CustomerController();
-            List<Review> reviews = cc.getReviewsByCustomerId(id);
+            ReviewController rc = new ReviewController();
+            List<Review> reviews = rc.getReviewsByCustomerId(id);
 
             ResponseController.sendJsonResponse(reviews, res);
         } catch (NumberFormatException e) {

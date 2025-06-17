@@ -1,6 +1,5 @@
 package controllers;
 
-import api.Request;
 import api.Response;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
@@ -23,8 +22,7 @@ public class ReviewController {
     }
 
     // GET villas/id/reviews
-    public void getReviewsByVillaId(HttpExchange exchange, int villaId) throws IOException {
-        Response res = new Response(exchange);
+    public List<Review> getReviewsByVillaId(int villaId) throws SQLException {
         String sql = """
         SELECT r.booking, r.star, r.title, r.content
         FROM reviews r
@@ -33,7 +31,8 @@ public class ReviewController {
         WHERE rt.villa = ?
     """;
 
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, villaId);
             ResultSet rs = stmt.executeQuery();
 
@@ -46,33 +45,12 @@ public class ReviewController {
                         rs.getString("content")
                 ));
             }
-
-            if (res.isSent()) {
-                ObjectMapper objectMapper = new ObjectMapper();
-                Map<String, Object> resJsonMap = new HashMap<>();
-                resJsonMap.put("message", "Request success");
-                resJsonMap.put("data", reviews);
-
-                String resJson = "";
-                try {
-                    resJson = objectMapper.writeValueAsString(resJsonMap);
-                } catch (Exception e) {
-                    System.out.println("Serialization error: " + e.getMessage());
-                }
-
-                res.setBody(resJson);
-                res.send(HttpURLConnection.HTTP_OK);
-            }
-
-        } catch (SQLException e) {
-            res.setBody("{\"message\":\"Database error: " + e.getMessage() + "\"}");
-            res.send(HttpURLConnection.HTTP_INTERNAL_ERROR);
+            return reviews;
         }
     }
 
     //  GET customers/id/reviews
-    public void getReviewsByCustomerId(HttpExchange exchange, int customerId) throws IOException {
-        Response res = new Response(exchange);
+    public List<Review> getReviewsByCustomerId (int customerId) throws SQLException {
         String sql = """
         SELECT r.booking, r.star, r.title, r.content
         FROM reviews r
@@ -80,7 +58,8 @@ public class ReviewController {
         WHERE b.customer = ?
     """;
 
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, customerId);
             ResultSet rs = stmt.executeQuery();
 
@@ -94,27 +73,7 @@ public class ReviewController {
                 );
                 reviews.add(review);
             }
-
-            if (res.isSent()) {
-                ObjectMapper objectMapper = new ObjectMapper();
-                Map<String, Object> resJsonMap = new HashMap<>();
-                resJsonMap.put("message", "Request success");
-                resJsonMap.put("data", reviews);
-
-                String resJson = "";
-                try {
-                    resJson = objectMapper.writeValueAsString(resJsonMap);
-                } catch (Exception e) {
-                    System.out.println("Serialization error: " + e.getMessage());
-                }
-
-                res.setBody(resJson);
-                res.send(HttpURLConnection.HTTP_OK);
-            }
-
-        } catch (SQLException e) {
-            res.setBody("{\"message\": \"Database error: " + e.getMessage() + "\"}");
-            res.send(HttpURLConnection.HTTP_INTERNAL_ERROR);
+            return reviews;
         }
     }
 

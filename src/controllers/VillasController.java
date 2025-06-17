@@ -141,39 +141,6 @@ public class VillasController {
         return bookings;
     }
 
-
-    // GET /villas/{id}/reviews => Menampilkan semua review pada suatu vila
-    public List<Review> getReviewsByVillaId(int villaId) throws SQLException {
-        List<Review> reviews = new ArrayList<>();
-        String sql = """
-            SELECT rv.booking, rv.star, rv.title, rv.content
-            FROM reviews rv
-            JOIN bookings b ON rv.booking = b.id
-            JOIN room_types rt ON b.room_type = rt.id
-            WHERE rt.villa = ?
-        """;
-
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            System.out.println("Connected to the database");
-            ps.setInt(1, villaId);
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                Review review = new Review(
-                        rs.getInt("booking"),
-                        rs.getInt("star"),
-                        rs.getString("title"),
-                        rs.getString("content")
-                );
-
-                reviews.add(review);
-            }
-        }
-        return reviews;
-    }
-
     // GET /villas?ci_date={checkin_date}&co_date={checkout_date} => Cari vila yang tersedia
     public List<Villas> searchAvailableVillas(String checkinDate, String checkoutDate) throws SQLException {
         List<Villas> available = new ArrayList<>();

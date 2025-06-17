@@ -184,33 +184,4 @@ public class CustomerController {
             res.error("Failed to update customer: " + e.getMessage());
         }
     }
-
-    // GET /customers/{id}/reviews -> daftar review yang diberikan oleh customer
-    public List<Review> getReviewsByCustomerId(int customerId) throws SQLException {
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db")) {
-            // SQL: cari review yang berelasi dengan booking milik customer ini
-            String sql = """
-                SELECT r.booking, r.star, r.title, r.content
-                FROM reviews r
-                JOIN bookings b ON r.booking = b.id
-                WHERE b.customer = ?
-            """;
-
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, customerId);
-            ResultSet rs = ps.executeQuery();
-
-            List<Review> reviews = new ArrayList<>();
-            while (rs.next()) {
-                Review review = new Review(
-                        rs.getInt("booking"),
-                        rs.getInt("star"),
-                        rs.getString("title"),
-                        rs.getString("content")
-                );
-                reviews.add(review);
-            }
-            return reviews;
-        }
-    }
 }
