@@ -61,7 +61,7 @@ public class Server {
             }
 
             else if (method.equals("DELETE")) {
-
+                Router.handleDeleteRequest(path,res);
             }
 //            } else if(method.equals("DELETE")) {
 //                if(path.matches("/villas/\\d+/rooms/\\d+$")) {

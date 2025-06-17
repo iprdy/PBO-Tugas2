@@ -111,4 +111,22 @@ public class Router {
             ResponseController.sendErrorResponse(res, "Unexpected error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
         }
     }
+
+    public static void handleDeleteRequest(String path, Response res) {
+        try {
+            if (path.matches("/villas/\\d+/rooms/\\d+$")) {
+                RouterController.handleDeleteVillaById(path, res);
+            }
+
+            else if (path.matches("/villas/\\d+$")) {
+                RouterController.handleDeleteVillaIdRoomsId(path, res);
+            }
+
+            else if (path.matches("/vouchers/\\d+$")) {
+                RouterController.handleDeleteVoucherById(path, res);
+            }
+        } catch (Exception e) {
+            ResponseController.sendErrorResponse(res, "Unexpected error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        }
+    }
 }

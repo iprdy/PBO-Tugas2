@@ -311,14 +311,14 @@ public class RouterController {
     public static void handlePutVillaIdRoomsId(String path, Response res, Request req) throws SQLException {
         try {
             VillasController vc = new VillasController();
-            int id = Integer.parseInt(path.split("/")[2]);
-            int vid = Integer.parseInt(path.split("/")[4]);
+            int vid = Integer.parseInt(path.split("/")[2]);
+            int rid = Integer.parseInt(path.split("/")[4]);
             String body = req.getBody();
             RoomTypes rt = mapper.readValue(body, RoomTypes.class);
-            rt.setIdAndVillaId(id, vid);
+            rt.setIdAndVillaId(rid, vid);
             vc.updateVillasRoomTypes(rt);
 
-            ResponseController.sendJsonResponseWithMessage("Berhasil mengupdate roomtype dengan id " + id + " di villa dengan id " + vid, rt, res);
+            ResponseController.sendJsonResponseWithMessage("Berhasil mengupdate roomtype dengan id " + rid + " di villa dengan id " + vid, rt, res);
         } catch (NumberFormatException e) {
             ResponseController.sendErrorResponse(res, "ID tidak valid", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
         } catch (JsonMappingException e) {
@@ -363,15 +363,28 @@ public class RouterController {
 
 
     //DELETE
-    public static void handleDeleteVillaIdRoomsId(String path, Response res, Request req) throws SQLException {
+    public static void handleDeleteVillaIdRoomsId(String path, Response res) throws SQLException {
+        try {
+            VillasController vc = new VillasController();
+            int vid = Integer.parseInt(path.split("/")[2]);
+            int rid = Integer.parseInt(path.split("/")[4]);
+            vc.deleteVillaRoomTypes(rid, vid);
+
+            ResponseController.sendJsonResponseWithMessage("Berhasil menghapus roomtype dengan id " + rid + " di villa dengan id " + vid, res);
+        } catch (NumberFormatException e) {
+            ResponseController.sendErrorResponse(res, "ID tidak valid", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
+        } catch (SQLException e) {
+            ResponseController.sendErrorResponse(res, "Database error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        } catch (Exception e) {
+            ResponseController.sendErrorResponse(res, "Unexpected error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        }
+    }
+
+    public static void handleDeleteVillaById(String path, Response res) throws SQLException {
 
     }
 
-    public static void handleDeleteVillaById(String path, Response res, Request req) throws SQLException {
-
-    }
-
-    public static void handleDeleteVoucherById(String path, Response res, Request req) throws SQLException {
+    public static void handleDeleteVoucherById(String path, Response res) throws SQLException {
 
     }
 }

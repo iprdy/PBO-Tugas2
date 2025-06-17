@@ -296,15 +296,15 @@ public class VillasController {
     }
 
     //DELETE /villas/rooms/{id}
-    public void deleteVillaRoomTypes(int id) throws SQLException {
-        String sql = "DELETE from room_types WHERE id = ?";
-        try (Connection conn = DriverManager.getConnection("jdbc:../sqlite:villa_booking.db");
+    public void deleteVillaRoomTypes(int rid, int vid) throws SQLException {
+        String sql = "DELETE from room_types WHERE id = ? AND villa_id = ?";
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
              PreparedStatement ps = conn.prepareStatement(sql)) {
             System.out.println("Has connected to the database");
 
-            ps.setInt(1, id);
+            ps.setInt(1, rid);
+            ps.setInt(2, vid);
             ps.executeUpdate();
-            System.out.println("Berhasil menghapus tipe ruangan");
         }
     }
 
