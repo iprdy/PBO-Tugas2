@@ -146,4 +146,9 @@ public class RoomTypes {
     public void setHas_fridge(boolean has_fridge) {
         this.has_fridge = has_fridge;
     }
+
+    public void setIdAndVillaId(int id, int villa_id) {
+        this.id = id;
+        this.villa_id = villa_id;
+    }
 }

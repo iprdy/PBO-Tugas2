@@ -89,4 +89,26 @@ public class Router {
             ResponseController.sendErrorResponse(res, "Unexpected error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
         }
     }
+
+    public static void handlePutRequest(String path, Response res, Request req) {
+        try {
+            if (path.matches("/villas/\\d+$")) {
+                RouterController.handlePutVillaById(path, res, req);
+            }
+
+            else if (path.matches("/villas/\\d+/rooms/\\d+$")) {
+                RouterController.handlePutVillaIdRoomsId(path, res, req);
+            }
+
+            else if (path.matches("/customer/\\d+$")) {
+                RouterController.handlePutCustomerById(path, res, req);
+            }
+
+            else if (path.matches("/vouchers/\\d+$")) {
+                RouterController.handlePutVoucherById(path, res, req);
+            }
+        } catch (Exception e) {
+            ResponseController.sendErrorResponse(res, "Unexpected error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        }
+    }
 }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
+import controllers.RouterController;
 import controllers.VillasController;
 import controllers.ReviewController;
 import controllers.CustomerController;
@@ -56,64 +57,12 @@ public class Server {
             }
 
             else if (method.equals("PUT")) {
-
+                Router.handlePutRequest(path,res, req);
             }
 
             else if (method.equals("DELETE")) {
 
             }
-
-//            // Endpoint: POST customers/{id}/bookings/{id}/reviews
-//            if (method.equals("POST") && path.matches("/customers/\\d+/booking/\\d+/reviews")) {
-//                String[] split = path.split("/");
-//                int customerId = Integer.parseInt(split[2]);
-//                int bookingId = Integer.parseInt(split[4]);
-//
-//                Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
-//                ReviewController rc = new ReviewController(conn);
-//                rc.postReviewForBooking(httpExchange, customerId, bookingId);
-//                return;
-//            }
-//
-//
-//            if (method.equals("POST") && (path.equals("/customers") || path.equals("/customers/"))) {
-//                System.out.println(">>> POST /customers route matched");
-//                Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
-//                CustomerController customerController = new CustomerController(conn);
-//                customerController.postCustomer(httpExchange);
-//                return;
-//            }
-//
-//            if(method.equals("POST")) {
-//                if (path.equals("/villas")) {
-//                    ObjectMapper mapper = new ObjectMapper();
-//                    InputStream is = httpExchange.getRequestBody();
-//                    Villas villas = mapper.readValue(is, Villas.class);
-//                    Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
-//                    VillasController vc = new VillasController();
-//                    vc.createVilla(villas);
-//                } else if (path.matches("/villas/\\d+/rooms$")) {
-//                    String[] split = path.split("/");
-//                    ObjectMapper mapper = new ObjectMapper();
-//                    InputStream is = httpExchange.getRequestBody();
-//                    RoomTypes roomtypes = mapper.readValue(is, RoomTypes.class);
-//                    roomtypes.setVilla_id(Integer.parseInt(split[2]));
-//                    Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
-//                    VillasController vc = new VillasController();
-//                    vc.createVillasRooms(roomtypes);
-//                }
-////                else if (path.equals("/customers")) {
-////                    ObjectMapper mapper = new ObjectMapper();
-////                    InputStream is = httpExchange.getRequestBody();
-////                    Customer customer = mapper.readValue(is, Customer.class);
-////
-////                    Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
-////                    CustomerController cc = new CustomerController(conn);
-////                    cc.postCustomer(httpExchange);
-////
-////                    res.json("{\"message\": \"Customer created successfully\"}");
-////                    return;
-////                }
 //            } else if(method.equals("PUT")) {
 //                if(path.matches("/villas/\\d+")) {
 //                    String[] split = path.split("/");
@@ -152,17 +101,6 @@ public class Server {
 //                    VillasController vc = new VillasController();
 //                    vc.deleteVilla(Integer.parseInt(split[2]));
 //                }
-//            }
-//
-//            if (method.equals("POST") && path.matches("/customers/\\d+/bookings")) {
-//                String[] split = path.split("/");
-//                int customerId = Integer.parseInt(split[2]);
-//                System.out.println(customerId);
-//
-//                Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
-//                CustomerController cc = new CustomerController(conn);
-//                cc.postBookingForCustomer(httpExchange);
-//                return;
 //            }
 
         } catch(Exception e) {

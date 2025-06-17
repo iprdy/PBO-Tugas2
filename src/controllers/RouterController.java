@@ -279,4 +279,80 @@ public class RouterController {
     public static void handlePostVouchers(Response res, Request req) throws SQLException {
 
     }
+
+
+
+
+    //PUT
+    public static void handlePutVillaById(String path, Response res, Request req) throws SQLException {
+        try {
+            VillasController vc = new VillasController();
+            int id = Integer.parseInt(path.split("/")[2]);
+            String body = req.getBody();
+            Villas villa = mapper.readValue(body, Villas.class);
+            villa.setId(id);
+            vc.updateVilla(villa);
+
+            ResponseController.sendJsonResponseWithMessage("Berhasil mengupdate villa dengan id" + id, villa, res);
+        } catch (NumberFormatException e) {
+            ResponseController.sendErrorResponse(res, "ID tidak valid", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
+        } catch (JsonMappingException e) {
+            ResponseController.sendErrorResponse(res, "Invalid data structure", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
+        } catch (JsonProcessingException e) {
+            ResponseController.sendErrorResponse(res, "Invalid JSON format", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
+        } catch (SQLException e) {
+            ResponseController.sendErrorResponse(res, "Database error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        } catch (Exception e) {
+            ResponseController.sendErrorResponse(res, "Unexpected error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        }
+
+    }
+
+    public static void handlePutVillaIdRoomsId(String path, Response res, Request req) throws SQLException {
+        try {
+            VillasController vc = new VillasController();
+            int id = Integer.parseInt(path.split("/")[2]);
+            int vid = Integer.parseInt(path.split("/")[4]);
+            String body = req.getBody();
+            RoomTypes rt = mapper.readValue(body, RoomTypes.class);
+            rt.setIdAndVillaId(id, vid);
+            vc.updateVillasRoomTypes(rt);
+
+            ResponseController.sendJsonResponseWithMessage("Berhasil mengupdate roomtype dengan id " + id " di villa dengan id " + vid, rt, res);
+        } catch (NumberFormatException e) {
+            ResponseController.sendErrorResponse(res, "ID tidak valid", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
+        } catch (JsonMappingException e) {
+            ResponseController.sendErrorResponse(res, "Invalid data structure", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
+        } catch (JsonProcessingException e) {
+            ResponseController.sendErrorResponse(res, "Invalid JSON format", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
+        } catch (SQLException e) {
+            ResponseController.sendErrorResponse(res, "Database error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        } catch (Exception e) {
+            ResponseController.sendErrorResponse(res, "Unexpected error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        }
+    }
+
+    public static void handlePutCustomerById(String path, Response res, Request req) throws SQLException {
+
+    }
+
+    public static void handlePutVoucherById(String path, Response res, Request req) throws SQLException {
+
+    }
+
+
+
+
+    //DELETE
+    public static void handleDeleteVillaIdRoomsId(String path, Response res, Request req) throws SQLException {
+
+    }
+
+    public static void handleDeleteVillaById(String path, Response res, Request req) throws SQLException {
+
+    }
+
+    public static void handleDeleteVoucherById(String path, Response res, Request req) throws SQLException {
+
+    }
 }
