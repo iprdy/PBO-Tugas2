@@ -150,38 +150,19 @@ public class CustomerController {
 
 
     // PUT /customers/{id} -> mengubah data customer berdasarkan ID
-    public void updateCustomer(HttpExchange httpExchange) {
-        Request req = new Request(httpExchange);
-        Response res = new Response(httpExchange);
-
+    public void updateCustomer(Customer updatedCustomer) throws SQLException {
         try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db")) {
-            // Ambil ID dari path URL
-            String[] pathParts = httpExchange.getRequestURI().getPath().split("/");
-            int customerId = Integer.parseInt(pathParts[2]);
-
-            // Ambil body request dan parsing jadi Customer
-            ObjectMapper objectMapper = new ObjectMapper();
-            Customer updatedCustomer = objectMapper.readValue(req.getBody(), Customer.class);
-
             String sql = "UPDATE customers SET name = ?, email = ?, phone = ? WHERE id = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, updatedCustomer.getName());
             ps.setString(2, updatedCustomer.getEmail());
             ps.setString(3, updatedCustomer.getPhone());
-            ps.setInt(4, customerId);
+            ps.setInt(4, updatedCustomer.getId());
 
             int rowsAffected = ps.executeUpdate();
             if (rowsAffected == 0) {
-                res.error("Customer with ID " + customerId + " not found or no changes made.");
-                return;
+                throw new SQLException("Failed to update customer");
             }
-
-            updatedCustomer.setId(customerId); // Set ID untuk response
-            String json = objectMapper.writeValueAsString(updatedCustomer);
-            res.json(json);
-
-        } catch (Exception e) {
-            res.error("Failed to update customer: " + e.getMessage());
         }
     }
 }

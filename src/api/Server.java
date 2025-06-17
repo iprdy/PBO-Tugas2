@@ -63,32 +63,6 @@ public class Server {
             else if (method.equals("DELETE")) {
 
             }
-//            } else if(method.equals("PUT")) {
-//                if(path.matches("/villas/\\d+")) {
-//                    String[] split = path.split("/");
-//                    ObjectMapper mapper = new ObjectMapper();
-//                    InputStream is = httpExchange.getRequestBody();
-//                    Villas villas = mapper.readValue(is, Villas.class);
-//                    villas.setId(Integer.parseInt(split[2]));
-//                    Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
-//                    VillasController vc = new VillasController();
-//                    vc.updateVilla(villas);
-//                } else if (path.matches("/villas/\\d+/rooms/\\d+$")) {
-//                    String[] split = path.split("/");
-//                    ObjectMapper mapper = new ObjectMapper();
-//                    InputStream is = httpExchange.getRequestBody();
-//                    RoomTypes roomtypes = mapper.readValue(is, RoomTypes.class);
-//                    roomtypes.setId(Integer.parseInt(split[2]));
-//                    roomtypes.setVilla_id(Integer.parseInt(split[4]));
-//                    Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
-//                    VillasController vc = new VillasController();
-//                    vc.updateVillasRoomTypes(roomtypes);
-//                } else if (path.matches("/customers/\\d+")) {
-//                    Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
-//                    CustomerController cc = new CustomerController(conn);
-//                    cc.updateCustomer(httpExchange);
-//                    return;
-//                }
 //            } else if(method.equals("DELETE")) {
 //                if(path.matches("/villas/\\d+/rooms/\\d+$")) {
 //                    String[] split = path.split("/");
