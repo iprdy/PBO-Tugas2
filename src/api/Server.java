@@ -4,24 +4,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
-import controllers.RouterController;
-import controllers.VillasController;
-import controllers.ReviewController;
-import controllers.CustomerController;
-import models.RoomTypes;
-import models.Villas;
+import controllers.ResponseController;
 
-import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.URI;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class Server {
+    private static String API = "UNKNOWN";
     private HttpServer server;
 
     private class RequestHandler implements HttpHandler {
@@ -47,7 +39,10 @@ public class Server {
         String path = uri.getPath();
         String method = req.getRequestMethod();
 
+
         try {
+            apiKeyCheck(req);
+
             if (method.equals("GET")) {
                 Router.handleGetRequest(path,res);
             }
@@ -63,20 +58,9 @@ public class Server {
             else if (method.equals("DELETE")) {
                 Router.handleDeleteRequest(path,res);
             }
-//            } else if(method.equals("DELETE")) {
-//                if(path.matches("/villas/\\d+/rooms/\\d+$")) {
-//                    String[] split = path.split("/");
-//                    Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
-//                    VillasController vc = new VillasController();
-//                    vc.deleteVillaRoomTypes(Integer.parseInt(split[4]));
-//                } else if (path.matches("/villas/\\d")) {
-//                    String[] split = path.split("/");
-//                    Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
-//                    VillasController vc = new VillasController();
-//                    vc.deleteVilla(Integer.parseInt(split[2]));
-//                }
-//            }
 
+        } catch (UnauthorizedException e) {
+            ResponseController.sendErrorResponse(res, "Unauthorized", e.getMessage(), HttpURLConnection.HTTP_UNAUTHORIZED);;
         } catch(Exception e) {
             System.out.println("Exception: " + e.getMessage());
         }
@@ -99,6 +83,12 @@ public class Server {
         httpExchange.close();
     }
 
+    public static void apiKeyCheck(Request req) {
+        String apiKey = req.getHeader("x-api-key");
 
+        if (apiKey == null || !(apiKey.equals(API))) {
+            throw new UnauthorizedException("Invalid API Key");
+        }
+    }
 }
 

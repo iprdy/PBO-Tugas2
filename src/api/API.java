@@ -2,7 +2,6 @@ package api;
 import api.Server;
 
 public class API {
-
     public static void main(String[] args) throws Exception {
         int port = 8080;
         if (args.length == 1) {
