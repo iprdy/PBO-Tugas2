@@ -43,6 +43,8 @@ public class CustomerController {
         }
     }
 
+
+
     // POST /customer/{id}/bookings => Customer melakukan pemesanan vila
     public void postBookingForCustomer(Booking bookingData, int customerId) throws SQLException {
         try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db")) {
@@ -89,6 +91,7 @@ public class CustomerController {
     }
 
 
+
     public List<Customer> getAllCustomers() throws SQLException {
         try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db")) {
             String sql = "SELECT * FROM customers";
@@ -108,6 +111,8 @@ public class CustomerController {
             return customers;
         }
     }
+
+
 
     // GET /customers/{id} -> detail satu customer
     public Customer getCustomerById(int customerId) throws SQLException {
@@ -129,6 +134,8 @@ public class CustomerController {
             return customer;
         }
     }
+
+
 
     // POST /customers -> menambahkan customer baru
     public void postCustomer(Customer customer) throws SQLException {
