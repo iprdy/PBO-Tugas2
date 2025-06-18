@@ -295,7 +295,7 @@ public class VillasController {
         }
     }
 
-    //DELETE /villas/rooms/{id}
+    //DELETE /villas/rooms/{id} ==> Menghapus kamar suatu villa
     public void deleteVillaRoomTypes(int rid, int vid) throws SQLException {
         String sql = "DELETE from room_types WHERE id = ? AND villa_id = ?";
         try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
