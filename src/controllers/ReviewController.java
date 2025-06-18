@@ -90,6 +90,9 @@ public class ReviewController {
                 throw new SQLException("Booking not found or doesn't belong to customer.");
             }
 
+            // ini agar field booking tidak 0 di response
+            reviewData.setBooking(bookingId);
+
             String insertSql = "INSERT INTO reviews (booking, star, title, content) VALUES (?, ?, ?, ?)";
             PreparedStatement ps = conn.prepareStatement(insertSql);
             ps.setInt(1, bookingId);
