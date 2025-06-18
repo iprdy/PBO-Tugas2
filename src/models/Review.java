@@ -6,6 +6,10 @@ public class Review {
     private String title;
     private String content;
 
+    public Review() {
+
+    }
+
     // Constructor lengkap
     public Review(int booking, int star, String title, String content) {
         this.booking = booking;

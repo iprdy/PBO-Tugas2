@@ -32,6 +32,10 @@ public class Request {
         this.headers = httpExchange.getRequestHeaders();
     }
 
+    public String getHeader (String key) {
+        return httpExchange.getRequestHeaders().getFirst(key);
+    }
+
     public String getParam(String key) {
         return this.params.getOrDefault(key, null);
     }

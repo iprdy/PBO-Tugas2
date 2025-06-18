@@ -6,27 +6,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
 import models.Customer;
 import models.Booking;
+import models.Review;
 import java.sql.*;
 import java.util.*;
 
 public class CustomerController {
-
-    private Connection conn;
-
-    public CustomerController(Connection conn) {
-        this.conn = conn;
-    }
-
     //GET /customer/{id}/bookings => daftar booking yang telah dilakukan oleh seorang customer
-    public void getCustomerBookings(HttpExchange httpExchange) {
-        Request req = new Request(httpExchange);
-        Response res = new Response(httpExchange);
-
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db")) {
-            // Ambil ID dari path
-            String[] pathParts = httpExchange.getRequestURI().getPath().split("/");
-            int customerId = Integer.parseInt(pathParts[2]);
-
+    public List<Booking> getCustomerBookings(int customerId) throws SQLException {
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db")) {
             String sql = "SELECT * FROM bookings WHERE customer = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, customerId);
@@ -52,31 +39,13 @@ public class CustomerController {
                 booking.setHasCheckedout(rs.getBoolean("has_checkedout"));
                 bookings.add(booking);
             }
-
-
-            ObjectMapper objectMapper = new ObjectMapper();
-            String json = objectMapper.writeValueAsString(bookings);
-            res.json(json);
-
-        } catch (Exception e) {
-            res.error("Failed to fetch bookings: " + e.getMessage());
+            return bookings;
         }
     }
 
     // POST /customer/{id}/bookings => Customer melakukan pemesanan vila
-    public void postBookingForCustomer(HttpExchange httpExchange) {
-        Request req = new Request(httpExchange);
-        Response res = new Response(httpExchange);
-
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db")) {
-            // Ambil customer ID dari URL
-            String[] pathParts = httpExchange.getRequestURI().getPath().split("/");
-            int customerId = Integer.parseInt(pathParts[2]);
-
-            // Ambil body dari request dan parsing jadi objek Booking
-            ObjectMapper objectMapper = new ObjectMapper();
-            Booking bookingData = objectMapper.readValue(req.getBody(), Booking.class);
-
+    public void postBookingForCustomer(Booking bookingData, int customerId) throws SQLException {
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db")) {
             // Siapkan SQL INSERT
             String sql = """
             INSERT INTO bookings (customer, room_type, checkin_date, checkout_date, price, voucher, final_price, payment_status, has_checkedin, has_checkedout)
@@ -103,8 +72,7 @@ public class CustomerController {
 
             int rowsAffected = ps.executeUpdate();
             if (rowsAffected == 0) {
-                res.error("Failed to insert booking");
-                return;
+                throw new SQLException("Failed to create booking");
             }
 
             ResultSet generatedKeys = ps.getGeneratedKeys();
@@ -117,21 +85,12 @@ public class CustomerController {
             bookingData.setHasCheckedin(false);
             bookingData.setHasCheckedout(false);
             bookingData.setId(bookingData.getId()); // agar id terisi
-
-            String json = objectMapper.writeValueAsString(bookingData);
-            res.json(json);
-
-        } catch (Exception e) {
-            res.error("Failed to create booking: " + e.getMessage());
         }
     }
 
 
-    public void getAllCustomers(HttpExchange httpExchange) {
-        Request req = new Request(httpExchange);
-        Response res = new Response(httpExchange);
-
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db")) {
+    public List<Customer> getAllCustomers() throws SQLException {
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db")) {
             String sql = "SELECT * FROM customers";
             PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
@@ -146,13 +105,64 @@ public class CustomerController {
                 );
                 customers.add(customer);
             }
+            return customers;
+        }
+    }
 
-            ObjectMapper objectMapper = new ObjectMapper();
-            String json = objectMapper.writeValueAsString(customers);
-            res.json(json);
+    // GET /customers/{id} -> detail satu customer
+    public Customer getCustomerById(int customerId) throws SQLException {
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db")) {
+            Customer customer = new Customer();
+            String sql = "SELECT * FROM customers WHERE id = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, customerId);
+            ResultSet rs = stmt.executeQuery();
 
-        } catch (Exception e) {
-            res.error("Failed to fetch customers: " + e.getMessage());
+            if (rs.next()) {
+                 customer = new Customer(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("email"),
+                        rs.getString("phone")
+                );
+            }
+            return customer;
+        }
+    }
+
+    // POST /customers -> menambahkan customer baru
+    public void postCustomer(Customer customer) throws SQLException {
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db")) {
+            String sql = "INSERT INTO customers (id, name, email, phone) VALUES (?, ?, ?, ?)";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, customer.getId());
+            ps.setString(2, customer.getName());
+            ps.setString(3, customer.getEmail());
+            ps.setString(4, customer.getPhone());
+
+            int affectedRows = ps.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("Failed to create customer");
+            }
+        }
+    }
+
+
+
+    // PUT /customers/{id} -> mengubah data customer berdasarkan ID
+    public void updateCustomer(Customer updatedCustomer) throws SQLException {
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db")) {
+            String sql = "UPDATE customers SET name = ?, email = ?, phone = ? WHERE id = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, updatedCustomer.getName());
+            ps.setString(2, updatedCustomer.getEmail());
+            ps.setString(3, updatedCustomer.getPhone());
+            ps.setInt(4, updatedCustomer.getId());
+
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected == 0) {
+                throw new SQLException("Failed to update customer");
+            }
         }
     }
 }

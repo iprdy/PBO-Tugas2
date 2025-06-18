@@ -1,3 +1,5 @@
+package database;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
@@ -10,14 +12,14 @@ public class DatabaseBuilder {
             PRAGMA foreign_keys = ON;
 
             CREATE TABLE IF NOT EXISTS villas (
-              id INTEGER PRIMARY KEY,
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
               name TEXT NOT NULL,
               description TEXT NOT NULL,
               address TEXT NOT NULL
             );
 
             CREATE TABLE IF NOT EXISTS room_types (
-              id INTEGER PRIMARY KEY,
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
               villa INTEGER NOT NULL,
               name TEXT NOT NULL,
               quantity INTEGER DEFAULT 1,
@@ -35,14 +37,14 @@ public class DatabaseBuilder {
             );
 
             CREATE TABLE IF NOT EXISTS customers (
-              id INTEGER PRIMARY KEY,
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
               name TEXT NOT NULL,
               email TEXT NOT NULL,
               phone TEXT
             );
 
             CREATE TABLE IF NOT EXISTS bookings (
-              id INTEGER PRIMARY KEY,
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
               customer INTEGER,
               room_type INTEGER,
               checkin_date TEXT NOT NULL,
@@ -67,7 +69,7 @@ public class DatabaseBuilder {
             );
 
             CREATE TABLE IF NOT EXISTS vouchers (
-              id INTEGER PRIMARY KEY,
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
               code TEXT NOT NULL,
               description TEXT NOT NULL,
               discount REAL NOT NULL,

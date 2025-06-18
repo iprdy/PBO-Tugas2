@@ -13,7 +13,9 @@ public class Booking {
     private boolean hasCheckedin;
     private boolean hasCheckedout;
 
-
+    public Booking() {
+        // Default constructor for Jackson
+    }
 
     public Booking(int customer, int roomType, String checkinDate, String checkoutDate,
                    int price, Integer voucher, int finalPrice) {
@@ -48,4 +50,5 @@ public class Booking {
     public void setHasCheckedin(boolean hasCheckedin) { this.hasCheckedin = hasCheckedin; }
     public void setHasCheckedout(boolean hasCheckedout) { this.hasCheckedout = hasCheckedout; }
     public void setId(int id) { this.id = id;}
+    public void setCustomer(int customer) { this.customer = customer; }
 }

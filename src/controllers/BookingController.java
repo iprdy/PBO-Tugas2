@@ -10,11 +10,13 @@ import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+
 public class BookingController {
 
     public static void create(Request req, Response res) {
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db")) {
-            String sql = "INSERT INTO bookings (guest, villa, date) VALUES (?, ?, ?)";
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
+) {
+            String sql = "INSERT INTO bookings ";
             PreparedStatement ps = conn.prepareStatement(sql);
 
             ObjectMapper mapper = new ObjectMapper();
@@ -25,15 +27,16 @@ public class BookingController {
 //            ps.setString(3, booking.getDate());
 
             ps.executeUpdate();
-            res.send("Booking created successfully");
+            res.send("Booking berhasil dibuat");
         } catch (Exception e) {
-            res.send("Failed to create booking: " + e.getMessage());
+            res.send("Booking tidak berhasil dibuat: " + e.getMessage());
         }
     }
 
     public static void getAll(Request req, Response res) {
         List<Booking> bookings = new ArrayList<>();
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db")) {
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
+) {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM bookings");
 
@@ -57,7 +60,8 @@ public class BookingController {
 
     public static void getById(Request req, Response res) {
         int id = Integer.parseInt(req.getParam("id"));
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:../villa_booking.db")) {
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
+) {
             String sql = "SELECT * FROM bookings WHERE id = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, id);
@@ -73,10 +77,10 @@ public class BookingController {
                 ObjectMapper mapper = new ObjectMapper();
 //                res.json(mapper.writeValueAsString(b));
             } else {
-                res.send("Booking not found");
+                res.send("Booking tidak ditemukan");
             }
         } catch (Exception e) {
-            res.send("Failed to retrieve booking: " + e.getMessage());
+            res.send("TIdak berhasil mengambil booking: " + e.getMessage());
         }
     }
 }
