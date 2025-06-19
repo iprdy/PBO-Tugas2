@@ -1,0 +1,31 @@
+package controllers;
+
+import models.Voucher;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class VoucherController {
+    public List<Voucher> getAllVouchers() throws SQLException {
+        List<Voucher> vouchers = new ArrayList<>();
+        String sql = "SELECT * FROM vouchers";
+
+        try (Connection conn = DriverManager.getConnection(DBConfig.DB_URL);
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                Voucher voucher = new Voucher(
+                        rs.getInt("id"),
+                        rs.getString("code"),
+                        rs.getString("description"),
+                        rs.getDouble("discount"),
+                        rs.getString("start_date"),
+                        rs.getString("end_date")
+                );
+                vouchers.add(voucher);
+            }
+            return vouchers;
+        }
+    }
+}
