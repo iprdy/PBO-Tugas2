@@ -86,4 +86,14 @@ public class VoucherController {
         }
     }
 
+    public void deleteVoucher(int id) throws SQLException {
+        String sql = "DELETE FROM vouchers WHERE id = ?";
+
+        try (Connection conn = DriverManager.getConnection(DBConfig.DB_URL);
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+        }
+    }
 }
