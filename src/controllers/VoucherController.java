@@ -28,4 +28,28 @@ public class VoucherController {
             return vouchers;
         }
     }
+
+    public Voucher getVoucherById(int id) throws SQLException {
+        String sql = "SELECT * FROM vouchers WHERE id = ?";
+
+        try (Connection conn = DriverManager.getConnection(DBConfig.DB_URL);
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return new Voucher(
+                        rs.getInt("id"),
+                        rs.getString("code"),
+                        rs.getString("description"),
+                        rs.getDouble("discount"),
+                        rs.getString("start_date"),
+                        rs.getString("end_date")
+                );
+            } else {
+                return null; // tidak ditemukan
+            }
+        }
+    }
 }
