@@ -52,4 +52,20 @@ public class VoucherController {
             }
         }
     }
+
+    public void postVoucher(Voucher voucher) throws SQLException {
+        String sql = "INSERT INTO vouchers (code, description, discount, start_date, end_date) VALUES (?, ?, ?, ?, ?)";
+
+        try (Connection conn = DriverManager.getConnection(DBConfig.DB_URL);
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, voucher.getCode());
+            stmt.setString(2, voucher.getDescription());
+            stmt.setDouble(3, voucher.getDiscount());
+            stmt.setString(4, voucher.getStartDate());
+            stmt.setString(5, voucher.getEndDate());
+
+            stmt.executeUpdate();
+        }
+    }
 }
