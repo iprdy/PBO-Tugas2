@@ -169,10 +169,25 @@ public class RouterController {
         }
     }
 
-    public static void handleGetVoucherById(String path, Response res) throws SQLException {
+    public static void handleGetVoucherById(String path, Response res) {
+        try {
+            int id = Integer.parseInt(path.split("/")[2]);
+            VoucherController vc = new VoucherController();
+            Voucher voucher = vc.getVoucherById(id);
 
+            if (voucher != null) {
+                ResponseController.sendJsonResponse(voucher, res);
+            } else {
+                ResponseController.sendErrorResponse(res, "Voucher tidak ditemukan", "ID: " + id, HttpURLConnection.HTTP_NOT_FOUND);
+            }
+        } catch (NumberFormatException e) {
+            ResponseController.sendErrorResponse(res, "ID tidak valid", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
+        } catch (SQLException e) {
+            ResponseController.sendErrorResponse(res, "Database error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        } catch (Exception e) {
+            ResponseController.sendErrorResponse(res, "Unexpected error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        }
     }
-
 
 
 
