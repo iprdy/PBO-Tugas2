@@ -7,8 +7,6 @@ import com.sun.net.httpserver.HttpExchange;
 import models.Customer;
 
 import models.Booking;
-
-import models.Review;
 import java.sql.*;
 import java.util.*;
 
@@ -148,7 +146,7 @@ public class CustomerController {
     // POST /customers -> menambahkan customer baru
     public void postCustomer(Customer customer) throws SQLException {
         try (Connection conn = DriverManager.getConnection(DBConfig.DB_URL)) {
-            String sql = "INSERT INTO customers (id, name, email, phone) VALUES (?, ?, ?, ?)";
+            String sql = "INSERT INTO customers (name, email, phone) VALUES (?, ?, ?, ?)";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, customer.getId());
             ps.setString(2, customer.getName());
