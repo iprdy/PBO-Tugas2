@@ -146,12 +146,12 @@ public class CustomerController {
     // POST /customers -> menambahkan customer baru
     public void postCustomer(Customer customer) throws SQLException {
         try (Connection conn = DriverManager.getConnection(DBConfig.DB_URL)) {
-            String sql = "INSERT INTO customers (name, email, phone) VALUES (?, ?, ?, ?)";
+            String sql = "INSERT INTO customers (name, email, phone) VALUES (?, ?, ?)";
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, customer.getId());
-            ps.setString(2, customer.getName());
-            ps.setString(3, customer.getEmail());
-            ps.setString(4, customer.getPhone());
+
+            ps.setString(1, customer.getName());
+            ps.setString(2, customer.getEmail());
+            ps.setString(3, customer.getPhone());
 
             int affectedRows = ps.executeUpdate();
             if (affectedRows == 0) {
