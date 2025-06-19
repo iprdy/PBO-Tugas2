@@ -156,8 +156,17 @@ public class RouterController {
         }
     }
 
-    public static void handleGetAllVouchers(Response res) throws SQLException {
+    public static void handleGetAllVouchers(Response res) {
+        try {
+            VoucherController vc = new VoucherController();
+            List<Voucher> vouchers = vc.getAllVouchers();
 
+            ResponseController.sendJsonResponse(vouchers, res);
+        } catch (SQLException e) {
+            ResponseController.sendErrorResponse(res, "Database error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        } catch (Exception e) {
+            ResponseController.sendErrorResponse(res, "Unexpected error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        }
     }
 
     public static void handleGetVoucherById(String path, Response res) throws SQLException {
