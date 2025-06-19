@@ -68,4 +68,22 @@ public class VoucherController {
             stmt.executeUpdate();
         }
     }
+
+    public void updateVoucher(Voucher voucher) throws SQLException {
+        String sql = "UPDATE vouchers SET code = ?, description = ?, discount = ?, start_date = ?, end_date = ? WHERE id = ?";
+
+        try (Connection conn = DriverManager.getConnection(DBConfig.DB_URL);
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, voucher.getCode());
+            stmt.setString(2, voucher.getDescription());
+            stmt.setDouble(3, voucher.getDiscount());
+            stmt.setString(4, voucher.getStartDate());
+            stmt.setString(5, voucher.getEndDate());
+            stmt.setInt(6, voucher.getId());
+
+            stmt.executeUpdate();
+        }
+    }
+
 }
