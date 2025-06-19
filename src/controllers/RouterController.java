@@ -397,9 +397,30 @@ public class RouterController {
         }
     }
 
-    public static void handlePutVoucherById(String path, Response res, Request req) throws SQLException {
+    public static void handlePutVoucherById(String path, Response res, Request req) {
+        try {
+            int id = Integer.parseInt(path.split("/")[2]);
+            String body = req.getBody();
+            Voucher voucher = mapper.readValue(body, Voucher.class);
+            voucher.setId(id);
 
+            VoucherController vc = new VoucherController();
+            vc.updateVoucher(voucher);
+
+            ResponseController.sendJsonResponseWithMessage("Berhasil mengupdate voucher dengan id " + id, voucher, res);
+        } catch (NumberFormatException e) {
+            ResponseController.sendErrorResponse(res, "ID tidak valid", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
+        } catch (JsonMappingException e) {
+            ResponseController.sendErrorResponse(res, "Invalid data structure", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
+        } catch (JsonProcessingException e) {
+            ResponseController.sendErrorResponse(res, "Invalid JSON format", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
+        } catch (SQLException e) {
+            ResponseController.sendErrorResponse(res, "Database error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        } catch (Exception e) {
+            ResponseController.sendErrorResponse(res, "Unexpected error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        }
     }
+
 
 
 
