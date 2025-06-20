@@ -79,7 +79,7 @@ public class ReviewController {
 
     // POST customers/id/booking/id/reviews
     public void postReviewForBooking(Review reviewData, int customerId, int bookingId) throws SQLException {
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db")) {
+        try (Connection conn = DriverManager.getConnection(DBConfig.DB_URL)) {
             String checkSql = "SELECT * FROM bookings WHERE id = ? AND customer = ?";
             PreparedStatement checkStmt = conn.prepareStatement(checkSql);
             checkStmt.setInt(1, bookingId);
