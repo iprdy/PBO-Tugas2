@@ -1,20 +1,14 @@
 package controllers;
 
-import com.fasterxml.jackson.databind.ObjectMapper; // untuk JSON serialization
-import com.sun.net.httpserver.HttpExchange;         // untuk handling HTTP request
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import models.Review;
 import models.RoomTypes;
 import models.Booking;
 import models.Villas;
-import api.Response;
 import java.sql.*;
 
 public class VillasController {
@@ -177,7 +171,7 @@ public class VillasController {
     }
     
     // POST /villas => Menambahkan data vila
-    public Villas createVilla(Villas villa) throws SQLException {
+    public void createVilla(Villas villa) throws SQLException {
         String sql = "INSERT INTO villas (id, name, description, address) VALUES (?, ?, ?, ?)";
 
         try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
@@ -194,12 +188,11 @@ public class VillasController {
             if (affectedRows == 0) {
                 throw new SQLException("Failed to create villa");
             }
-            return villa;
         }
     }
     
     // POST /villas/{id}/rooms => Menambahkan tipe kamar pada vila
-    public RoomTypes createVillasRooms(RoomTypes roomtypes) throws SQLException {
+    public void createVillasRooms(RoomTypes roomtypes) throws SQLException {
         String sql = """
                 INSERT INTO room_types (villa, name, quantity, capacity, price, bed_size, has_desk, has_ac, has_tv,
                 has_wifi, has_shower, has_hotwater, has_fridge)
@@ -229,12 +222,11 @@ public class VillasController {
             if (affectedRows == 0) {
                 throw new SQLException("Failed to create room type");
             }
-            return roomtypes;
         }
     }
 
     //PUT /villas{id} => Mengubah data suatu villa
-    public Villas updateVilla(Villas newVilla) throws SQLException {
+    public void updateVilla(Villas newVilla) throws SQLException {
         String sql = """
                 UPDATE villas SET name = ?, description = ?, address = ? WHERE id = ?
                 """;
@@ -254,13 +246,11 @@ public class VillasController {
             }
 
             System.out.println("Villa dengan id: " + newVilla.getId() + " berhasil di update");
-
-            return newVilla;
         }
     }
 
     //PUT /villas/{id}/rooms/{id} => Mengubah informasi kamar suatu villa
-    public RoomTypes updateVillasRoomTypes(RoomTypes roomtypes) throws SQLException {
+    public void updateVillasRoomTypes(RoomTypes roomtypes) throws SQLException {
         String sql = "INSERT INTO room_types (villa, name, quantity, capacity, price, bed_size, has_desk, has_ac, has_tv, has_wifi, has_shower, has_hotwater, has_fridge) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -287,10 +277,6 @@ public class VillasController {
             if (affectedRows == 0) {
                 throw new SQLException("Failed to update room type villa");
             }
-
-            System.out.println("Tipe ruangan pada villa " + roomtypes.getVilla_id() + " berhasil di update");
-
-            return roomtypes;
         }
     }
 
