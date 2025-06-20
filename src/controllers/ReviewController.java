@@ -79,7 +79,7 @@ public class ReviewController {
 
     // POST customers/id/booking/id/reviews
     public void postReviewForBooking(Review reviewData, int customerId, int bookingId) throws SQLException {
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db")) {
+        try (Connection conn = DriverManager.getConnection(DBConfig.DB_URL)) {
             String checkSql = "SELECT * FROM bookings WHERE id = ? AND customer = ?";
             PreparedStatement checkStmt = conn.prepareStatement(checkSql);
             checkStmt.setInt(1, bookingId);
@@ -89,6 +89,9 @@ public class ReviewController {
             if (!rs.next()) {
                 throw new SQLException("Booking not found or doesn't belong to customer.");
             }
+
+            // ini agar field booking tidak 0 di response
+            reviewData.setBooking(bookingId);
 
             String insertSql = "INSERT INTO reviews (booking, star, title, content) VALUES (?, ?, ?, ?)";
             PreparedStatement ps = conn.prepareStatement(insertSql);

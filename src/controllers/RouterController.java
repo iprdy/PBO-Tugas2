@@ -11,6 +11,11 @@ import java.net.HttpURLConnection;
 import java.sql.SQLException;
 import java.util.List;
 
+// Static final untuk koneksi database
+final class DBConfig {
+    public static final String DB_URL = "jdbc:sqlite:villa_booking.db";
+}
+
 public class RouterController {
     public static ObjectMapper mapper = new ObjectMapper();
     //GET
@@ -156,14 +161,38 @@ public class RouterController {
         }
     }
 
-    public static void handleGetAllVouchers(Response res) throws SQLException {
+    public static void handleGetAllVouchers(Response res) {
+        try {
+            VoucherController vc = new VoucherController();
+            List<Voucher> vouchers = vc.getAllVouchers();
 
+            ResponseController.sendJsonResponse(vouchers, res);
+        } catch (SQLException e) {
+            ResponseController.sendErrorResponse(res, "Database error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        } catch (Exception e) {
+            ResponseController.sendErrorResponse(res, "Unexpected error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        }
     }
 
-    public static void handleGetVoucherById(String path, Response res) throws SQLException {
+    public static void handleGetVoucherById(String path, Response res) {
+        try {
+            int id = Integer.parseInt(path.split("/")[2]);
+            VoucherController vc = new VoucherController();
+            Voucher voucher = vc.getVoucherById(id);
 
+            if (voucher != null) {
+                ResponseController.sendJsonResponse(voucher, res);
+            } else {
+                ResponseController.sendErrorResponse(res, "Voucher tidak ditemukan", "ID: " + id, HttpURLConnection.HTTP_NOT_FOUND);
+            }
+        } catch (NumberFormatException e) {
+            ResponseController.sendErrorResponse(res, "ID tidak valid", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
+        } catch (SQLException e) {
+            ResponseController.sendErrorResponse(res, "Database error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        } catch (Exception e) {
+            ResponseController.sendErrorResponse(res, "Unexpected error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        }
     }
-
 
 
 
@@ -276,8 +305,26 @@ public class RouterController {
         }
     }
 
-    public static void handlePostVouchers(Response res, Request req) throws SQLException {
+    public static void handlePostVouchers(Response res, Request req) {
+        try {
+            String body = req.getBody();
+            Voucher voucher = mapper.readValue(body, Voucher.class);
 
+            VoucherController vc = new VoucherController();
+            vc.postVoucher(voucher);
+
+            ResponseController.sendJsonResponseWithMessage("Berhasil membuat voucher", voucher, res);
+        } catch (NumberFormatException e) {
+            ResponseController.sendErrorResponse(res, "ID tidak valid", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
+        } catch (JsonMappingException e) {
+            ResponseController.sendErrorResponse(res, "Invalid data structure", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
+        } catch (JsonProcessingException e) {
+            ResponseController.sendErrorResponse(res, "Invalid JSON format", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
+        } catch (SQLException e) {
+            ResponseController.sendErrorResponse(res, "Database error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        } catch (Exception e) {
+            ResponseController.sendErrorResponse(res, "Unexpected error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        }
     }
 
 
@@ -355,9 +402,30 @@ public class RouterController {
         }
     }
 
-    public static void handlePutVoucherById(String path, Response res, Request req) throws SQLException {
+    public static void handlePutVoucherById(String path, Response res, Request req) {
+        try {
+            int id = Integer.parseInt(path.split("/")[2]);
+            String body = req.getBody();
+            Voucher voucher = mapper.readValue(body, Voucher.class);
+            voucher.setId(id);
 
+            VoucherController vc = new VoucherController();
+            vc.updateVoucher(voucher);
+
+            ResponseController.sendJsonResponseWithMessage("Berhasil mengupdate voucher dengan id " + id, voucher, res);
+        } catch (NumberFormatException e) {
+            ResponseController.sendErrorResponse(res, "ID tidak valid", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
+        } catch (JsonMappingException e) {
+            ResponseController.sendErrorResponse(res, "Invalid data structure", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
+        } catch (JsonProcessingException e) {
+            ResponseController.sendErrorResponse(res, "Invalid JSON format", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
+        } catch (SQLException e) {
+            ResponseController.sendErrorResponse(res, "Database error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        } catch (Exception e) {
+            ResponseController.sendErrorResponse(res, "Unexpected error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        }
     }
+
 
 
 
@@ -396,7 +464,19 @@ public class RouterController {
         }
     }
 
-    public static void handleDeleteVoucherById(String path, Response res) throws SQLException {
+    public static void handleDeleteVoucherById(String path, Response res) {
+        try {
+            int id = Integer.parseInt(path.split("/")[2]);
+            VoucherController vc = new VoucherController();
+            vc.deleteVoucher(id);
 
+            ResponseController.sendJsonResponseWithMessage("Berhasil menghapus voucher dengan id " + id, res);
+        } catch (NumberFormatException e) {
+            ResponseController.sendErrorResponse(res, "ID tidak valid", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
+        } catch (SQLException e) {
+            ResponseController.sendErrorResponse(res, "Database error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        } catch (Exception e) {
+            ResponseController.sendErrorResponse(res, "Unexpected error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        }
     }
 }
