@@ -10,11 +10,6 @@ import models.Booking;
 import java.sql.*;
 import java.util.*;
 
-// Static final untuk koneksi database
-final class DBConfig {
-    public static final String DB_URL = "jdbc:sqlite:villa_booking.db";
-}
-
 public class CustomerController {
 
     //GET /customer/{id}/bookings => daftar booking yang telah dilakukan oleh seorang customer
