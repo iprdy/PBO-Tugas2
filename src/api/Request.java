@@ -59,21 +59,5 @@ public class Request {
     public String getContentType() {
         return headers.getFirst("Content-Type");
     }
-
-//    public Map<String, Object> getJSON() throws JsonProcessingException {
-//        if (!getContentType().equalsIgnoreCase("application/json")) {
-//            return null;
-//        }
-//
-//        Map<String, Object> jsonMap = new HashMap<>();
-//        if (jsonBody == null) {
-//            ObjectMapper objectMapper = new ObjectMapper();
-//            jsonMap = objectMapper.readValue(this.getBody(), new TypeReference<>(){});
-//        }
-//
-//        return jsonMap;
-//    }
-
-
 }
 
