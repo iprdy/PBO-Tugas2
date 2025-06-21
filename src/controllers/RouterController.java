@@ -191,75 +191,38 @@ public class RouterController {
 
 
     //PUT
-    public static void handlePutVillaById(String path, Response res, Request req) {
-        try {
-            VillasController vc = new VillasController();
-            int id = Integer.parseInt(path.split("/")[2]);
-            String body = req.getBody();
-            Villas villa = mapper.readValue(body, Villas.class);
-            villa.setId(id);
-            vc.updateVilla(villa);
+    public static void handlePutVillaById(String path, Response res, Request req) throws Exception {
+        VillasController vc = new VillasController();
+        int id = Integer.parseInt(path.split("/")[2]);
+        String body = req.getBody();
+        Villas villa = mapper.readValue(body, Villas.class);
+        villa.setId(id);
+        vc.updateVilla(villa);
 
-            ResponseController.sendJsonResponseWithMessage("Berhasil mengupdate villa dengan id" + id, villa, res);
-        } catch (NumberFormatException e) {
-            ResponseController.sendErrorResponse(res, "ID tidak valid", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
-        } catch (JsonMappingException e) {
-            ResponseController.sendErrorResponse(res, "Invalid data structure", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
-        } catch (JsonProcessingException e) {
-            ResponseController.sendErrorResponse(res, "Invalid JSON format", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
-        } catch (SQLException e) {
-            ResponseController.sendErrorResponse(res, "Database error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
-        } catch (Exception e) {
-            ResponseController.sendErrorResponse(res, "Unexpected error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
-        }
-
+        ResponseController.sendJsonResponseWithMessage("Berhasil mengupdate villa dengan id" + id, villa, res);
     }
 
-    public static void handlePutVillaIdRoomsId(String path, Response res, Request req) {
-        try {
-            VillasController vc = new VillasController();
-            int vid = Integer.parseInt(path.split("/")[2]);
-            int rid = Integer.parseInt(path.split("/")[4]);
-            String body = req.getBody();
-            RoomTypes rt = mapper.readValue(body, RoomTypes.class);
-            rt.setIdAndVillaId(rid, vid);
-            vc.updateVillasRoomTypes(rt);
+    public static void handlePutVillaIdRoomsId(String path, Response res, Request req) throws Exception {
+        VillasController vc = new VillasController();
+        int vid = Integer.parseInt(path.split("/")[2]);
+        int rid = Integer.parseInt(path.split("/")[4]);
+        String body = req.getBody();
+        RoomTypes rt = mapper.readValue(body, RoomTypes.class);
+        rt.setIdAndVillaId(rid, vid);
+        vc.updateVillasRoomTypes(rt);
 
-            ResponseController.sendJsonResponseWithMessage("Berhasil mengupdate roomtype dengan id " + rid + " di villa dengan id " + vid, rt, res);
-        } catch (NumberFormatException e) {
-            ResponseController.sendErrorResponse(res, "ID tidak valid", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
-        } catch (JsonMappingException e) {
-            ResponseController.sendErrorResponse(res, "Invalid data structure", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
-        } catch (JsonProcessingException e) {
-            ResponseController.sendErrorResponse(res, "Invalid JSON format", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
-        } catch (SQLException e) {
-            ResponseController.sendErrorResponse(res, "Database error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
-        } catch (Exception e) {
-            ResponseController.sendErrorResponse(res, "Unexpected error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
-        }
+        ResponseController.sendJsonResponseWithMessage("Berhasil mengupdate roomtype dengan id " + rid + " di villa dengan id " + vid, rt, res);
     }
 
-    public static void handlePutCustomerById(String path, Response res, Request req) {
-        try {
-            CustomerController cc = new CustomerController();
-            int id = Integer.parseInt(path.split("/")[2]);
-            String body = req.getBody();
-            Customer customer = mapper.readValue(body, Customer.class);
-            customer.setId(id);
-            cc.updateCustomer(customer);
+    public static void handlePutCustomerById(String path, Response res, Request req) throws Exception {
+        CustomerController cc = new CustomerController();
+        int id = Integer.parseInt(path.split("/")[2]);
+        String body = req.getBody();
+        Customer customer = mapper.readValue(body, Customer.class);
+        customer.setId(id);
+        cc.updateCustomer(customer);
 
-            ResponseController.sendJsonResponseWithMessage("Berhasil mengupdate customer dengan id " + id, customer, res);
-        } catch (NumberFormatException e) {
-            ResponseController.sendErrorResponse(res, "ID tidak valid", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
-        } catch (JsonMappingException e) {
-            ResponseController.sendErrorResponse(res, "Invalid data structure", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
-        } catch (JsonProcessingException e) {
-            ResponseController.sendErrorResponse(res, "Invalid JSON format", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
-        } catch (SQLException e) {
-            ResponseController.sendErrorResponse(res, "Database error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
-        } catch (Exception e) {
-            ResponseController.sendErrorResponse(res, "Unexpected error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
-        }
+        ResponseController.sendJsonResponseWithMessage("Berhasil mengupdate customer dengan id " + id, customer, res);
     }
 
     public static void handlePutVoucherById(String path, Response res, Request req) {
@@ -291,37 +254,22 @@ public class RouterController {
 
 
     //DELETE
-    public static void handleDeleteVillaIdRoomsId(String path, Response res) {
-        try {
-            VillasController vc = new VillasController();
-            int vid = Integer.parseInt(path.split("/")[2]);
-            int rid = Integer.parseInt(path.split("/")[4]);
-            vc.deleteVillaRoomTypes(rid, vid);
+    public static void handleDeleteVillaIdRoomsId(String path, Response res) throws Exception {
+        VillasController vc = new VillasController();
+        int vid = Integer.parseInt(path.split("/")[2]);
+        int rid = Integer.parseInt(path.split("/")[4]);
+        vc.deleteVillaRoomTypes(rid, vid);
 
-            ResponseController.sendJsonResponseWithMessage("Berhasil menghapus roomtype dengan id " + rid + " di villa dengan id " + vid, res);
-        } catch (NumberFormatException e) {
-            ResponseController.sendErrorResponse(res, "ID tidak valid", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
-        } catch (SQLException e) {
-            ResponseController.sendErrorResponse(res, "Database error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
-        } catch (Exception e) {
-            ResponseController.sendErrorResponse(res, "Unexpected error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
-        }
+        ResponseController.sendJsonResponseWithMessage("Berhasil menghapus roomtype dengan id " + rid + " di villa dengan id " + vid, res);
     }
 
-    public static void handleDeleteVillaById(String path, Response res) {
-        try {
-            VillasController vc = new VillasController();
-            int id = Integer.parseInt(path.split("/")[2]);
-            vc.deleteVilla(id);
+    public static void handleDeleteVillaById(String path, Response res) throws Exception {
+        int id = Integer.parseInt(path.split("/")[2]);
+        VillasController vc = new VillasController();
 
-            ResponseController.sendJsonResponseWithMessage("Berhasil menghapus villa dengan id " + id, res);
-        } catch (NumberFormatException e) {
-            ResponseController.sendErrorResponse(res, "ID tidak valid", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
-        } catch (SQLException e) {
-            ResponseController.sendErrorResponse(res, "Database error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
-        } catch (Exception e) {
-            ResponseController.sendErrorResponse(res, "Unexpected error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
-        }
+        vc.deleteVilla(id);
+
+        ResponseController.sendJsonResponseWithMessage("Berhasil menghapus villa dengan id " + id, res);
     }
 
     public static void handleDeleteVoucherById(String path, Response res) {
