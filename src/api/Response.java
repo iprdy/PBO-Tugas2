@@ -62,4 +62,8 @@ public class Response {
     public boolean isSent() {
         return this.isSent;
     }
+
+    public boolean isNotSent() {
+        return !this.isSent;
+    }
 }
