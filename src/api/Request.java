@@ -69,5 +69,21 @@ public class Request {
         return objectMapper.readValue(this.getBody(), new TypeReference<>() {});
     }
 
+    public Map<String, String> getQueryParams() {
+        String query = httpExchange.getRequestURI().getQuery();
+        Map<String, String> queryMap = new HashMap<>();
+
+        if (query != null) {
+            for (String pair : query.split("&")) {
+                String[] parts = pair.split("=");
+                if (parts.length == 2) {
+                    queryMap.put(parts[0], parts[1]);
+                }
+            }
+        }
+
+        return queryMap;
+    }
+
 }
 
