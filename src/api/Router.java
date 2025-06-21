@@ -1,13 +1,7 @@
 package api;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import controllers.ResponseController;
 import controllers.RouterController;
-import exceptions.DataNotFoundException;
-
-import java.net.HttpURLConnection;
-import java.sql.SQLException;
+import exceptions.ExceptionHandler;
 
 public class Router {
     public static void handleGetRequest(String path, Response res) {
@@ -59,18 +53,8 @@ public class Router {
             else if (path.matches("/vouchers/\\d+")) {
                 RouterController.handleGetVoucherById(path, res);
             }
-        } catch (DataNotFoundException e) {
-            ResponseController.sendErrorResponse(res, "Data tidak ditemukan", e.getMessage(), HttpURLConnection.HTTP_NOT_FOUND);
-        } catch (NumberFormatException e) {
-            ResponseController.sendErrorResponse(res, "ID tidak valid", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
-        } catch (JsonMappingException e) {
-            ResponseController.sendErrorResponse(res, "Invalid data structure", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
-        } catch (JsonProcessingException e) {
-            ResponseController.sendErrorResponse(res, "Invalid JSON format", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
-        } catch (SQLException e) {
-            ResponseController.sendErrorResponse(res, "Database error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
         } catch (Exception e) {
-            ResponseController.sendErrorResponse(res, "Unexpected error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+            ExceptionHandler.handleException(e, res);
         }
     }
 
@@ -100,7 +84,7 @@ public class Router {
                 RouterController.handlePostVouchers(res, req);
             }
         } catch (Exception e) {
-            ResponseController.sendErrorResponse(res, "Unexpected error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+            ExceptionHandler.handleException(e, res);
         }
     }
 
@@ -122,8 +106,7 @@ public class Router {
                 RouterController.handlePutVoucherById(path, res, req);
             }
         } catch (Exception e) {
-            ResponseController.sendErrorResponse(res, "Unexpected error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
-        }
+            ExceptionHandler.handleException(e, res);        }
     }
 
     public static void handleDeleteRequest(String path, Response res) {
@@ -140,7 +123,6 @@ public class Router {
                 RouterController.handleDeleteVoucherById(path, res);
             }
         } catch (Exception e) {
-            ResponseController.sendErrorResponse(res, "Unexpected error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
-        }
+            ExceptionHandler.handleException(e, res);        }
     }
 }
