@@ -66,4 +66,8 @@ public class Response {
     public boolean isNotSent() {
         return !this.isSent;
     }
+
+    public void setHeader(String key, String value) {
+        this.headers.set(key, value);
+    }
 }
