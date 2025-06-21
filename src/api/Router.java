@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import controllers.ResponseController;
 import controllers.RouterController;
+import exceptions.DataNotFoundException;
 
 import java.net.HttpURLConnection;
 import java.sql.SQLException;
@@ -58,6 +59,8 @@ public class Router {
             else if (path.matches("/vouchers/\\d+")) {
                 RouterController.handleGetVoucherById(path, res);
             }
+        } catch (DataNotFoundException e) {
+            ResponseController.sendErrorResponse(res, "Data tidak ditemukan", e.getMessage(), HttpURLConnection.HTTP_NOT_FOUND);
         } catch (NumberFormatException e) {
             ResponseController.sendErrorResponse(res, "ID tidak valid", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
         } catch (JsonMappingException e) {

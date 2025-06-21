@@ -58,8 +58,8 @@ public static final ObjectMapper mapper = new ObjectMapper();
 
         try {
             Map<String, Object> resJsonMap = new LinkedHashMap<>();
-            resJsonMap.put("type", type);
-            resJsonMap.put("error", msg);
+            resJsonMap.put("error type", type);
+            resJsonMap.put("error message", msg);
 
             String jsonResponse = mapper.writeValueAsString(resJsonMap);
             res.setBody(jsonResponse);

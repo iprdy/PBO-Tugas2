@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import models.*;
+import util.Validator;
 
 import java.net.HttpURLConnection;
 import java.sql.SQLException;
@@ -29,7 +30,7 @@ public class RouterController {
     public static void handleGetVillaById(String path, Response res) throws Exception {
         int id = Integer.parseInt(path.split("/")[2]);
         VillasController vc = new VillasController();
-        Villas villa = vc.getVillaById(id);
+        Villas villa = Validator.dataRequireNonNull(vc.getVillaById(id), "Villa dengan id " + id + " tidak ditemukan");
 
         ResponseController.sendJsonResponse(villa, res);
     }
@@ -38,6 +39,7 @@ public class RouterController {
         int id = Integer.parseInt(path.split("/")[2]);
         VillasController vc = new VillasController();
         List<RoomTypes> rt = vc.getRoomsByVillaId(id);
+
         ResponseController.sendJsonResponse(rt, res);
     }
 
