@@ -44,7 +44,10 @@ public class Response {
         this.isSent = true;
     }
 
-
+    public void send(int status, String body) {
+        setBody(body);
+        send(status);
+    }
 
     public void json(String jsonString) {
         this.setBody(jsonString);
