@@ -6,7 +6,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import models.*;
-import util.Validator;
+import util.GlobalValidator;
+import util.VillaValidator;
 
 import java.net.HttpURLConnection;
 import java.sql.SQLException;
@@ -30,7 +31,7 @@ public class RouterController {
     public static void handleGetVillaById(String path, Response res) throws Exception {
         int id = Integer.parseInt(path.split("/")[2]);
         VillasController vc = new VillasController();
-        Villas villa = Validator.dataRequireNonNull(vc.getVillaById(id), "Villa dengan id " + id + " tidak ditemukan");
+        Villas villa = GlobalValidator.dataRequireNonNull(vc.getVillaById(id), "Villa dengan id " + id + " tidak ditemukan");
 
         ResponseController.sendJsonResponse(villa, res);
     }
@@ -119,6 +120,7 @@ public class RouterController {
         VillasController vc = new VillasController();
         String body = req.getBody();
         Villas villa = mapper.readValue(body, Villas.class);
+        VillaValidator.validatePostVilla(villa);
         vc.createVilla(villa);
 
         ResponseController.sendJsonResponseWithMessage("Berhasil membuat villa", villa, res);

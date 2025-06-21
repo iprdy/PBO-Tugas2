@@ -13,8 +13,12 @@ public class ExceptionHandler {
         if (e instanceof DataNotFoundException)
             ResponseController.sendErrorResponse(res, "Data tidak ditemukan", e.getMessage(), HttpURLConnection.HTTP_NOT_FOUND);
 
+        else if (e instanceof BadRequestException) {
+            ResponseController.sendErrorResponse(res, "Input tidak valid", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
+        }
+
         else if (e instanceof NumberFormatException) {
-            ResponseController.sendErrorResponse(res, "ID tidak valid", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
+            ResponseController.sendErrorResponse(res, "ID pada path tidak valid", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
         }
 
         else if (e instanceof JsonMappingException) {
@@ -30,7 +34,8 @@ public class ExceptionHandler {
         }
 
         else {
-            ResponseController.sendErrorResponse(res, "Unexpected error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+            String message = e.getMessage() != null ? e.getMessage() : e.toString();
+            ResponseController.sendErrorResponse(res, "Unexpected error", message, HttpURLConnection.HTTP_INTERNAL_ERROR);
         }
     }
 }
