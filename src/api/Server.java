@@ -5,6 +5,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import controllers.ResponseController;
+import exceptions.UnauthorizedException;
 
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;

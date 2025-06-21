@@ -1,9 +1,12 @@
 package api;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import controllers.ResponseController;
 import controllers.RouterController;
 
 import java.net.HttpURLConnection;
+import java.sql.SQLException;
 
 public class Router {
     public static void handleGetRequest(String path, Response res) {
@@ -55,6 +58,14 @@ public class Router {
             else if (path.matches("/vouchers/\\d+")) {
                 RouterController.handleGetVoucherById(path, res);
             }
+        } catch (NumberFormatException e) {
+            ResponseController.sendErrorResponse(res, "ID tidak valid", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
+        } catch (JsonMappingException e) {
+            ResponseController.sendErrorResponse(res, "Invalid data structure", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
+        } catch (JsonProcessingException e) {
+            ResponseController.sendErrorResponse(res, "Invalid JSON format", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
+        } catch (SQLException e) {
+            ResponseController.sendErrorResponse(res, "Database error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
         } catch (Exception e) {
             ResponseController.sendErrorResponse(res, "Unexpected error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
         }
