@@ -251,9 +251,23 @@ public class VillasController {
 
     //PUT /villas/{id}/rooms/{id} => Mengubah informasi kamar suatu villa
     public void updateVillasRoomTypes(RoomTypes roomtypes) throws SQLException {
-        String sql = "INSERT INTO room_types (villa, name, quantity, capacity, price, bed_size, has_desk, has_ac, has_tv, has_wifi, has_shower, has_hotwater, has_fridge) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
+        String sql = """
+                        UPDATE room_types SET
+                            villa = ?,
+                            name = ?,
+                            quantity = ?,
+                            capacity = ?,
+                            price = ?,
+                            bed_size = ?,
+                            has_desk = ?,
+                            has_ac = ?,
+                            has_tv = ?,
+                            has_wifi = ?,
+                            has_shower = ?,
+                            has_hotwater = ?,
+                            has_fridge = ?
+                        WHERE id = ?
+                """;
 
         try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
         PreparedStatement ps = conn.prepareStatement(sql)) {
