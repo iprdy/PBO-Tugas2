@@ -113,111 +113,56 @@ public class RouterController {
 
 
     //POST
-    public static void handlePostVilla(Response res, Request req) {
-        try {
-            VillasController vc = new VillasController();
-            String body = req.getBody();
-            Villas villa = mapper.readValue(body, Villas.class);
-            vc.createVilla(villa);
+    public static void handlePostVilla(Response res, Request req) throws Exception {
+        VillasController vc = new VillasController();
+        String body = req.getBody();
+        Villas villa = mapper.readValue(body, Villas.class);
+        vc.createVilla(villa);
 
-            ResponseController.sendJsonResponseWithMessage("Berhasil membuat villa", villa, res);
-        } catch (JsonMappingException e) {
-            ResponseController.sendErrorResponse(res, "Invalid data structure", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
-        } catch (JsonProcessingException e) {
-            ResponseController.sendErrorResponse(res, "Invalid JSON format", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
-        } catch (SQLException e) {
-            ResponseController.sendErrorResponse(res, "Database error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
-        } catch (Exception e) {
-            ResponseController.sendErrorResponse(res, "Unexpected error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
-        }
+        ResponseController.sendJsonResponseWithMessage("Berhasil membuat villa", villa, res);
     }
 
-    public static void handlePostVillaIdRooms(String path, Response res, Request req) {
-        try {
-            int id = Integer.parseInt(path.split("/")[2]);
-            VillasController vc = new VillasController();
-            String body = req.getBody();
-            RoomTypes rt = mapper.readValue(body, RoomTypes.class);
-            rt.setVilla_id(id);
-            vc.createVillasRooms(rt);
 
-            ResponseController.sendJsonResponseWithMessage("Berhasil membuat room type di villa dengan id " + id, rt, res);
-        } catch (NumberFormatException e) {
-            ResponseController.sendErrorResponse(res, "ID tidak valid", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
-        } catch (JsonMappingException e) {
-            ResponseController.sendErrorResponse(res, "Invalid data structure", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
-        } catch (JsonProcessingException e) {
-            ResponseController.sendErrorResponse(res, "Invalid JSON format", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
-        } catch (SQLException e) {
-            ResponseController.sendErrorResponse(res, "Database error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
-        } catch (Exception e) {
-            ResponseController.sendErrorResponse(res, "Unexpected error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
-        }
+    public static void handlePostVillaIdRooms(String path, Response res, Request req) throws Exception {
+        int id = Integer.parseInt(path.split("/")[2]);
+        VillasController vc = new VillasController();
+        String body = req.getBody();
+        RoomTypes rt = mapper.readValue(body, RoomTypes.class);
+        rt.setVilla_id(id);
+        vc.createVillasRooms(rt);
+
+        ResponseController.sendJsonResponseWithMessage("Berhasil membuat room type di villa dengan id " + id, rt, res);
     }
 
-    public static void handlePostCustomer(Response res, Request req) {
-        try {
-            CustomerController cc = new CustomerController();
-            String body = req.getBody();
-            Customer customer = mapper.readValue(body, Customer.class);
-            cc.postCustomer(customer);
+    public static void handlePostCustomer(Response res, Request req) throws Exception{
+        CustomerController cc = new CustomerController();
+        String body = req.getBody();
+        Customer customer = mapper.readValue(body, Customer.class);
+        cc.postCustomer(customer);
 
-            ResponseController.sendJsonResponseWithMessage("Berhasil membuat customer", customer, res);
-        } catch (JsonMappingException e) {
-            ResponseController.sendErrorResponse(res, "Invalid data structure", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
-        } catch (JsonProcessingException e) {
-            ResponseController.sendErrorResponse(res, "Invalid JSON format", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
-        } catch (SQLException e) {
-            ResponseController.sendErrorResponse(res, "Database error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
-        } catch (Exception e) {
-            ResponseController.sendErrorResponse(res, "Unexpected error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
-        }
+        ResponseController.sendJsonResponseWithMessage("Berhasil membuat customer", customer, res);
     }
 
-    public static void handlePostCustomerIdBookings(String path, Response res, Request req) {
-        try {
-            int id = Integer.parseInt(path.split("/")[2]);
-            CustomerController cc = new CustomerController();
-            String body = req.getBody();
-            Booking booking = mapper.readValue(body, Booking.class);
-            booking.setCustomer(id);
-            cc.postBookingForCustomer(booking, id);
+    public static void handlePostCustomerIdBookings(String path, Response res, Request req) throws Exception {
+        int id = Integer.parseInt(path.split("/")[2]);
+        CustomerController cc = new CustomerController();
+        String body = req.getBody();
+        Booking booking = mapper.readValue(body, Booking.class);
+        booking.setCustomer(id);
+        cc.postBookingForCustomer(booking, id);
 
-            ResponseController.sendJsonResponseWithMessage("Berhasil membuat booking di costumer dengan id " + id, booking, res);
-        } catch (NumberFormatException e) {
-            ResponseController.sendErrorResponse(res, "ID tidak valid", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
-        } catch (JsonMappingException e) {
-            ResponseController.sendErrorResponse(res, "Invalid data structure", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
-        } catch (JsonProcessingException e) {
-            ResponseController.sendErrorResponse(res, "Invalid JSON format", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
-        } catch (SQLException e) {
-            ResponseController.sendErrorResponse(res, "Database error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
-        } catch (Exception e) {
-            ResponseController.sendErrorResponse(res, "Unexpected error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
-        }
+        ResponseController.sendJsonResponseWithMessage("Berhasil membuat booking di costumer dengan id " + id, booking, res);
     }
 
-    public static void handlePostCustomerIdBookingsIdReviews(String path, Response res, Request req) {
-        try {
-            int cid = Integer.parseInt(path.split("/")[2]);
-            int bid = Integer.parseInt(path.split("/")[4]);
-            ReviewController rc = new ReviewController();
-            String body = req.getBody();
-            Review review = mapper.readValue(body, Review.class);
-            rc.postReviewForBooking(review, cid, bid);
+    public static void handlePostCustomerIdBookingsIdReviews(String path, Response res, Request req) throws Exception {
+        int cid = Integer.parseInt(path.split("/")[2]);
+        int bid = Integer.parseInt(path.split("/")[4]);
+        ReviewController rc = new ReviewController();
+        String body = req.getBody();
+        Review review = mapper.readValue(body, Review.class);
+        rc.postReviewForBooking(review, cid, bid);
 
-            ResponseController.sendJsonResponseWithMessage("Berhasil membuat review di costumer dengan id " + cid + "dan booking dengan id " + bid, review, res);
-        } catch (NumberFormatException e) {
-            ResponseController.sendErrorResponse(res, "ID tidak valid", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
-        } catch (JsonMappingException e) {
-            ResponseController.sendErrorResponse(res, "Invalid data structure", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
-        } catch (JsonProcessingException e) {
-            ResponseController.sendErrorResponse(res, "Invalid JSON format", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
-        } catch (SQLException e) {
-            ResponseController.sendErrorResponse(res, "Database error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
-        } catch (Exception e) {
-            ResponseController.sendErrorResponse(res, "Unexpected error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
-        }
+        ResponseController.sendJsonResponseWithMessage("Berhasil membuat review di costumer dengan id " + cid + "dan booking dengan id " + bid, review, res);
     }
 
     public static void handlePostVouchers(Response res, Request req) {
