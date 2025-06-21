@@ -59,4 +59,7 @@ public class Response {
         send(500); // status 500 Internal Server Error
     }
 
+    public boolean isSent() {
+        return this.isSent;
+    }
 }
