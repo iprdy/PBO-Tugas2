@@ -44,10 +44,7 @@ public class Response {
         this.isSent = true;
     }
 
-    public void send(String body) {
-        setBody(body);
-        send(200); // default ke 200 OK
-    }
+
 
     public void json(String jsonString) {
         this.setBody(jsonString);
