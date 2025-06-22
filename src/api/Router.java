@@ -112,13 +112,11 @@ public class Router {
     public static void handleDeleteRequest(String path, Response res) {
         try {
             if (path.matches("/villas/\\d+/rooms/\\d+$")) {
-                RouterController.handleDeleteVillaById(path, res);
-            }
-
-            else if (path.matches("/villas/\\d+$")) {
                 RouterController.handleDeleteVillaIdRoomsId(path, res);
             }
-
+            else if (path.matches("/villas/\\d+$")) {
+                RouterController.handleDeleteVillaById(path, res);
+            }
             else if (path.matches("/vouchers/\\d+$")) {
                 RouterController.handleDeleteVoucherById(path, res);
             }
