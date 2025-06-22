@@ -98,7 +98,7 @@ public class Router {
                 RouterController.handlePutVillaIdRoomsId(path, res, req);
             }
 
-            else if (path.matches("/customer/\\d+$")) {
+            else if (path.matches("/customers/\\d+$")) {
                 RouterController.handlePutCustomerById(path, res, req);
             }
 
