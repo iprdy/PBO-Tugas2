@@ -26,9 +26,6 @@ public class RouterController {
         return Integer.parseInt(parts[parts.length - positionFromEnd]);
     }
 
-
-
-
     //GET
     public static void handleGetAllVilla(Response res) throws Exception {
         VillasController vc = new VillasController();
@@ -157,7 +154,8 @@ public class RouterController {
     }
 
     public static void handlePostCustomerIdBookings(String path, Response res, Request req) throws Exception {
-        int id = Integer.parseInt(path.split("/")[2]);
+        int id = extractIdFromPath(path, 1);
+
         CustomerController cc = new CustomerController();
         String body = req.getBody();
         Booking booking = mapper.readValue(body, Booking.class);
@@ -168,8 +166,9 @@ public class RouterController {
     }
 
     public static void handlePostCustomerIdBookingsIdReviews(String path, Response res, Request req) throws Exception {
-        int cid = Integer.parseInt(path.split("/")[2]);
-        int bid = Integer.parseInt(path.split("/")[4]);
+        int bid = extractIdFromPath(path, 1); // paling akhir
+        int cid = extractIdFromPath(path, 3); // 2 sebelum itu
+
         ReviewController rc = new ReviewController();
         String body = req.getBody();
         Review review = mapper.readValue(body, Review.class);
@@ -207,6 +206,7 @@ public class RouterController {
     public static void handlePutVillaById(String path, Response res, Request req) throws Exception {
         VillasController vc = new VillasController();
         int id = extractIdFromPath(path, 1);
+
         String body = req.getBody();
         Villas villa = mapper.readValue(body, Villas.class);
         villa.setId(id);
@@ -217,8 +217,9 @@ public class RouterController {
 
     public static void handlePutVillaIdRoomsId(String path, Response res, Request req) throws Exception {
         VillasController vc = new VillasController();
-        int rid = extractIdFromPath(path, 1); // /rooms/{rid}
-        int vid = extractIdFromPath(path, 3); // /villas/{vid}
+        int rid = extractIdFromPath(path, 1); // paling akhir
+        int vid = extractIdFromPath(path, 3); // 2 sebelum itu
+
         String body = req.getBody();
         RoomTypes rt = mapper.readValue(body, RoomTypes.class);
         rt.setIdAndVillaId(rid, vid);
@@ -230,6 +231,7 @@ public class RouterController {
     public static void handlePutCustomerById(String path, Response res, Request req) throws Exception {
         CustomerController cc = new CustomerController();
         int id = extractIdFromPath(path, 1);
+
         String body = req.getBody();
         Customer customer = mapper.readValue(body, Customer.class);
         customer.setId(id);
@@ -241,6 +243,7 @@ public class RouterController {
     public static void handlePutVoucherById(String path, Response res, Request req) {
         try {
             int id = extractIdFromPath(path, 1);
+
             String body = req.getBody();
             Voucher voucher = mapper.readValue(body, Voucher.class);
             voucher.setId(id);
@@ -269,8 +272,9 @@ public class RouterController {
     //DELETE
     public static void handleDeleteVillaIdRoomsId(String path, Response res) throws Exception {
         VillasController vc = new VillasController();
-        int rid = extractIdFromPath(path, 1); // /rooms/{rid}
-        int vid = extractIdFromPath(path, 3); // /villas/{vid}
+        int rid = extractIdFromPath(path, 1); // paling akhir
+        int vid = extractIdFromPath(path, 3); // 2 sebelum itu
+
         vc.deleteVillaRoomTypes(rid, vid);
 
         ResponseController.sendJsonResponseWithMessage("Berhasil menghapus roomtype dengan id " + rid + " di villa dengan id " + vid, res);
@@ -278,6 +282,7 @@ public class RouterController {
 
     public static void handleDeleteVillaById(String path, Response res) throws Exception {
         int id = extractIdFromPath(path, 1);
+
         VillasController vc = new VillasController();
 
         vc.deleteVilla(id);
