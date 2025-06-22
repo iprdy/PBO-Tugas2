@@ -26,6 +26,9 @@ public class RouterController {
         return Integer.parseInt(parts[parts.length - positionFromEnd]);
     }
 
+
+
+
     //GET
     public static void handleGetAllVilla(Response res) throws Exception {
         VillasController vc = new VillasController();
@@ -203,7 +206,7 @@ public class RouterController {
     //PUT
     public static void handlePutVillaById(String path, Response res, Request req) throws Exception {
         VillasController vc = new VillasController();
-        int id = Integer.parseInt(path.split("/")[2]);
+        int id = extractIdFromPath(path, 1);
         String body = req.getBody();
         Villas villa = mapper.readValue(body, Villas.class);
         villa.setId(id);
@@ -214,8 +217,8 @@ public class RouterController {
 
     public static void handlePutVillaIdRoomsId(String path, Response res, Request req) throws Exception {
         VillasController vc = new VillasController();
-        int vid = Integer.parseInt(path.split("/")[2]);
-        int rid = Integer.parseInt(path.split("/")[4]);
+        int rid = extractIdFromPath(path, 1); // /rooms/{rid}
+        int vid = extractIdFromPath(path, 3); // /villas/{vid}
         String body = req.getBody();
         RoomTypes rt = mapper.readValue(body, RoomTypes.class);
         rt.setIdAndVillaId(rid, vid);
@@ -226,7 +229,7 @@ public class RouterController {
 
     public static void handlePutCustomerById(String path, Response res, Request req) throws Exception {
         CustomerController cc = new CustomerController();
-        int id = Integer.parseInt(path.split("/")[2]);
+        int id = extractIdFromPath(path, 1);
         String body = req.getBody();
         Customer customer = mapper.readValue(body, Customer.class);
         customer.setId(id);
@@ -237,7 +240,7 @@ public class RouterController {
 
     public static void handlePutVoucherById(String path, Response res, Request req) {
         try {
-            int id = Integer.parseInt(path.split("/")[2]);
+            int id = extractIdFromPath(path, 1);
             String body = req.getBody();
             Voucher voucher = mapper.readValue(body, Voucher.class);
             voucher.setId(id);
