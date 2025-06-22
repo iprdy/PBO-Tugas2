@@ -20,6 +20,12 @@ final class DBConfig {
 
 public class RouterController {
     public static ObjectMapper mapper = new ObjectMapper();
+
+    public static int extractIdFromPath(String path, int positionFromEnd) {
+        String[] parts = path.split("/");
+        return Integer.parseInt(parts[parts.length - positionFromEnd]);
+    }
+
     //GET
     public static void handleGetAllVilla(Response res) throws Exception {
         VillasController vc = new VillasController();
@@ -260,15 +266,15 @@ public class RouterController {
     //DELETE
     public static void handleDeleteVillaIdRoomsId(String path, Response res) throws Exception {
         VillasController vc = new VillasController();
-        int vid = Integer.parseInt(path.split("/")[2]);
-        int rid = Integer.parseInt(path.split("/")[4]);
+        int rid = extractIdFromPath(path, 1); // /rooms/{rid}
+        int vid = extractIdFromPath(path, 3); // /villas/{vid}
         vc.deleteVillaRoomTypes(rid, vid);
 
         ResponseController.sendJsonResponseWithMessage("Berhasil menghapus roomtype dengan id " + rid + " di villa dengan id " + vid, res);
     }
 
     public static void handleDeleteVillaById(String path, Response res) throws Exception {
-        int id = Integer.parseInt(path.split("/")[2]);
+        int id = extractIdFromPath(path, 1);
         VillasController vc = new VillasController();
 
         vc.deleteVilla(id);
@@ -278,7 +284,7 @@ public class RouterController {
 
     public static void handleDeleteVoucherById(String path, Response res) {
         try {
-            int id = Integer.parseInt(path.split("/")[2]);
+            int id = extractIdFromPath(path, 1);
             VoucherController vc = new VoucherController();
             vc.deleteVoucher(id);
 
