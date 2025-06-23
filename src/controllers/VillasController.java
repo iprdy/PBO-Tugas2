@@ -210,13 +210,13 @@ public class VillasController {
             ps.setInt(4, roomtypes.getCapacity());
             ps.setInt(5, roomtypes.getPrice());
             ps.setString(6, roomtypes.getBed_size());
-            ps.setBoolean(7, roomtypes.isHas_desk());
-            ps.setBoolean(8, roomtypes.isHas_ac());
-            ps.setBoolean(9, roomtypes.isHas_tv());
-            ps.setBoolean(10, roomtypes.isHas_wifi());
-            ps.setBoolean(11, roomtypes.isHas_shower());
-            ps.setBoolean(12, roomtypes.isHas_hotwater());
-            ps.setBoolean(13, roomtypes.isHas_fridge());
+            ps.setBoolean(7, roomtypes.getHas_desk());
+            ps.setBoolean(8, roomtypes.getHas_ac());
+            ps.setBoolean(9, roomtypes.getHas_tv());
+            ps.setBoolean(10, roomtypes.getHas_wifi());
+            ps.setBoolean(11, roomtypes.getHas_shower());
+            ps.setBoolean(12, roomtypes.getHas_hotwater());
+            ps.setBoolean(13, roomtypes.getHas_fridge());
 
             int affectedRows = ps.executeUpdate();
             if (affectedRows == 0) {
@@ -278,13 +278,13 @@ public class VillasController {
             ps.setInt(4, roomtypes.getCapacity());
             ps.setInt(5, roomtypes.getPrice());
             ps.setString(6, roomtypes.getBed_size());
-            ps.setBoolean(7, roomtypes.isHas_desk());
-            ps.setBoolean(8, roomtypes.isHas_ac());
-            ps.setBoolean(9, roomtypes.isHas_tv());
-            ps.setBoolean(10, roomtypes.isHas_wifi());
-            ps.setBoolean(11, roomtypes.isHas_shower());
-            ps.setBoolean(12, roomtypes.isHas_hotwater());
-            ps.setBoolean(13, roomtypes.isHas_fridge());
+            ps.setBoolean(7, roomtypes.getHas_desk());
+            ps.setBoolean(8, roomtypes.getHas_ac());
+            ps.setBoolean(9, roomtypes.getHas_tv());
+            ps.setBoolean(10, roomtypes.getHas_wifi());
+            ps.setBoolean(11, roomtypes.getHas_shower());
+            ps.setBoolean(12, roomtypes.getHas_hotwater());
+            ps.setBoolean(13, roomtypes.getHas_fridge());
             ps.setInt(14, roomtypes.getId());
 
             int affectedRows = ps.executeUpdate();

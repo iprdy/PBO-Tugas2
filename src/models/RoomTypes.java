@@ -1,20 +1,22 @@
 package models;
 
+import exceptions.BadRequestException;
+
 public class RoomTypes {
-    private int id;
-    private int villa_id;
+    private Integer id;
+    private Integer villa_id;
     private String name;
-    private int quantity;
-    private int capacity;
-    private int price;
+    private Integer quantity;
+    private Integer capacity;
+    private Integer price;
     private String bed_size;
-    private boolean has_desk;
-    private boolean has_ac;
-    private boolean has_tv;
-    private boolean has_wifi;
-    private boolean has_shower;
-    private boolean has_hotwater;
-    private boolean has_fridge;
+    private Boolean has_desk;
+    private Boolean has_ac;
+    private Boolean has_tv;
+    private Boolean has_wifi;
+    private Boolean has_shower;
+    private Boolean has_hotwater;
+    private Boolean has_fridge;
 
     public RoomTypes() {}
 
@@ -35,11 +37,11 @@ public class RoomTypes {
         this.has_fridge = has_fridge;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public int getVilla_id() {
+    public Integer getVilla_id() {
         return villa_id;
     }
 
@@ -47,15 +49,15 @@ public class RoomTypes {
         return name;
     }
 
-    public int getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
-    public int getCapacity() {
+    public Integer getCapacity() {
         return capacity;
     }
 
-    public int getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
@@ -63,39 +65,39 @@ public class RoomTypes {
         return bed_size;
     }
 
-    public boolean isHas_desk() {
+    public Boolean getHas_desk() {
         return has_desk;
     }
 
-    public boolean isHas_ac() {
+    public Boolean getHas_ac() {
         return has_ac;
     }
 
-    public boolean isHas_tv() {
+    public Boolean getHas_tv() {
         return has_tv;
     }
 
-    public boolean isHas_wifi() {
+    public Boolean getHas_wifi() {
         return has_wifi;
     }
 
-    public boolean isHas_shower() {
+    public Boolean getHas_shower() {
         return has_shower;
     }
 
-    public boolean isHas_hotwater() {
+    public Boolean getHas_hotwater() {
         return has_hotwater;
     }
 
-    public boolean isHas_fridge() {
+    public Boolean getHas_fridge() {
         return has_fridge;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public void setVilla_id(int villa_id) {
+    public void setVilla_id(Integer villa_id) {
         this.villa_id = villa_id;
     }
 
@@ -103,51 +105,61 @@ public class RoomTypes {
         this.name = name;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 
-    public void setCapacity(int capacity) {
+    public void setCapacity(Integer capacity) {
         this.capacity = capacity;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(Integer price) {
         this.price = price;
     }
 
     public void setBed_size(String bed_size) {
-        this.bed_size = bed_size;
+        if (bed_size != null) {
+            String lower = bed_size.trim().toLowerCase();
+            switch (lower) {
+                case "double" -> this.bed_size = "Double";
+                case "queen" -> this.bed_size = "Queen";
+                case "king" -> this.bed_size = "King";
+                default -> this.bed_size = bed_size;
+            }
+        } else {
+            this.bed_size = null;
+        }
     }
 
-    public void setHas_desk(boolean has_desk) {
+    public void setHas_desk(Boolean has_desk) {
         this.has_desk = has_desk;
     }
 
-    public void setHas_ac(boolean has_ac) {
+    public void setHas_ac(Boolean has_ac) {
         this.has_ac = has_ac;
     }
 
-    public void setHas_tv(boolean has_tv) {
+    public void setHas_tv(Boolean has_tv) {
         this.has_tv = has_tv;
     }
 
-    public void setHas_wifi(boolean has_wifi) {
+    public void setHas_wifi(Boolean has_wifi) {
         this.has_wifi = has_wifi;
     }
 
-    public void setHas_shower(boolean has_shower) {
+    public void setHas_shower(Boolean has_shower) {
         this.has_shower = has_shower;
     }
 
-    public void setHas_hotwater(boolean has_hotwater) {
+    public void setHas_hotwater(Boolean has_hotwater) {
         this.has_hotwater = has_hotwater;
     }
 
-    public void setHas_fridge(boolean has_fridge) {
+    public void setHas_fridge(Boolean has_fridge) {
         this.has_fridge = has_fridge;
     }
 
-    public void setIdAndVillaId(int id, int villa_id) {
+    public void setIdAndVillaId(Integer id, Integer villa_id) {
         this.id = id;
         this.villa_id = villa_id;
     }
