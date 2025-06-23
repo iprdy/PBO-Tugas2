@@ -227,7 +227,15 @@ public class VillasController {
 
             int affectedRows = ps.executeUpdate();
             if (affectedRows == 0) {
-                throw new SQLException("Failed to create room type");
+                throw new SQLException("Gagal membuat ruangan");
+            }
+
+            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    roomtypes.setId(generatedKeys.getInt(1));
+                } else {
+                    throw new SQLException("Gagal membuat ruangan, tidak mendapatkan id");
+                }
             }
         }
     }

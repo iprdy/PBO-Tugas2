@@ -39,6 +39,23 @@ public static final ObjectMapper mapper = new ObjectMapper();
         }
     }
 
+    public static void sendJsonResponseWithMessage(String msg, Object oldObject, Object newObject, Response res) {
+        try {
+            Map<String, Object> data = new LinkedHashMap<>();
+            data.put("message", msg);
+            data.put("old data", oldObject);
+            data.put("new data", newObject);
+
+            String jsonResponse = mapper.writeValueAsString(data);
+            res.setBody(jsonResponse);
+            res.send(HttpURLConnection.HTTP_OK);
+        } catch(JsonProcessingException e) {
+            sendErrorResponse(res, "Serialization error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        } catch (Exception e) {
+            sendErrorResponse(res, "Unexpected error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        }
+    }
+
     public static void sendJsonResponseWithMessage(String msg, Response res) {
         try {
             Map<String, Object> data = new LinkedHashMap<>();
