@@ -1,9 +1,5 @@
 package controllers;
 
-import api.Request;
-import api.Response;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sun.net.httpserver.HttpExchange;
 import models.Customer;
 
 import models.Booking;
