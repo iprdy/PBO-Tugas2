@@ -172,21 +172,28 @@ public class VillasController {
     
     // POST /villas => Menambahkan data vila
     public void createVilla(Villas villa) throws SQLException {
-        String sql = "INSERT INTO villas (id, name, description, address) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO villas (name, description, address) VALUES (?, ?, ?)";
 
         try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             System.out.println("Connected to the database");
 
-            ps.setInt(1, villa.getId());
-            ps.setString(2, villa.getName());
-            ps.setString(3, villa.getDescription());
-            ps.setString(4, villa.getAddress());
+            ps.setString(1, villa.getName());
+            ps.setString(2, villa.getDescription());
+            ps.setString(3, villa.getAddress());
 
             int affectedRows = ps.executeUpdate();
             if (affectedRows == 0) {
-                throw new SQLException("Failed to create villa");
+                throw new SQLException("Gagal membuat villa");
+            }
+
+            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    villa.setId(generatedKeys.getInt(1));
+                } else {
+                    throw new SQLException("Gagal membuat villa, tidak mendapatkan id");
+                }
             }
         }
     }

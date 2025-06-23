@@ -22,11 +22,11 @@ public class ExceptionHandler {
         }
 
         else if (e instanceof JsonMappingException) {
-            ResponseController.sendErrorResponse(res, "Invalid data structure", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
+            ResponseController.sendErrorResponse(res, "Struktur data tidak valid", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
         }
 
         else if (e instanceof JsonProcessingException) {
-            ResponseController.sendErrorResponse(res, "Invalid JSON format", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
+            ResponseController.sendErrorResponse(res, "Format JSON tidak valid", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
         }
 
         else if (e instanceof SQLException) {

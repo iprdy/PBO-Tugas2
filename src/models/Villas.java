@@ -10,7 +10,7 @@ public class Villas {
 
     }
 
-    public Villas(int id, String name, String description, String address) {
+    public Villas(Integer id, String name, String description, String address) {
         this.id = id;
         this.name = name;
         this.description = description;
