@@ -1,7 +1,7 @@
 package models;
 
 public class Villas {
-    private int id;
+    private Integer id;
     private String name;
     private String description;
     private String address;
@@ -10,14 +10,14 @@ public class Villas {
 
     }
 
-    public Villas(int id, String name, String description, String address) {
+    public Villas(Integer id, String name, String description, String address) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.address = address;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 

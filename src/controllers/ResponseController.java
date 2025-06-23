@@ -5,7 +5,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.net.HttpURLConnection;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -40,6 +39,23 @@ public static final ObjectMapper mapper = new ObjectMapper();
         }
     }
 
+    public static void sendJsonResponseWithMessage(String msg, Object oldObject, Object newObject, Response res) {
+        try {
+            Map<String, Object> data = new LinkedHashMap<>();
+            data.put("message", msg);
+            data.put("old data", oldObject);
+            data.put("new data", newObject);
+
+            String jsonResponse = mapper.writeValueAsString(data);
+            res.setBody(jsonResponse);
+            res.send(HttpURLConnection.HTTP_OK);
+        } catch(JsonProcessingException e) {
+            sendErrorResponse(res, "Serialization error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        } catch (Exception e) {
+            sendErrorResponse(res, "Unexpected error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        }
+    }
+
     public static void sendJsonResponseWithMessage(String msg, Response res) {
         try {
             Map<String, Object> data = new LinkedHashMap<>();
@@ -59,8 +75,8 @@ public static final ObjectMapper mapper = new ObjectMapper();
 
         try {
             Map<String, Object> resJsonMap = new LinkedHashMap<>();
-            resJsonMap.put("type", type);
-            resJsonMap.put("error", msg);
+            resJsonMap.put("error type", type);
+            resJsonMap.put("error message", msg);
 
             String jsonResponse = mapper.writeValueAsString(resJsonMap);
             res.setBody(jsonResponse);

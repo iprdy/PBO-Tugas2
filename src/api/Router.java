@@ -1,9 +1,7 @@
 package api;
 
-import controllers.ResponseController;
 import controllers.RouterController;
-
-import java.net.HttpURLConnection;
+import exceptions.ExceptionHandler;
 
 public class Router {
     public static void handleGetRequest(String path, Response res) {
@@ -56,7 +54,7 @@ public class Router {
                 RouterController.handleGetVoucherById(path, res);
             }
         } catch (Exception e) {
-            ResponseController.sendErrorResponse(res, "Unexpected error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+            ExceptionHandler.handleException(e, res);
         }
     }
 
@@ -86,7 +84,7 @@ public class Router {
                 RouterController.handlePostVouchers(res, req);
             }
         } catch (Exception e) {
-            ResponseController.sendErrorResponse(res, "Unexpected error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+            ExceptionHandler.handleException(e, res);
         }
     }
 
@@ -100,7 +98,7 @@ public class Router {
                 RouterController.handlePutVillaIdRoomsId(path, res, req);
             }
 
-            else if (path.matches("/customer/\\d+$")) {
+            else if (path.matches("/customers/\\d+$")) {
                 RouterController.handlePutCustomerById(path, res, req);
             }
 
@@ -108,25 +106,23 @@ public class Router {
                 RouterController.handlePutVoucherById(path, res, req);
             }
         } catch (Exception e) {
-            ResponseController.sendErrorResponse(res, "Unexpected error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
-        }
+            ExceptionHandler.handleException(e, res);        }
     }
 
     public static void handleDeleteRequest(String path, Response res) {
         try {
             if (path.matches("/villas/\\d+/rooms/\\d+$")) {
-                RouterController.handleDeleteVillaById(path, res);
+                RouterController.handleDeleteVillaIdRoomsId(path, res);
             }
 
             else if (path.matches("/villas/\\d+$")) {
-                RouterController.handleDeleteVillaIdRoomsId(path, res);
+                RouterController.handleDeleteVillaById(path, res);
             }
 
             else if (path.matches("/vouchers/\\d+$")) {
                 RouterController.handleDeleteVoucherById(path, res);
             }
         } catch (Exception e) {
-            ResponseController.sendErrorResponse(res, "Unexpected error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
-        }
+            ExceptionHandler.handleException(e, res);        }
     }
 }

@@ -44,9 +44,9 @@ public class Response {
         this.isSent = true;
     }
 
-    public void send(String body) {
+    public void send(int status, String body) {
         setBody(body);
-        send(200); // default ke 200 OK
+        send(status);
     }
 
     public void json(String jsonString) {
@@ -59,8 +59,15 @@ public class Response {
         send(500); // status 500 Internal Server Error
     }
 
-
     public boolean isSent() {
+        return this.isSent;
+    }
+
+    public boolean isNotSent() {
         return !this.isSent;
+    }
+
+    public void setHeader(String key, String value) {
+        this.headers.set(key, value);
     }
 }

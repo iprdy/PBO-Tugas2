@@ -1,20 +1,14 @@
 package controllers;
 
-import com.fasterxml.jackson.databind.ObjectMapper; // untuk JSON serialization
-import com.sun.net.httpserver.HttpExchange;         // untuk handling HTTP request
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import models.Review;
 import models.RoomTypes;
 import models.Booking;
 import models.Villas;
-import api.Response;
 import java.sql.*;
 
 public class VillasController {
@@ -177,33 +171,39 @@ public class VillasController {
     }
     
     // POST /villas => Menambahkan data vila
-    public Villas createVilla(Villas villa) throws SQLException {
-        String sql = "INSERT INTO villas (id, name, description, address) VALUES (?, ?, ?, ?)";
+    public void createVilla(Villas villa) throws SQLException {
+        String sql = "INSERT INTO villas (name, description, address) VALUES (?, ?, ?)";
 
         try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             System.out.println("Connected to the database");
 
-            ps.setInt(1, villa.getId());
-            ps.setString(2, villa.getName());
-            ps.setString(3, villa.getDescription());
-            ps.setString(4, villa.getAddress());
+            ps.setString(1, villa.getName());
+            ps.setString(2, villa.getDescription());
+            ps.setString(3, villa.getAddress());
 
             int affectedRows = ps.executeUpdate();
             if (affectedRows == 0) {
-                throw new SQLException("Failed to create villa");
+                throw new SQLException("Gagal membuat villa");
             }
-            return villa;
+
+            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    villa.setId(generatedKeys.getInt(1));
+                } else {
+                    throw new SQLException("Gagal membuat villa, tidak mendapatkan id");
+                }
+            }
         }
     }
     
     // POST /villas/{id}/rooms => Menambahkan tipe kamar pada vila
-    public RoomTypes createVillasRooms(RoomTypes roomtypes) throws SQLException {
+    public void createVillasRooms(RoomTypes roomtypes) throws SQLException {
         String sql = """
-                INSERT INTO room_types (id, villa, name, quantity, capacity, price, bed_size, has_desk, has_ac, has_tv,
+                INSERT INTO room_types (villa, name, quantity, capacity, price, bed_size, has_desk, has_ac, has_tv,
                 has_wifi, has_shower, has_hotwater, has_fridge)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """;
 
         try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
@@ -211,31 +211,37 @@ public class VillasController {
 
             System.out.println("Connected to the database");
 
-            ps.setInt(1, roomtypes.getId());
-            ps.setInt(2, roomtypes.getVilla_id());
-            ps.setString(3, roomtypes.getName());
-            ps.setInt(4, roomtypes.getQuantity());
-            ps.setInt(5, roomtypes.getCapacity());
-            ps.setInt(6, roomtypes.getPrice());
-            ps.setString(7, roomtypes.getBed_size());
-            ps.setBoolean(8, roomtypes.isHas_desk());
-            ps.setBoolean(9, roomtypes.isHas_ac());
-            ps.setBoolean(10, roomtypes.isHas_tv());
-            ps.setBoolean(11, roomtypes.isHas_wifi());
-            ps.setBoolean(12, roomtypes.isHas_shower());
-            ps.setBoolean(13, roomtypes.isHas_hotwater());
-            ps.setBoolean(14, roomtypes.isHas_fridge());
+            ps.setInt(1, roomtypes.getVilla_id());
+            ps.setString(2, roomtypes.getName());
+            ps.setInt(3, roomtypes.getQuantity());
+            ps.setInt(4, roomtypes.getCapacity());
+            ps.setInt(5, roomtypes.getPrice());
+            ps.setString(6, roomtypes.getBed_size());
+            ps.setBoolean(7, roomtypes.getHas_desk());
+            ps.setBoolean(8, roomtypes.getHas_ac());
+            ps.setBoolean(9, roomtypes.getHas_tv());
+            ps.setBoolean(10, roomtypes.getHas_wifi());
+            ps.setBoolean(11, roomtypes.getHas_shower());
+            ps.setBoolean(12, roomtypes.getHas_hotwater());
+            ps.setBoolean(13, roomtypes.getHas_fridge());
 
             int affectedRows = ps.executeUpdate();
             if (affectedRows == 0) {
-                throw new SQLException("Failed to create room type");
+                throw new SQLException("Gagal membuat ruangan");
             }
-            return roomtypes;
+
+            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    roomtypes.setId(generatedKeys.getInt(1));
+                } else {
+                    throw new SQLException("Gagal membuat ruangan, tidak mendapatkan id");
+                }
+            }
         }
     }
 
     //PUT /villas{id} => Mengubah data suatu villa
-    public Villas updateVilla(Villas newVilla) throws SQLException {
+    public void updateVilla(Villas newVilla) throws SQLException {
         String sql = """
                 UPDATE villas SET name = ?, description = ?, address = ? WHERE id = ?
                 """;
@@ -255,16 +261,28 @@ public class VillasController {
             }
 
             System.out.println("Villa dengan id: " + newVilla.getId() + " berhasil di update");
-
-            return newVilla;
         }
     }
 
     //PUT /villas/{id}/rooms/{id} => Mengubah informasi kamar suatu villa
-    public RoomTypes updateVillasRoomTypes(RoomTypes roomtypes) throws SQLException {
-        String sql = "INSERT INTO room_types (villa, name, quantity, capacity, price, bed_size, has_desk, has_ac, has_tv, has_wifi, has_shower, has_hotwater, has_fridge) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
+    public void updateVillasRoomTypes(RoomTypes roomtypes) throws SQLException {
+        String sql = """
+                        UPDATE room_types SET
+                            villa = ?,
+                            name = ?,
+                            quantity = ?,
+                            capacity = ?,
+                            price = ?,
+                            bed_size = ?,
+                            has_desk = ?,
+                            has_ac = ?,
+                            has_tv = ?,
+                            has_wifi = ?,
+                            has_shower = ?,
+                            has_hotwater = ?,
+                            has_fridge = ?
+                        WHERE id = ?
+                """;
 
         try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
         PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -275,27 +293,23 @@ public class VillasController {
             ps.setInt(4, roomtypes.getCapacity());
             ps.setInt(5, roomtypes.getPrice());
             ps.setString(6, roomtypes.getBed_size());
-            ps.setBoolean(7, roomtypes.isHas_desk());
-            ps.setBoolean(8, roomtypes.isHas_ac());
-            ps.setBoolean(9, roomtypes.isHas_tv());
-            ps.setBoolean(10, roomtypes.isHas_wifi());
-            ps.setBoolean(11, roomtypes.isHas_shower());
-            ps.setBoolean(12, roomtypes.isHas_hotwater());
-            ps.setBoolean(13, roomtypes.isHas_fridge());
+            ps.setBoolean(7, roomtypes.getHas_desk());
+            ps.setBoolean(8, roomtypes.getHas_ac());
+            ps.setBoolean(9, roomtypes.getHas_tv());
+            ps.setBoolean(10, roomtypes.getHas_wifi());
+            ps.setBoolean(11, roomtypes.getHas_shower());
+            ps.setBoolean(12, roomtypes.getHas_hotwater());
+            ps.setBoolean(13, roomtypes.getHas_fridge());
             ps.setInt(14, roomtypes.getId());
 
             int affectedRows = ps.executeUpdate();
             if (affectedRows == 0) {
                 throw new SQLException("Failed to update room type villa");
             }
-
-            System.out.println("Tipe ruangan pada villa " + roomtypes.getVilla_id() + " berhasil di update");
-
-            return roomtypes;
         }
     }
 
-    //DELETE /villas/rooms/{id}
+    //DELETE /villas/rooms/{id} ==> Menghapus kamar suatu villa
     public void deleteVillaRoomTypes(int rid, int vid) throws SQLException {
         String sql = "DELETE from room_types WHERE id = ? AND villa_id = ?";
         try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
