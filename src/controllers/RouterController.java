@@ -156,7 +156,7 @@ public class RouterController {
     }
 
     public static void handlePostCustomerIdBookings(String path, Response res, Request req) throws Exception {
-        int id = extractIdFromPath(path, 1);
+        int id = extractIdFromPath(path, 2);
 
         CustomerController cc = new CustomerController();
         String body = req.getBody();
@@ -168,8 +168,8 @@ public class RouterController {
     }
 
     public static void handlePostCustomerIdBookingsIdReviews(String path, Response res, Request req) throws Exception {
-        int bid = extractIdFromPath(path, 1); // paling akhir
-        int cid = extractIdFromPath(path, 3); // 2 sebelum itu
+        int bid = extractIdFromPath(path, 2); // paling akhir
+        int cid = extractIdFromPath(path, 4); // 2 sebelum itu
 
         ReviewController rc = new ReviewController();
         String body = req.getBody();
