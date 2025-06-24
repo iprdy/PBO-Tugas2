@@ -46,10 +46,12 @@ public class CustomerController {
     // POST /customer/{id}/bookings => Customer melakukan pemesanan vila
     public void postBookingForCustomer(Booking bookingData, int customerId) throws SQLException {
         try (Connection conn = DriverManager.getConnection(DBConfig.DB_URL)) {
-            // Siapkan SQL INSERT
             String sql = """
-            INSERT INTO bookings (customer, room_type, checkin_date, checkout_date, price, voucher, final_price, payment_status, has_checkedin, has_checkedout)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO bookings (
+                customer, room_type, checkin_date, checkout_date,
+                price, voucher, final_price, payment_status,
+                has_checkedin, has_checkedout
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """;
 
             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -59,6 +61,7 @@ public class CustomerController {
             ps.setString(4, bookingData.getCheckoutDate());
             ps.setInt(5, bookingData.getPrice());
 
+            // Null handling untuk voucher
             if (bookingData.getVoucher() != null) {
                 ps.setInt(6, bookingData.getVoucher());
             } else {
@@ -66,27 +69,29 @@ public class CustomerController {
             }
 
             ps.setInt(7, bookingData.getFinalPrice());
-            ps.setString(8, "waiting"); // default
-            ps.setBoolean(9, false);    // default hasCheckedin
-            ps.setBoolean(10, false);   // default hasCheckedout
+            ps.setString(8, "waiting"); // default payment status
+            ps.setBoolean(9, false);    // has_checkedin default false
+            ps.setBoolean(10, false);   // has_checkedout default false
 
             int rowsAffected = ps.executeUpdate();
             if (rowsAffected == 0) {
                 throw new SQLException("Failed to create booking");
             }
 
+            // Ambil id yang baru dibuat (auto-increment)
             ResultSet generatedKeys = ps.getGeneratedKeys();
             if (generatedKeys.next()) {
                 int newId = generatedKeys.getInt(1);
-                bookingData.setId(newId);
+                bookingData.setId(newId); // simpan ke objek
             }
 
+            // Pastikan field default tetap terisi di objek Java
             bookingData.setPaymentStatus("waiting");
             bookingData.setHasCheckedin(false);
             bookingData.setHasCheckedout(false);
-            bookingData.setId(bookingData.getId()); // agar id terisi
         }
     }
+
 
 
 
