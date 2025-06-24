@@ -9,6 +9,7 @@ import java.io.*;
 import java.sql.*;
 import java.util.*;
 import java.net.HttpURLConnection;
+import util.ReviewValidator;
 
 public class ReviewController {
     private Connection conn;
@@ -87,22 +88,25 @@ public class ReviewController {
             ResultSet rs = checkStmt.executeQuery();
 
             if (!rs.next()) {
-                throw new SQLException("Booking not found or doesn't belong to customer.");
+                throw new SQLException("Pemesanan tidak ditemukan atau bukan milik pelanggan tersebut.");
             }
 
-            // ini agar field booking tidak 0 di response
+            // memvalidasi input user
+            ReviewValidator.validatePostReview(reviewData);
+
+            // set booking ID berdasarkan path
             reviewData.setBooking(bookingId);
 
             String insertSql = "INSERT INTO reviews (booking, star, title, content) VALUES (?, ?, ?, ?)";
             PreparedStatement ps = conn.prepareStatement(insertSql);
-            ps.setInt(1, bookingId);
+            ps.setInt(1, reviewData.getBooking());
             ps.setInt(2, reviewData.getStar());
             ps.setString(3, reviewData.getTitle());
             ps.setString(4, reviewData.getContent());
 
             int rows = ps.executeUpdate();
             if (rows == 0) {
-                throw new SQLException("Failed to create review");
+                throw new SQLException("Gagal menambahkan review");
             }
         }
     }

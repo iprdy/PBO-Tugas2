@@ -19,35 +19,19 @@ public class Review {
     }
 
     // Getter & Setter
-    public int getBooking() {
-        return booking;
-    }
+    public int getBooking() { return booking; }
 
-    public void setBooking(int booking) {
-        this.booking = booking;
-    }
+    public int getStar() { return star; }
 
-    public int getStar() {
-        return star;
-    }
+    public String getTitle() { return title; }
 
-    public void setStar(int star) {
-        this.star = star;
-    }
+    public String getContent() { return content; }
 
-    public String getTitle() {
-        return title;
-    }
+    public void setBooking(int booking) { this.booking = booking; }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+    public void setStar(int star) { this.star = star; }
 
-    public String getContent() {
-        return content;
-    }
+    public void setTitle(String title) { this.title = title; }
 
-    public void setContent(String content) {
-        this.content = content;
-    }
+    public void setContent(String content) { this.content = content; }
 }
