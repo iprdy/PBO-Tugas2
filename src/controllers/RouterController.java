@@ -244,6 +244,8 @@ public class RouterController {
         int rid = extractIdFromPath(path, 1); // paling akhir
         int vid = extractIdFromPath(path, 3); // 2 sebelum itu
 
+        VillaValidator.checkVillaIdAndRoomTypeId(rid, vid);
+
         String body = req.getBody();
         RoomTypes rt = mapper.readValue(body, RoomTypes.class);
         rt.setIdAndVillaId(rid, vid);
