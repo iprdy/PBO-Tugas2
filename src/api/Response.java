@@ -12,12 +12,10 @@ public class Response {
     private final HttpExchange httpExchange;
     private final Headers headers;
     private final StringBuilder stringBuilder = new StringBuilder();
-    private boolean isSent;
 
     public Response(HttpExchange httpExchange) {
         this.httpExchange = httpExchange;
         this.headers = httpExchange.getResponseHeaders();
-        this.isSent = false;
     }
 
     public void setBody(String string) {
@@ -46,33 +44,5 @@ public class Response {
         } finally {
             httpExchange.close();
         }
-        this.isSent = true;
-    }
-
-    public void send(int status, String body) {
-        setBody(body);
-        send(status);
-    }
-
-    public void json(String jsonString) {
-        this.setBody(jsonString);
-        send(200); // status OK
-    }
-
-    public void error(String message) {
-        this.setBody("{\"error\": \"" + message.replace("\"", "\\\"") + "\"}");
-        send(500); // status 500 Internal Server Error
-    }
-
-    public boolean isSent() {
-        return this.isSent;
-    }
-
-    public boolean isNotSent() {
-        return !this.isSent;
-    }
-
-    public void setHeader(String key, String value) {
-        this.headers.set(key, value);
     }
 }
