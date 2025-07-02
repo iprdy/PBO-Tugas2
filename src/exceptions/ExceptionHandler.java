@@ -34,10 +34,6 @@ public class ExceptionHandler {
             ResponseController.sendErrorResponse(res, "Database error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
         }
 
-        else if (e instanceof DateTimeParseException) {
-            ResponseController.sendErrorResponse(res, "DateTime parse error", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
-        }
-
         else {
             String message = e.getMessage() != null ? e.getMessage() : e.toString();
             ResponseController.sendErrorResponse(res, "Unexpected error", message, HttpURLConnection.HTTP_INTERNAL_ERROR);

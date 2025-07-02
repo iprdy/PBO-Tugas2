@@ -8,42 +8,46 @@ import models.Villas;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.HashMap;
 import java.util.Map;
 
 public class VillaValidator {
-    public static Map<String, String> validateQuery (Request req) throws DateTimeParseException {
-        Map<String, String> query = req.getQueryParams();
+    public static Map<String, String> validateQuery (Request req) {
+        Map<String, String> rawQuery = req.getQueryParams();
 
-        if (query.isEmpty()) {
-            return query;
+        if (rawQuery.isEmpty()) {
+            return rawQuery;
         }
 
-        if (!query.containsKey("ci_date") || !query.containsKey("co_date")) {
+        if (!rawQuery.containsKey("ci_date") || !rawQuery.containsKey("co_date")) {
             throw new BadRequestException("Wajib mengisi key 'ci_date' dan 'co_date'");
         }
 
-        String ci_date = query.get("ci_date");
-        String co_date = query.get("co_date");
+        String ciDate = rawQuery.get("ci_date");
+        String coDate = rawQuery.get("co_date");
 
-        if (ci_date == null || co_date == null) {
+        if (ciDate == null || ciDate.isEmpty() || coDate == null || coDate.isEmpty()) {
             throw new BadRequestException("Wajib mengisi value 'ci_date' dan 'co_date'");
         }
 
-        if (!ci_date.matches("\\d{4}-\\d{2}-\\d{2}") || !co_date.matches("\\d{4}-\\d{2}-\\d{2}")) {
-            throw new BadRequestException("Format tanggal harus 'YYYY-MM-DD')");
+        LocalDate ci_dateParse;
+        LocalDate co_dateParse;
+        try {
+            ci_dateParse = LocalDate.parse(ciDate);
+            co_dateParse = LocalDate.parse(coDate);
+        } catch (DateTimeParseException e) {
+            throw new BadRequestException("Format tanggal harus 'YYYY-MM-DD'");
         }
-
-        LocalDate ci_dateParse = LocalDate.parse(ci_date);
-        LocalDate co_dateParse = LocalDate.parse(co_date);
 
         if (co_dateParse.isBefore(ci_dateParse)) {
             throw new BadRequestException("Tanggal pada co_date tidak boleh lebih awal dari ci_date");
         }
 
-        query.put("ci_date",ci_dateParse + " 00:00:00");
-        query.put("co_date", co_dateParse + " 23:59:59");
+        Map<String, String> validatedQuery = new HashMap<>();
+        validatedQuery.put("ci_date",ci_dateParse + " 00:00:00");
+        validatedQuery.put("co_date", co_dateParse + " 23:59:59");
 
-        return query;
+        return validatedQuery;
     }
 
     public static void validatePostVilla (Villas villa) {
