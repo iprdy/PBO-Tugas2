@@ -6,9 +6,7 @@ public class Villas {
     private String description;
     private String address;
 
-    public Villas() {
-
-    }
+    public Villas() {}
 
     public Villas(Integer id, String name, String description, String address) {
         this.id = id;

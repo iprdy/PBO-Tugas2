@@ -1,7 +1,5 @@
 package models;
 
-import exceptions.BadRequestException;
-
 public class RoomTypes {
     private Integer id;
     private Integer villa_id;

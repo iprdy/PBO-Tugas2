@@ -7,7 +7,6 @@ import controllers.ResponseController;
 
 import java.net.HttpURLConnection;
 import java.sql.SQLException;
-import java.time.format.DateTimeParseException;
 
 public class ExceptionHandler {
     public static void handleException(Exception e, Response res) {

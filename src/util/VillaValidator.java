@@ -1,7 +1,6 @@
 package util;
 
 import api.Request;
-import api.Response;
 import exceptions.BadRequestException;
 import exceptions.DataNotFoundException;
 import models.RoomTypes;
