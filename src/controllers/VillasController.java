@@ -97,7 +97,6 @@ public class VillasController {
         return rooms;
     }
 
-
     // GET /villas/{id}/bookings => Menampilkan semua booking pada suatu vila
     public List<Booking> getBookingsByVillaId(int villaId) throws SQLException {
         List<Booking> bookings = new ArrayList<>();

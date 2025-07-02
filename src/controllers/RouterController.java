@@ -298,6 +298,7 @@ public class RouterController {
         VillasController vc = new VillasController();
         int rid = extractIdFromPath(path, 1); // paling akhir
         int vid = extractIdFromPath(path, 3); // 2 sebelum itu
+        VillaValidator.checkVillaIdAndRoomTypeId(rid, vid);
 
         vc.deleteVillaRoomTypes(rid, vid);
 
@@ -308,6 +309,7 @@ public class RouterController {
         int id = extractIdFromPath(path, 1);
 
         VillasController vc = new VillasController();
+        GlobalValidator.dataRequireNonNull(vc.getVillaById(id), "Villa dengan id " + id + " tidak ditemukan");
 
         vc.deleteVilla(id);
 
