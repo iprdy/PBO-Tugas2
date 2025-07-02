@@ -4,8 +4,6 @@ import controllers.RouterController;
 import exceptions.BadRequestException;
 import exceptions.ExceptionHandler;
 
-import java.util.Map;
-
 public class Router {
     public static void handleGetRequest(String path, Response res, Request req) {
         try {
@@ -52,6 +50,11 @@ public class Router {
             else if (path.matches("/vouchers/\\d+")) {
                 RouterController.handleGetVoucherById(path, res);
             }
+
+            else {
+                throw new BadRequestException("Path '" + path + "' bukan path yang valid");
+            }
+
         } catch (Exception e) {
             ExceptionHandler.handleException(e, res);
         }
@@ -82,6 +85,11 @@ public class Router {
             else if (path.matches("/vouchers")) {
                 RouterController.handlePostVouchers(res, req);
             }
+
+            else {
+                throw new BadRequestException("Path '" + path + "' bukan path yang valid");
+            }
+
         } catch (Exception e) {
             ExceptionHandler.handleException(e, res);
         }
@@ -104,6 +112,11 @@ public class Router {
             else if (path.matches("/vouchers/\\d+$")) {
                 RouterController.handlePutVoucherById(path, res, req);
             }
+
+            else {
+                throw new BadRequestException("Path '" + path + "' bukan path yang valid");
+            }
+
         } catch (Exception e) {
             ExceptionHandler.handleException(e, res);        }
     }
@@ -121,6 +134,11 @@ public class Router {
             else if (path.matches("/vouchers/\\d+$")) {
                 RouterController.handleDeleteVoucherById(path, res);
             }
+
+            else {
+                throw new BadRequestException("Path '" + path + "' bukan path yang valid");
+            }
+
         } catch (Exception e) {
             ExceptionHandler.handleException(e, res);        }
     }
