@@ -43,7 +43,7 @@ public class Server {
             apiKeyCheck(req);
 
             switch (method) {
-                case "GET" -> Router.handleGetRequest(path, res);
+                case "GET" -> Router.handleGetRequest(path, res, req);
                 case "POST" -> Router.handlePostRequest(path, res, req);
                 case "PUT" -> Router.handlePutRequest(path, res, req);
                 case "DELETE" -> Router.handleDeleteRequest(path, res);

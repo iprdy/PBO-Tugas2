@@ -17,11 +17,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class Request {
 
     private final HttpExchange httpExchange;
-    private Headers headers;
+    private final Headers headers;
     private String rawBody;
 
     private String jsonBody;
-    private Map<String, String> params = new HashMap<>();
+    private final Map<String, String> params = new HashMap<>();
 
     public void setParam(String key, String value) {
         this.params.put(key, value);
@@ -32,12 +32,12 @@ public class Request {
         this.headers = httpExchange.getRequestHeaders();
     }
 
-    public String getHeader (String key) {
-        return httpExchange.getRequestHeaders().getFirst(key);
-    }
-
     public String getParam(String key) {
         return this.params.getOrDefault(key, null);
+    }
+
+    public String getHeader (String key) {
+        return httpExchange.getRequestHeaders().getFirst(key);
     }
 
     public String getBody() {

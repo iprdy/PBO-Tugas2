@@ -27,6 +27,10 @@ public class RouterController {
     }
 
     //GET
+    public static void handleGetSlashVillas(Response res, Request req) {
+
+    }
+
     public static void handleGetAllVilla(Response res) throws Exception {
         VillasController vc = new VillasController();
         List<Villas> villa = vc.getAllVillas();
@@ -66,7 +70,12 @@ public class RouterController {
         ResponseController.sendJsonResponse(reviews, res);
     }
 
-//    public static void handleGetVillaCinCout(String path, Response res) {}
+    public static void handleGetVillaCinCout(String checkIn, String checkOut, Response res) throws Exception {
+        VillasController vc = new VillasController();
+        List<Villas> villas = vc.searchAvailableVillas(checkIn, checkOut);
+
+        ResponseController.sendJsonResponse(villas, res);
+    }
 
     public static void handleGetAllCustomer(Response res) throws Exception {
         CustomerController cc = new CustomerController();

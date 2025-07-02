@@ -1,5 +1,4 @@
 package api;
-import api.Server;
 
 public class API {
     public static void main(String[] args) throws Exception {

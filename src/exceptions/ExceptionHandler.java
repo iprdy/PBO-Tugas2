@@ -7,6 +7,7 @@ import controllers.ResponseController;
 
 import java.net.HttpURLConnection;
 import java.sql.SQLException;
+import java.time.format.DateTimeParseException;
 
 public class ExceptionHandler {
     public static void handleException(Exception e, Response res) {
@@ -31,6 +32,10 @@ public class ExceptionHandler {
 
         else if (e instanceof SQLException) {
             ResponseController.sendErrorResponse(res, "Database error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        }
+
+        else if (e instanceof DateTimeParseException) {
+            ResponseController.sendErrorResponse(res, "DateTime parse error", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
         }
 
         else {

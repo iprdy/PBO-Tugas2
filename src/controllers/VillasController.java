@@ -152,7 +152,6 @@ public class VillasController {
         try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            System.out.println("Connected to the database (availability)");
             ps.setString(1, checkinDate);
             ps.setString(2, checkoutDate);
             ResultSet rs = ps.executeQuery();

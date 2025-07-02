@@ -1,13 +1,16 @@
 package api;
 
 import controllers.RouterController;
+import exceptions.BadRequestException;
 import exceptions.ExceptionHandler;
 
+import java.util.Map;
+
 public class Router {
-    public static void handleGetRequest(String path, Response res) {
+    public static void handleGetRequest(String path, Response res, Request req) {
         try {
             if (path.equals("/villas")) {
-                RouterController.handleGetAllVilla(res);
+                RouterController.handleGetSlashVillas(res, req);
             }
 
             else if (path.matches("/villas/\\d+$")) {
@@ -25,10 +28,6 @@ public class Router {
             else if (path.matches("/villas/\\d+/reviews")) {
                 RouterController.handleGetVillaIdReviews(path, res);
             }
-
-//            else if (path.matches("/villas?ci_date=\\d{4}-\\d{2}-\\d{2}&co_date=\\d{4}-\\d{2}-\\d{2}")) {
-//
-//            }
 
             else if (path.equals("/customers")) {
                 RouterController.handleGetAllCustomer(res);
