@@ -1,17 +1,15 @@
 package api;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import controllers.ResponseController;
+import exceptions.BadRequestException;
 import exceptions.UnauthorizedException;
 
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
 
 public class Server {
 
@@ -26,9 +24,6 @@ public class Server {
         server.createContext("/", new RequestHandler());
         server.start();
         System.out.println("Server started at http://localhost:" + port);
-
-        // Log lokasi file DB
-        System.out.println("DB path: " + new java.io.File("villa_booking.db").getAbsolutePath());
     }
 
     public static void processHttpExchange(HttpExchange httpExchange) {
@@ -47,31 +42,16 @@ public class Server {
                 case "POST" -> Router.handlePostRequest(path, res, req);
                 case "PUT" -> Router.handlePutRequest(path, res, req);
                 case "DELETE" -> Router.handleDeleteRequest(path, res);
-//                default -> throw new Exception();
+                default -> throw new BadRequestException("Method '" + method + "' tidak didukung di project API ini");
             }
 
         } catch (UnauthorizedException e) {
             ResponseController.sendErrorResponse(res, "Unauthorized", e.getMessage(), HttpURLConnection.HTTP_UNAUTHORIZED);
+        } catch (BadRequestException e) {
+            ResponseController.sendErrorResponse(res, "Method tidak didukung", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
         } catch(Exception e) {
             System.out.println("Exception: " + e.getMessage());
         }
-
-//        if (res.isSent()) {
-//            ObjectMapper objectMapper = new ObjectMapper();
-//            Map<String, Object> resJsonMap = new HashMap<>();
-//            resJsonMap.put("message", "Request Success...Failed Maybe?");
-//
-//            String resJson = "";
-//            try {
-//                resJson = objectMapper.writeValueAsString(resJsonMap);
-//            } catch(Exception e) {
-//                System.out.println("Serialization error: " + e.getMessage());
-//            }
-//            res.setBody(resJson);
-//            res.send(HttpURLConnection.HTTP_OK);
-//        }
-
-        httpExchange.close();
     }
 
     public static void apiKeyCheck(Request req) {
