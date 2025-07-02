@@ -35,8 +35,6 @@ public class VillaValidator {
         try {
             ci_dateParse = LocalDate.parse(ciDate);
             co_dateParse = LocalDate.parse(coDate);
-            System.out.println(ci_dateParse);
-            System.out.println(co_dateParse);
         } catch (DateTimeParseException e) {
             throw new BadRequestException("Format tanggal harus 'YYYY-MM-DD'");
         }

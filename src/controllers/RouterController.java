@@ -36,10 +36,8 @@ public class RouterController {
             String coDate = query.get("co_date");
 
             handleGetAvaibleVillas(ciDate, coDate, res);
-            System.out.println(ciDate);
-            System.out.println(coDate);
+
         } else {
-            System.out.println("Lol");
             handleGetAllVilla(res);
         }
     }
@@ -86,6 +84,7 @@ public class RouterController {
     public static void handleGetAvaibleVillas(String checkIn, String checkOut, Response res) throws Exception {
         VillasController vc = new VillasController();
         List<Villas> villas = vc.searchAvailableVillas(checkIn, checkOut);
+        GlobalValidator.dataRequireNonNull(villas, "Tidak ada villa yang tersedia");
 
         ResponseController.sendJsonResponse(villas, res);
     }

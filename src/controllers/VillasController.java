@@ -166,7 +166,7 @@ public class VillasController {
                 available.add(villa);
             }
         }
-        return available;
+        return available.isEmpty() ? null : available;
     }
     
     // POST /villas => Menambahkan data vila
