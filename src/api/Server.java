@@ -56,20 +56,20 @@ public class Server {
             System.out.println("Exception: " + e.getMessage());
         }
 
-        if (res.isSent()) {
-            ObjectMapper objectMapper = new ObjectMapper();
-            Map<String, Object> resJsonMap = new HashMap<>();
-            resJsonMap.put("message", "Request Success...Failed Maybe?");
-
-            String resJson = "";
-            try {
-                resJson = objectMapper.writeValueAsString(resJsonMap);
-            } catch(Exception e) {
-                System.out.println("Serialization error: " + e.getMessage());
-            }
-            res.setBody(resJson);
-            res.send(HttpURLConnection.HTTP_OK);
-        }
+//        if (res.isSent()) {
+//            ObjectMapper objectMapper = new ObjectMapper();
+//            Map<String, Object> resJsonMap = new HashMap<>();
+//            resJsonMap.put("message", "Request Success...Failed Maybe?");
+//
+//            String resJson = "";
+//            try {
+//                resJson = objectMapper.writeValueAsString(resJsonMap);
+//            } catch(Exception e) {
+//                System.out.println("Serialization error: " + e.getMessage());
+//            }
+//            res.setBody(resJson);
+//            res.send(HttpURLConnection.HTTP_OK);
+//        }
 
         httpExchange.close();
     }

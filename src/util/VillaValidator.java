@@ -35,6 +35,8 @@ public class VillaValidator {
         try {
             ci_dateParse = LocalDate.parse(ciDate);
             co_dateParse = LocalDate.parse(coDate);
+            System.out.println(ci_dateParse);
+            System.out.println(co_dateParse);
         } catch (DateTimeParseException e) {
             throw new BadRequestException("Format tanggal harus 'YYYY-MM-DD'");
         }
@@ -109,8 +111,8 @@ public class VillaValidator {
             throw new BadRequestException("Bed size tidak boleh kosong");
         }
 
-        if (!(rt.getBed_size().equals("Double") || rt.getBed_size().equals("Queen") || rt.getBed_size().equals("King"))) {
-            throw new BadRequestException("Ukuran kasur harus di antara: Double, Queen, atau King");
+        if (!(rt.getBed_size().equals("double") || rt.getBed_size().equals("queen") || rt.getBed_size().equals("king"))) {
+            throw new BadRequestException("Ukuran kasur harus di antara: double, queen, atau king");
         }
 
         if (rt.getHas_desk() == null) {

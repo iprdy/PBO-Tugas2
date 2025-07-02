@@ -12,6 +12,7 @@ import util.VillaValidator;
 import java.net.HttpURLConnection;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 // Static final untuk koneksi database
 final class DBConfig {
@@ -27,8 +28,20 @@ public class RouterController {
     }
 
     //GET
-    public static void handleGetSlashVillas(Response res, Request req) {
+    public static void handleGetSlashVillas(Response res, Request req) throws Exception {
+        Map<String, String> query = VillaValidator.validateQuery(req);
 
+        if (!query.isEmpty()) {
+            String ciDate = query.get("ci_date");
+            String coDate = query.get("co_date");
+
+            handleGetAvaibleVillas(ciDate, coDate, res);
+            System.out.println(ciDate);
+            System.out.println(coDate);
+        } else {
+            System.out.println("Lol");
+            handleGetAllVilla(res);
+        }
     }
 
     public static void handleGetAllVilla(Response res) throws Exception {
@@ -70,7 +83,7 @@ public class RouterController {
         ResponseController.sendJsonResponse(reviews, res);
     }
 
-    public static void handleGetVillaCinCout(String checkIn, String checkOut, Response res) throws Exception {
+    public static void handleGetAvaibleVillas(String checkIn, String checkOut, Response res) throws Exception {
         VillasController vc = new VillasController();
         List<Villas> villas = vc.searchAvailableVillas(checkIn, checkOut);
 

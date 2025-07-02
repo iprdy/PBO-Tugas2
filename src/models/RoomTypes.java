@@ -119,13 +119,8 @@ public class RoomTypes {
 
     public void setBed_size(String bed_size) {
         if (bed_size != null) {
-            String lower = bed_size.trim().toLowerCase();
-            switch (lower) {
-                case "double" -> this.bed_size = "Double";
-                case "queen" -> this.bed_size = "Queen";
-                case "king" -> this.bed_size = "King";
-                default -> this.bed_size = bed_size;
-            }
+            this.bed_size = bed_size.trim().toLowerCase();
+
         } else {
             this.bed_size = null;
         }

@@ -139,15 +139,15 @@ public class VillasController {
     public List<Villas> searchAvailableVillas(String checkinDate, String checkoutDate) throws SQLException {
         List<Villas> available = new ArrayList<>();
         String sql = """
-            SELECT DISTINCT v.* FROM villas v
-            JOIN room_types rt ON v.id = rt.villa
-            WHERE rt.id NOT IN (
-                SELECT b.room_type FROM bookings b
-                WHERE NOT (
-                    b.checkout_date <= ? OR b.checkin_date >= ?
+                SELECT DISTINCT v.* 
+                FROM villas v 
+                JOIN room_types r ON r.villa = v.id 
+                WHERE NOT EXISTS ( 
+                    SELECT 1 FROM bookings b 
+                    WHERE b.room_type = r.id 
+                    AND NOT (b.checkout_date <= ? OR b.checkin_date >= ?)
                 )
-            )
-        """;
+                """;
 
         try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
              PreparedStatement ps = conn.prepareStatement(sql)) {
