@@ -1,8 +1,5 @@
 package api;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 
 import java.io.BufferedReader;
@@ -12,28 +9,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 public class Request {
 
     private final HttpExchange httpExchange;
-    private final Headers headers;
     private String rawBody;
-
-    private String jsonBody;
-    private final Map<String, String> params = new HashMap<>();
-
-    public void setParam(String key, String value) {
-        this.params.put(key, value);
-    }
 
     public Request(HttpExchange httpExchange) {
         this.httpExchange = httpExchange;
-        this.headers = httpExchange.getRequestHeaders();
-    }
-
-    public String getParam(String key) {
-        return this.params.getOrDefault(key, null);
     }
 
     public String getHeader (String key) {
@@ -54,19 +36,6 @@ public class Request {
 
     public String getRequestMethod() {
         return httpExchange.getRequestMethod();
-    }
-
-    public String getContentType() {
-        return headers.getFirst("Content-Type");
-    }
-
-    public Map<String, Object> getJSON() throws JsonProcessingException {
-        if (!"application/json".equalsIgnoreCase(getContentType())) {
-            return null;
-        }
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.readValue(this.getBody(), new TypeReference<>() {});
     }
 
     public Map<String, String> getQueryParams() {
