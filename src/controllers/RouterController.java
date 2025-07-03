@@ -6,8 +6,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import models.*;
-import util.GlobalValidator;
-import util.VillaValidator;
+import util.*;
 
 import java.net.HttpURLConnection;
 import java.sql.SQLException;
@@ -76,7 +75,7 @@ public class RouterController {
     public static void handleGetVillaIdReviews(String path, Response res) throws Exception {
         int id = Integer.parseInt(path.split("/")[2]);
         ReviewController rc = new ReviewController();
-        List<Review> reviews = rc.getReviewsByVillaId(id);
+        List<Review> reviews = GlobalValidator.dataRequireNonNull(rc.getReviewsByVillaId(id), "Villa dengan id " + id + " tidak ditemukan");
 
         ResponseController.sendJsonResponse(reviews, res);
     }
@@ -115,7 +114,7 @@ public class RouterController {
     public static void handleGetCustomerIdReviews(String path, Response res) throws Exception {
         int id = Integer.parseInt(path.split("/")[2]);
         ReviewController rc = new ReviewController();
-        List<Review> reviews = rc.getReviewsByCustomerId(id);
+        List<Review> reviews = GlobalValidator.dataRequireNonNull(rc.getReviewsByCustomerId(id), "Belum ada review untuk customer dengan id " + id);
 
         ResponseController.sendJsonResponse(reviews, res);
     }
@@ -189,15 +188,31 @@ public class RouterController {
     }
 
     public static void handlePostCustomerIdBookingsIdReviews(String path, Response res, Request req) throws Exception {
-        int bid = extractIdFromPath(path, 2); // paling akhir
-        int cid = extractIdFromPath(path, 4); // 2 sebelum itu
+        int bookingId = extractIdFromPath(path, 2);  // /.../bookings/1/reviews
+        int customerId = extractIdFromPath(path, 4); // /customers/1/...
 
-        ReviewController rc = new ReviewController();
+        // Validasi pemesanan memang milik customer
+        ReviewValidator.checkBookingBelongsToCustomer(bookingId, customerId);
+
+        // Ambil data review dari body
         String body = req.getBody();
         Review review = mapper.readValue(body, Review.class);
-        rc.postReviewForBooking(review, cid, bid);
 
-        ResponseController.sendJsonResponseWithMessage("Berhasil membuat review di costumer dengan id " + cid + "dan booking dengan id " + bid, review, res);
+        // Validasi isi review
+        ReviewValidator.validatePostReview(review);
+
+        // Set booking ID dari path (bukan dari body)
+        review.setBooking(bookingId);
+
+        // Masukkan ke database
+        ReviewController rc = new ReviewController();
+        rc.postReviewForBooking(review, customerId, bookingId);
+
+        ResponseController.sendJsonResponseWithMessage(
+                "Berhasil membuat review untuk customer dengan id " + customerId + " dan booking dengan id " + bookingId,
+                review,
+                res
+        );
     }
 
     public static void handlePostVouchers(Response res, Request req) {
