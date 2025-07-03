@@ -371,3 +371,35 @@ Kondisi ini terjadi jika tidak terdapat voucher dengan id yang sesuai.
 
 
 ---
+
+### 📝 POST `/vouchers`
+
+Menambahkan voucher baru. Pastikan semua data diisi dengan benar, karena sistem akan memvalidasi setiap field.
+
+Gunakan format berikut untuk menambahkan customer:
+```json 
+{
+  "code": "DISKON25",
+  "description": "Diskon 25% untuk semua pemesanan di bulan Juli",
+  "discount": 25.0,
+  "startDate": "2025-03-01",
+  "endDate": "2025-03-31"
+}
+
+```
+
+### ✅ 1. Berhasil Menambahkan Voucher
+
+Berhasil menambahkan data voucher baru.
+
+**Contoh Response:**
+
+
+### ❌ 2. Gagal - Gagal Menambahkan Voucher
+
+Kondisi ini terjadi jika ada field yang kosong atau format tidak sesuai.
+
+**Contoh Response:**
+
+
+---
