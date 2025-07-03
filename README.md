@@ -117,6 +117,4 @@ Jika nilai yang dikirim tidak valid (misal star < 1 atau title kosong), maka sis
 
 ![Gagal – Validasi Review](images/img_5.png)
 
-
-
 ---
