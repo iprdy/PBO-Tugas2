@@ -98,7 +98,10 @@ public class RouterController {
     public static void handleGetCustomerById(String path, Response res) throws Exception {
         int id = Integer.parseInt(path.split("/")[2]);
         CustomerController cc = new CustomerController();
-        Customer customer = cc.getCustomerById(id);
+        Customer customer = GlobalValidator.dataRequireNonNull(
+                cc.getCustomerById(id),
+                "Villa dengan id " + id + " tidak ditemukan"
+        );
 
         ResponseController.sendJsonResponse(customer, res);
     }
