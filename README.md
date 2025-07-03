@@ -422,3 +422,22 @@ Kondisi ini terjadi jika tidak terdapat data voucher dengan id yang sesuai.
 **Contoh Response:**
 
 ---
+
+### 🗑️ DELETE `/vouchers/{id}`
+
+Menghapus data voucher dari database berdasarkan id.
+
+### ✅ 1. Berhasil Menghapus Voucher
+
+Berhasil menghapus data voucher berdasarkan id.
+
+**Contoh Response:**
+
+
+### ❌ 2. Gagal - ID Voucher Tidak Ditemukan
+
+Kondisi ini terjadi jika tidak terdapat data voucher dengan id yang sesuai.
+
+**Contoh Response:**
+
+---
