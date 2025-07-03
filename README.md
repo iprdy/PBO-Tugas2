@@ -237,7 +237,7 @@ Endpoint ini digunakan untuk **menambahkan data vila baru** ke dalam database. P
 
 Permintaan berhasil diproses dan data vila baru telah ditambahkan ke dalam database. Sistem akan mengembalikan respons berisi data vila yang baru dibuat, termasuk `id` yang dihasilkan otomatis.
 
-**Contoh Request:**
+**Contoh Request dan Response:**
 
 ![Vila Berhasil Ditambahkan](images/Villa%20-%20Vila%20Berhasil%20Ditambahkan.png)
 
@@ -310,6 +310,103 @@ Field `name`, `description`, dan `address` merupakan atribut wajib diisi. Jika s
 **Contoh Response:**
 
 ![Tidak Mengisi Nilai pada Field](images/Villa%20-%20Tidak%20Mengisi%20Nilai%20pada%20FIeld.png)
+
+---
+### 🔄 PUT `/villa/{id}`
+Endpoint ini digunakan untuk **mengubah data vila** yang sudah ada di dalam database berdasarkan `id` vila. Data yang dikirimkan harus dalam format JSON sesuai struktur yang ditentukan.
+
+#### 📥 Format JSON yang Diperlukan:
+```json
+{
+  "name": "Nama Baru Vila",
+  "description": "Deskripsi singkat baru tentang vila",
+  "address": "Alamat lengkap baru vila"
+}
+```
+> **Note:**  
+> Tidak perlu menyertakan `id` dalam JSON karena `id` digunakan dari path parameter (`/villas/{id}`) dan diatur otomatis oleh database. Jika `id` disertakan dalam body JSON, maka sistem akan menolak permintaan karena tidak sesuai dengan aturan validasi.
+
+### ✅ 1. Berhasil Mengubah Vila
+
+Permintaan berhasil diproses dan data vila berhasil diperbarui. Respons akan menampilkan data lama dan data baru sebagai bukti perubahan yang telah dilakukan.
+
+**Contoh Request dan Response:**
+
+![Berhasil Mengubah Vila](images/Villa%20-%20Berhasil%20Mengubah%20Vila.png)
+
+### ❌ 2. Gagal - Data Vila Tidak Ditemukan
+
+Kesalahan ini terjadi apabila `id` vila yang diberikan tidak ditemukan di dalam database.
+
+> Pastikan `id` yang digunakan sudah benar dan vila dengan `id` tersebut memang masih tersedia.
+
+**Contoh Response:**
+
+![Data Vila Tidak Ditemukan](images/Villa%20-%20Update%20-%20Data%20Vila%20Tidak%20Ditemukan.png)
+
+### ❌ 3. Gagal - Format JSON Tidak Valid
+Kesalahan terjadi karena **format JSON tidak valid secara sintaksis**, seperti:
+- Tidak menggunakan tanda kutip ganda (`"`)
+- Struktur JSON rusak (kurung kurawal tidak lengkap, koma berlebih, dll.)
+
+**Contoh JSON Tidak Valid:**
+```json
+{
+  name: "Villa Kenanga Baru",
+  "description": Villa direnovasi dengan kolam renang dan rooftop baru,
+  "address": "Jalan Laut Selatan No. 99"
+}
+```
+
+**Contoh Response:**
+
+![Format JSON Tidak Valid](images/Villa%20-%20Update%20-%20Format%20JSON%20Tidak%20Valid.png)
+
+### ❌ 4. Gagal - Struktur Data Tidak Valid
+Permintaan akan gagal jika struktur data JSON tidak sesuai dengan format yang diharapkan. Beberapa penyebab umum:
+- Field `name`, `description`, atau `address` bukan tipe data `string`
+- Key tidak sesuai dengan spesifikasi (`name`, `description`, `address`)
+
+**Contoh Response:**
+
+![Struktur Data Tidak Valid](images/Villa%20-%20Update%20-%20Struktur%20Data%20Tidak%20Valid.png)
+
+### ❌ 5. Gagal - Validasi dari `PUT /villas`
+Permintaan akan ditolak jika terdapat pelanggaran terhadap aturan validasi berikut:
+
+#### 1. Menyertakan Field `id`
+Sistem akan menolak jika permintaan JSON menyertakan field `id`, karena `id` digunakan dari path parameter dan tidak boleh dikirim di dalam body JSON.
+
+**Contoh:**
+```json
+{
+  "id": 1,
+  "name": "Villa Kenanga Baru",
+  "description": "Villa direnovasi dengan kolam renang dan rooftop baru",
+  "address": "Jalan Laut Selatan No. 99"
+}
+```
+
+**Contoh Response:**
+
+![Menyertakan Field ID](images/Villa%20-%20Update%20-%20Menyertakan%20Field%20ID.png)
+
+#### 2. Tidak Mengisi Nilai pada Field
+Field `name`, `description`, dan `address` merupakan atribut wajib. Jika salah satu field dikosongkan atau hanya berisi string kosong, maka sistem akan memunculkan pesan kesalahan.
+
+**Contoh JSON Tidak Valid:**
+
+```json
+{
+  "name": "",
+  "description": "",
+  "address": ""
+}
+```
+
+**Contoh Response:**
+
+![Tidak Mengisi Nilai pada Field](images/Villa%20-%20Update%20-%20Tidak%20Mengisi%20Nilai%20pada%20Field.png)
 
 ---
 
