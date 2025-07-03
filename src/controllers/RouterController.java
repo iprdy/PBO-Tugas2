@@ -282,31 +282,19 @@ public class RouterController {
         ResponseController.sendJsonResponseWithMessage("Berhasil mengupdate customer dengan id " + id, oldCustomer, newCustomer, res);
     }
 
-    public static void handlePutVoucherById(String path, Response res, Request req) {
-        try {
-            int id = extractIdFromPath(path, 1);
+    public static void handlePutVoucherById(String path, Response res, Request req) throws Exception {
+        int id = extractIdFromPath(path, 1);
 
-            String body = req.getBody();
-            Voucher voucher = mapper.readValue(body, Voucher.class);
-            voucher.setId(id);
+        VoucherController vc = new VoucherController();
+        Voucher oldVoucher = GlobalValidator.dataRequireNonNull(vc.getVoucherById(id), "Voucher dengan id " + id + " tidak ditemukan");
 
-            VoucherController vc = new VoucherController();
-            vc.updateVoucher(voucher);
+        String body = req.getBody();
+        Voucher newVoucher = mapper.readValue(body, Voucher.class);
+        newVoucher.setId(id);
+        vc.updateVoucher(newVoucher);
 
-            ResponseController.sendJsonResponseWithMessage("Berhasil mengupdate voucher dengan id " + id, voucher, res);
-        } catch (NumberFormatException e) {
-            ResponseController.sendErrorResponse(res, "ID tidak valid", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
-        } catch (JsonMappingException e) {
-            ResponseController.sendErrorResponse(res, "Invalid data structure", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
-        } catch (JsonProcessingException e) {
-            ResponseController.sendErrorResponse(res, "Invalid JSON format", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
-        } catch (SQLException e) {
-            ResponseController.sendErrorResponse(res, "Database error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
-        } catch (Exception e) {
-            ResponseController.sendErrorResponse(res, "Unexpected error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
-        }
+        ResponseController.sendJsonResponseWithMessage("Berhasil mengupdate voucher dengan id " + id, oldVoucher, newVoucher, res);
     }
-
 
 
 
