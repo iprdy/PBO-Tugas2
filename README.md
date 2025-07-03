@@ -189,14 +189,14 @@ Endpoint ini digunakan untuk mencari vila yang tersedia berdasarkan rentang tang
 ### ✅ 1. Vila yang Tersedia Berhasil Ditemukan
 Jika terdapat vila yang tersedia pada rentang tanggal yang diberikan, maka daftar vila akan ditampilkan.
 
-**Contoh Respons:**
+**Contoh Response:**
 
 ![Villa yang Tersedia Berhasil Ditemukan](images/Villa%20-%20Villa%20yang%20Tersedia%20Berhasil%20Ditemukan.png)
 
 ### ❌ 2. Gagal - Tidak Ada Vila yang Tersedia
 Jika tidak ada vila yang tersedia dalam rentang tanggal tersebut, maka sistem akan mengembalikan pesan bahwa tidak ada hasil.
 
-**Contoh Respons:**
+**Contoh Response:**
 
 ![Tidak Ada Vila yang Tersedia](images/Villa%20-%20Tidak%20ada%20Vila%20yang%20Tersedia.png)
 
@@ -205,16 +205,111 @@ Kesalahan ini muncul jika format tanggal yang diberikan tidak sesuai dengan form
 
 > Pastikan parameter `ci_date` dan `co_date` menggunakan format tanggal yang benar, seperti: `2025-07-05`.
 
-**Contoh Respons:**
+**Contoh Response:**
 
 ![Format Tanggal Salah](images/Villa%20-%20Format%20Tanggal%20Salah.png)
 
 ### ❌ 4. Gagal - Tanggal Check Out Lebih Awal dari Tanggal Check In
 Sistem akan menolak permintaan jika tanggal check-out lebih awal dari tanggal check-in, karena logika waktu tidak valid.
 
-**Contoh Respons:**
+**Contoh Response:**
 
 ![Tanggal Check Out Lebih Awal dari Tanggal Check In](images/Villa%20-%20Tanggal%20Check%20Out%20Lebih%20Awal%20dari%20Tanggal%20Check%20In.png)
+
+---
+### 📝 POST `/villas`
+
+Endpoint ini digunakan untuk **menambahkan data vila baru** ke dalam database. Permintaan dikirim dalam format JSON.
+
+#### 📥 Format JSON yang Diperlukan:
+```json
+{
+  "name": "Nama Vila",
+  "description": "Deskripsi singkat tentang vila",
+  "address": "Alamat lengkap vila"
+}
+```
+
+> **Note:**  
+> Tidak perlu menyertakan `id` dalam JSON karena field `id` dibuat otomatis oleh database menggunakan auto increment. Jika `id` disertakan, sistem akan memunculkan validasi dan menolak permintaan tersebut.
+
+### ✅ 1. Vila Berhasil Ditambahkan
+
+Permintaan berhasil diproses dan data vila baru telah ditambahkan ke dalam database. Sistem akan mengembalikan respons berisi data vila yang baru dibuat, termasuk `id` yang dihasilkan otomatis.
+
+**Contoh Request:**
+
+![Vila Berhasil Ditambahkan](images/Villa%20-%20Vila%20Berhasil%20Ditambahkan.png)
+
+---
+
+### ❌ 2. Gagal - Format JSON Tidak Valid
+
+Gagal menambahkan vila karena format JSON yang dikirimkan **tidak sesuai** dengan struktur yang diharapkan (misalnya, ada koma yang salah, kurung kurawal tidak lengkap, atau menggunakan format non-JSON).
+
+> Pastikan struktur JSON valid dan menggunakan tanda kutip ganda (`"`) untuk key dan value.
+
+**Contoh JSON Tidak Valid:**
+```json
+{
+  name: Villa Mawar
+  "description": "Deskripsi"
+  "address": "Alamat"
+}
+```
+
+**Contoh Response:**
+
+![Format JSON Tidak Valid](images/Villa%20-%20Format%20JSON%20Tidak%20Valid.png)
+
+### ❌ 3. Gagal - Struktur Data Tidak Valid
+Permintaan gagal karena struktur data JSON tidak sesuai dengan yang diharapkan. Beberapa penyebab umum meliputi:
+
+- `name`, `description`, atau `address` bukan bertipe string (misalnya `integer`, `boolean`, atau `null`).
+- Key JSON tidak sesuai dengan yang diharapkan (`name`, `description`, `address`).
+- Field kosong atau hanya berisi spasi. 
+- Menyertakan atribut tambahan yang tidak digunakan.
+
+>Pastikan struktur JSON Anda sesuai dengan format dan tipe data yang telah ditentukan sistem.
+
+**Contoh Response:**
+
+![Struktur Data Tidak Valid](images/Villa%20-%20Struktur%20Data%20Tidak%20Valid.png)
+
+### ❌ 4. Gagal - Validasi dari `POST /villas`
+
+Permintaan akan ditolak jika terdapat pelanggaran terhadap aturan validasi berikut:
+
+#### 1. Menyertakan Field `id`
+Sistem menolak jika permintaan JSON menyertakan `id`, karena `id` diatur otomatis oleh database.
+
+**Contoh:**
+```json
+{
+  "id": 99,
+  "name": "Villa Invalid",
+  "description": "Harusnya tanpa ID",
+  "address": "Alamat"
+}
+```
+**Contoh Response:**
+
+![Menyertakan Field ID](images/Villa%20-%20Menyertakan%20Field%20ID.png)
+
+#### 2. Tidak Mengisi Nilai pada Field
+Field `name`, `description`, dan `address` merupakan atribut wajib diisi. Jika salah satu field dikosongkan atau tidak diberikan nilai, maka sistem akan menolak permintaan dan menampilkan pesan kesalahan.
+
+**Contoh JSON tidak valid:**
+```json
+{
+  "name": "",
+  "description": "Deskripsi",
+  "address": "Alamat"
+}
+```
+**Contoh Response:**
+
+![Tidak Mengisi Nilai pada Field](images/Villa%20-%20Tidak%20Mengisi%20Nilai%20pada%20FIeld.png)
 
 ---
 
