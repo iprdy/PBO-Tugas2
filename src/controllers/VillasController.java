@@ -1,6 +1,5 @@
 package controllers;
 
-
 import database.DatabaseBuilder;
 
 import java.sql.Connection;
