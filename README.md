@@ -403,3 +403,22 @@ Kondisi ini terjadi jika ada field yang kosong atau format tidak sesuai.
 
 
 ---
+
+### ✏️ PUT `/vouchers/{id}`
+
+Memperbarui data voucher yang sudah ada berdasarkan id.
+
+### ✅ 1. Berhasil Memperbarui Data Voucher
+
+Berhasil memperbarui data voucher berdasarkan id.
+
+**Contoh Response:**
+
+
+### ❌ 2. Gagal - ID Voucher Tidak Ditemukan
+
+Kondisi ini terjadi jika tidak terdapat data voucher dengan id yang sesuai.
+
+**Contoh Response:**
+
+---
