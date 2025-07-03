@@ -94,6 +94,16 @@ Jika ID customer tidak ditemukan di database, atau belum pernah menulis review, 
 ### 📝 POST `/customers/{customerId}/bookings/{bookingId}/reviews`
 Menambahkan review baru dari seorang customer untuk booking tertentu. Endpoint ini hanya bisa digunakan jika customer dan booking tersebut sudah ada di database, dan booking memang milik customer tersebut.
 
+Gunakan format berikut saat melakukan request:
+
+```json 
+{
+  "star": (angka dari 1-5),
+  "title": "",
+  "content": ""
+}
+```
+
 ### ✅ 1. Review Berhasil Ditambahkan
 
 Berhasil menambahkan review untuk booking milik customer dengan ID tertentu.
