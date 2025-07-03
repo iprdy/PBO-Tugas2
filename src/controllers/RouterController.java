@@ -128,14 +128,14 @@ public class RouterController {
 
     public static void handleGetVoucherById(String path, Response res) throws Exception {
         int id = Integer.parseInt(path.split("/")[2]);
-        VoucherController vc = new VoucherController();
-        Voucher voucher = vc.getVoucherById(id);
 
-        if (voucher != null) {
-                ResponseController.sendJsonResponse(voucher, res);
-        } else {
-            ResponseController.sendErrorResponse(res, "Voucher tidak ditemukan", "ID: " + id, HttpURLConnection.HTTP_NOT_FOUND);
-        }
+        VoucherController vc = new VoucherController();
+        Voucher voucher = GlobalValidator.dataRequireNonNull(
+                vc.getVoucherById(id),
+                "Voucher dengan id " + id + " tidak ditemukan"
+        );
+
+        ResponseController.sendJsonResponse(voucher, res);
     }
 
 
@@ -215,26 +215,14 @@ public class RouterController {
         );
     }
 
-    public static void handlePostVouchers(Response res, Request req) {
-        try {
-            String body = req.getBody();
-            Voucher voucher = mapper.readValue(body, Voucher.class);
+    public static void handlePostVouchers(Response res, Request req) throws Exception {
+        String body = req.getBody();
+        Voucher voucher = mapper.readValue(body, Voucher.class);
 
-            VoucherController vc = new VoucherController();
-            vc.postVoucher(voucher);
+        VoucherController vc = new VoucherController();
+        vc.postVoucher(voucher);
 
-            ResponseController.sendJsonResponseWithMessage("Berhasil membuat voucher", voucher, res);
-        } catch (NumberFormatException e) {
-            ResponseController.sendErrorResponse(res, "ID tidak valid", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
-        } catch (JsonMappingException e) {
-            ResponseController.sendErrorResponse(res, "Invalid data structure", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
-        } catch (JsonProcessingException e) {
-            ResponseController.sendErrorResponse(res, "Invalid JSON format", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
-        } catch (SQLException e) {
-            ResponseController.sendErrorResponse(res, "Database error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
-        } catch (Exception e) {
-            ResponseController.sendErrorResponse(res, "Unexpected error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
-        }
+        ResponseController.sendJsonResponseWithMessage("Berhasil membuat voucher", voucher, res);
     }
 
 
@@ -272,39 +260,29 @@ public class RouterController {
         CustomerController cc = new CustomerController();
         int id = extractIdFromPath(path, 1);
 
+        Customer oldCustomer = GlobalValidator.dataRequireNonNull(cc.getCustomerById(id),"Customer dengan id " + id + " tidak ditemukan");
+
         String body = req.getBody();
-        Customer customer = mapper.readValue(body, Customer.class);
-        customer.setId(id);
-        cc.updateCustomer(customer);
+        Customer newCustomer = mapper.readValue(body, Customer.class);
+        newCustomer.setId(id);
+        cc.updateCustomer(newCustomer);
 
-        ResponseController.sendJsonResponseWithMessage("Berhasil mengupdate customer dengan id " + id, customer, res);
+        ResponseController.sendJsonResponseWithMessage("Berhasil mengupdate customer dengan id " + id, oldCustomer, newCustomer, res);
     }
 
-    public static void handlePutVoucherById(String path, Response res, Request req) {
-        try {
-            int id = extractIdFromPath(path, 1);
+    public static void handlePutVoucherById(String path, Response res, Request req) throws Exception {
+        int id = extractIdFromPath(path, 1);
 
-            String body = req.getBody();
-            Voucher voucher = mapper.readValue(body, Voucher.class);
-            voucher.setId(id);
+        VoucherController vc = new VoucherController();
+        Voucher oldVoucher = GlobalValidator.dataRequireNonNull(vc.getVoucherById(id), "Voucher dengan id " + id + " tidak ditemukan");
 
-            VoucherController vc = new VoucherController();
-            vc.updateVoucher(voucher);
+        String body = req.getBody();
+        Voucher newVoucher = mapper.readValue(body, Voucher.class);
+        newVoucher.setId(id);
+        vc.updateVoucher(newVoucher);
 
-            ResponseController.sendJsonResponseWithMessage("Berhasil mengupdate voucher dengan id " + id, voucher, res);
-        } catch (NumberFormatException e) {
-            ResponseController.sendErrorResponse(res, "ID tidak valid", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
-        } catch (JsonMappingException e) {
-            ResponseController.sendErrorResponse(res, "Invalid data structure", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
-        } catch (JsonProcessingException e) {
-            ResponseController.sendErrorResponse(res, "Invalid JSON format", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
-        } catch (SQLException e) {
-            ResponseController.sendErrorResponse(res, "Database error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
-        } catch (Exception e) {
-            ResponseController.sendErrorResponse(res, "Unexpected error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
-        }
+        ResponseController.sendJsonResponseWithMessage("Berhasil mengupdate voucher dengan id " + id, oldVoucher, newVoucher, res);
     }
-
 
 
 
@@ -332,19 +310,14 @@ public class RouterController {
         ResponseController.sendJsonResponseWithMessage("Berhasil menghapus villa dengan id " + id, oldVilla, res);
     }
 
-    public static void handleDeleteVoucherById(String path, Response res) {
-        try {
-            int id = extractIdFromPath(path, 1);
-            VoucherController vc = new VoucherController();
-            vc.deleteVoucher(id);
+    public static void handleDeleteVoucherById(String path, Response res) throws Exception {
+        int id = extractIdFromPath(path, 1);
 
-            ResponseController.sendJsonResponseWithMessage("Berhasil menghapus voucher dengan id " + id, res);
-        } catch (NumberFormatException e) {
-            ResponseController.sendErrorResponse(res, "ID tidak valid", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
-        } catch (SQLException e) {
-            ResponseController.sendErrorResponse(res, "Database error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
-        } catch (Exception e) {
-            ResponseController.sendErrorResponse(res, "Unexpected error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
-        }
+        VoucherController vc = new VoucherController();
+        Voucher oldVoucher = GlobalValidator.dataRequireNonNull(vc.getVoucherById(id),"Voucher dengan id " + id + " tidak ditemukan");
+
+        vc.deleteVoucher(id);
+
+        ResponseController.sendJsonResponseWithMessage("Berhasil menghapus voucher dengan id " + id, oldVoucher, res);
     }
 }
