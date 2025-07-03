@@ -173,6 +173,7 @@ public class RouterController {
         CustomerController cc = new CustomerController();
         String body = req.getBody();
         Customer customer = mapper.readValue(body, Customer.class);
+        CustomerValidator.validatePostCustomer(customer);
         cc.postCustomer(customer);
 
         ResponseController.sendJsonResponseWithMessage("Berhasil membuat customer", customer, res);
