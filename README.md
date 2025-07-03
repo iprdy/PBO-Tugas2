@@ -92,6 +92,25 @@ Kondisi ini terjadi jika ada field yang kosong atau format email atau nomor tele
 
 ---
 
+### ✏️ PUT `/customers/{id}`
+
+Memperbarui data customer yang sudah ada berdasarkan id.
+
+### ✅ 1. Berhasil Memperbarui Data Customer
+
+Berhasil memperbarui data customer berdasarkan id.
+
+**Contoh Response:**
+
+
+### ❌ 2. Gagal - ID Customer Tidak Ditemukan
+
+Kondisi ini terjadi jika tidak terdapat data customer dengan id yang sesuai.
+
+**Contoh Response:**
+
+---
+
 ## 🏡 Villa
 Villa dalam aplikasi pemesanan vila mempresentasikan properti atau penginapan yang tersedia untuk disewa. Vila menyediakan endpoint untuk melihat, menambahkan, mengubah, dan menghapus vila yang tersedia. Setiap vila berisi informasi mengenai:
 
