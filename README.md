@@ -252,9 +252,9 @@ Gagal menambahkan vila karena format JSON yang dikirimkan **tidak sesuai** denga
 **Contoh JSON Tidak Valid:**
 ```json
 {
-  name: Villa Mawar
-  "description": "Deskripsi"
-  "address": "Alamat"
+  name: "Villa Nusa Indah",
+  "description": "Villa tenang dengan pemandangan taman bunga sakura",
+  "address": "Jalan Sakura No. 88, Ubud, Bali"
 }
 ```
 
@@ -286,10 +286,10 @@ Sistem menolak jika permintaan JSON menyertakan `id`, karena `id` diatur otomati
 **Contoh:**
 ```json
 {
-  "id": 99,
-  "name": "Villa Invalid",
-  "description": "Harusnya tanpa ID",
-  "address": "Alamat"
+    "id": 1,
+  "name": "Villa Nusa Indah",
+  "description": "Villa tenang dengan pemandangan taman bunga sakura",
+  "address": "Jalan Sakura No. 88, Ubud, Bali"
 }
 ```
 **Contoh Response:**
