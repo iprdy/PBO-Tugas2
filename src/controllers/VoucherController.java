@@ -1,6 +1,5 @@
 package controllers;
 
-
 import database.DatabaseBuilder;
 
 import models.Voucher;
