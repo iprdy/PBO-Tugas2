@@ -29,6 +29,40 @@ Data disimpan dalam **SQLite**, dan API dapat diuji menggunakan aplikasi seperti
 ---
 
 ## Dokumentasi API
+## 👤 Customer
+Customer merepresentasikan pengguna yang melakukan pemesanan vila. Customer dapat memiliki beberapa pemesanan (booking) dan memberikan review. Setiap vila berisi informasi mengenai:
+
+| Field | Tipe Data dalam Database | Tipe Data dalam Program | Keterangan                                 |
+|-------|--------------------------|-------------------------|--------------------------------------------|
+| id    | `INT`                    | `Integer`               | Identitas unik dari masing-masing customer |
+| name  | `TEXT`                   | `String`                | Nama lengkap customer                      |
+| email | `TEXT`                   | `String`                | Alamat email customer                      |
+| phone | `TEXT`                   | `String`                | Nomor telepon customer                     |
+
+Berikut adalah daftar endpoint yant tersedia untuk entitas `Customer`
+
+___
+
+### 🔍 GET `/customers`
+
+Menampilkan seluruh customer yang terdaftar.
+
+### ✅ 1. Berhasil Menampilkan Seluruh Customer
+
+Berhasil menampilkan seluruh customer yang terdaftar.
+
+**Contoh Response:**
+
+
+### ❌ 2. Gagal - Tidak Ada Customer Pada Database
+
+Kondisi ini terjadi jika tidak terdapat data customer sama sekali dalam database.
+
+**Contoh Response:**
+
+
+---
+
 ## 🏡 Villa
 Villa dalam aplikasi pemesanan vila mempresentasikan properti atau penginapan yang tersedia untuk disewa. Vila menyediakan endpoint untuk melihat, menambahkan, mengubah, dan menghapus vila yang tersedia. Setiap vila berisi informasi mengenai:
 
