@@ -13,10 +13,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
-// Static final untuk koneksi database
-final class DBConfig {
-    public static final String DB_URL = "jdbc:sqlite:villa_booking.db";
-}
+
 
 public class RouterController {
     public static ObjectMapper mapper = new ObjectMapper();
