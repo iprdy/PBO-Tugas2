@@ -351,3 +351,23 @@ Kondisi ini terjadi jika tidak terdapat data voucher sama sekali dalam database.
 **Contoh Response:**
 
 ---
+
+### 🔍 GET `/vouchers/{id}`
+
+Menampilkan informasi detail voucher berdasarkan id.
+
+### ✅ 1. Berhasil Menampilkan Data Voucher
+
+Berhasil menampilkan informasi detail voucher berdasarkan id.
+
+**Contoh Response:**
+
+
+### ❌ 2. Gagal - ID Voucher Tidak Ditemukan
+
+Kondisi ini terjadi jika tidak terdapat voucher dengan id yang sesuai.
+
+**Contoh Response:**
+
+
+---
