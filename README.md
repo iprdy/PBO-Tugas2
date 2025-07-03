@@ -63,6 +63,25 @@ Kondisi ini terjadi jika tidak terdapat data customer sama sekali dalam database
 
 ---
 
+### 🔍 GET `/customers/{id}`
+
+Menampilkan informasi detail customer berdasarkan id.
+
+### ✅ 1. Berhasil Menampilkan Data Customer
+
+Berhasil menampilkan informasi detail customer berdasarkan id.
+
+**Contoh Response:**
+
+
+### ❌ 2. Gagal - ID Customer Tidak Ditemukan
+
+Kondisi ini terjadi jika tidak terdapat Customer dengan id yang sesuai.
+
+**Contoh Response:**
+
+
+---
 ### 📝 POST `/customers`
 
 Menambahkan customer baru. Email dan nomor telepon akan divalidasi untuk format yang benar.
