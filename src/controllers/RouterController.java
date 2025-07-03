@@ -43,7 +43,7 @@ public class RouterController {
 
     public static void handleGetAllVilla(Response res) throws Exception {
         VillasController vc = new VillasController();
-        List<Villas> villa = vc.getAllVillas();
+        List<Villas> villa = GlobalValidator.dataRequireNonNull(vc.getAllVillas(), "Tidak ada data villa yang tersedia");
 
         ResponseController.sendJsonResponse(villa, res);
     }
