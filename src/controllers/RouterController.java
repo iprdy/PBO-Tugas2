@@ -269,15 +269,27 @@ public class RouterController {
     }
 
     public static void handlePutCustomerById(String path, Response res, Request req) throws Exception {
-        CustomerController cc = new CustomerController();
-        int id = extractIdFromPath(path, 1);
+       try{
+           CustomerController cc = new CustomerController();
+           int id = extractIdFromPath(path, 1);
 
-        String body = req.getBody();
-        Customer customer = mapper.readValue(body, Customer.class);
-        customer.setId(id);
-        cc.updateCustomer(customer);
+           String body = req.getBody();
+           Customer customer = mapper.readValue(body, Customer.class);
+           customer.setId(id);
+           cc.updateCustomer(customer);
 
-        ResponseController.sendJsonResponseWithMessage("Berhasil mengupdate customer dengan id " + id, customer, res);
+           ResponseController.sendJsonResponseWithMessage("Berhasil mengupdate customer dengan id " + id, customer, res);
+       } catch (NumberFormatException e) {
+            ResponseController.sendErrorResponse(res, "ID tidak valid", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
+       } catch (JsonMappingException e) {
+            ResponseController.sendErrorResponse(res, "Invalid data structure", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
+       } catch (JsonProcessingException e) {
+           ResponseController.sendErrorResponse(res, "Invalid JSON format", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
+       } catch (SQLException e) {
+           ResponseController.sendErrorResponse(res, "Database error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+       } catch (Exception e) {
+           ResponseController.sendErrorResponse(res, "Unexpected error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+       }
     }
 
     public static void handlePutVoucherById(String path, Response res, Request req) {
