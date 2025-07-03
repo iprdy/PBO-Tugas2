@@ -223,6 +223,7 @@ public class RouterController {
         Voucher voucher = mapper.readValue(body, Voucher.class);
 
         VoucherController vc = new VoucherController();
+        VoucherValidator.validatePostVoucher(voucher);
         vc.postVoucher(voucher);
 
         ResponseController.sendJsonResponseWithMessage("Berhasil membuat voucher", voucher, res);
