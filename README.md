@@ -410,6 +410,25 @@ Field `name`, `description`, dan `address` merupakan atribut wajib. Jika salah s
 
 ---
 
+### 🗑️ DELETE `/villas/{id}`
+Endpoint ini digunakan untuk **menghapus data sebuah vila** berdasarkan `id` yang diberikan. Jika vila dengan `id` tersebut ditemukan di database, maka data akan dihapus secara permanen.
+
+### ✅ 1. Vila Berhasil Dihapus
+Permintaan berhasil diproses dan vila dengan `id` yang dimaksud berhasil dihapus dari database.
+
+**Contoh Response:**
+
+![Vila Berhasil Dihapus](images/Villa%20-%20Vila%20Berhasil%20Dihapus.png)
+
+### ❌ 2. Gagal - Data Vila Tidak Ditemukan
+Kesalahan ini terjadi apabila `id` vila yang diberikan tidak ditemukan di dalam database. Sistem akan menampilkan pesan error bahwa data tidak tersedia untuk dihapus.
+
+**Contoh Response:**
+
+![Villa - Delete - Data Vila Tidak Ditemukan](images/Villa%20-%20Delete%20-%20Data%20Vila%20Tidak%20Ditemukan.png)
+
+---
+
 ## 📝 Review
 
 Review adalah fitur yang memungkinkan pelanggan untuk memberikan penilaian dan umpan balik setelah melakukan pemesanan vila. Setiap review berisi informasi mengenai:
