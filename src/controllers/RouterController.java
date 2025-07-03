@@ -322,19 +322,14 @@ public class RouterController {
         ResponseController.sendJsonResponseWithMessage("Berhasil menghapus villa dengan id " + id, oldVilla, res);
     }
 
-    public static void handleDeleteVoucherById(String path, Response res) {
-        try {
-            int id = extractIdFromPath(path, 1);
-            VoucherController vc = new VoucherController();
-            vc.deleteVoucher(id);
+    public static void handleDeleteVoucherById(String path, Response res) throws Exception {
+        int id = extractIdFromPath(path, 1);
 
-            ResponseController.sendJsonResponseWithMessage("Berhasil menghapus voucher dengan id " + id, res);
-        } catch (NumberFormatException e) {
-            ResponseController.sendErrorResponse(res, "ID tidak valid", e.getMessage(), HttpURLConnection.HTTP_BAD_REQUEST);
-        } catch (SQLException e) {
-            ResponseController.sendErrorResponse(res, "Database error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
-        } catch (Exception e) {
-            ResponseController.sendErrorResponse(res, "Unexpected error", e.getMessage(), HttpURLConnection.HTTP_INTERNAL_ERROR);
-        }
+        VoucherController vc = new VoucherController();
+        Voucher oldVoucher = GlobalValidator.dataRequireNonNull(vc.getVoucherById(id),"Voucher dengan id " + id + " tidak ditemukan");
+
+        vc.deleteVoucher(id);
+
+        ResponseController.sendJsonResponseWithMessage("Berhasil menghapus voucher dengan id " + id, oldVoucher, res);
     }
 }
