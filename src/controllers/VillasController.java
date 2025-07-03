@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import exceptions.DataNotFoundException;
 import models.RoomTypes;
 import models.Booking;
 import models.Villas;
@@ -167,6 +168,39 @@ public class VillasController {
         }
         return available.isEmpty() ? null : available;
     }
+
+    public RoomTypes getVillaRoomById(int rid, int vid) throws SQLException, DataNotFoundException {
+        String sql = "SELECT * FROM room_types WHERE id = ? AND villa = ?";
+
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, rid);
+            ps.setInt(2, vid);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return new RoomTypes(
+                        rs.getInt("id"),
+                        rs.getInt("villa"),
+                        rs.getString("name"),
+                        rs.getInt("quantity"),
+                        rs.getInt("capacity"),
+                        rs.getInt("price"),
+                        rs.getString("bed_size"),
+                        rs.getInt("has_desk") == 1,
+                        rs.getInt("has_ac") == 1,
+                        rs.getInt("has_tv") == 1,
+                        rs.getInt("has_wifi") == 1,
+                        rs.getInt("has_shower") == 1,
+                        rs.getInt("has_hotwater") == 1,
+                        rs.getInt("has_fridge") == 1
+                );
+            } else {
+                return null;
+            }
+        }
+    }
     
     // POST /villas => Menambahkan data vila
     public void createVilla(Villas villa) throws SQLException {
@@ -308,7 +342,7 @@ public class VillasController {
 
     //DELETE /villas/rooms/{id} ==> Menghapus kamar suatu villa
     public void deleteVillaRoomTypes(int rid, int vid) throws SQLException {
-        String sql = "DELETE from room_types WHERE id = ? AND villa_id = ?";
+        String sql = "DELETE from room_types WHERE id = ? AND villa = ?";
         try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
              PreparedStatement ps = conn.prepareStatement(sql)) {
             System.out.println("Has connected to the database");

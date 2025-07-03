@@ -255,18 +255,17 @@ public class RouterController {
     }
 
     public static void handlePutVillaIdRoomsId(String path, Response res, Request req) throws Exception {
-        VillasController vc = new VillasController();
         int rid = extractIdFromPath(path, 1); // paling akhir
         int vid = extractIdFromPath(path, 3); // 2 sebelum itu
-
-        VillaValidator.checkVillaIdAndRoomTypeId(rid, vid);
+        VillasController vc = new VillasController();
+        RoomTypes oldRoomType = GlobalValidator.dataRequireNonNull(vc.getVillaRoomById(rid,vid), "ID Villa atau Room Type tidak ditemukan");
 
         String body = req.getBody();
-        RoomTypes rt = mapper.readValue(body, RoomTypes.class);
-        rt.setIdAndVillaId(rid, vid);
-        vc.updateVillasRoomTypes(rt);
+        RoomTypes newRoomType = mapper.readValue(body, RoomTypes.class);
+        newRoomType.setIdAndVillaId(rid, vid);
+        vc.updateVillasRoomTypes(newRoomType);
 
-        ResponseController.sendJsonResponseWithMessage("Berhasil mengupdate roomtype dengan id " + rid + " di villa dengan id " + vid, rt, res);
+        ResponseController.sendJsonResponseWithMessage("Berhasil mengupdate roomtype dengan id " + rid + " di villa dengan id " + vid, oldRoomType, newRoomType, res);
     }
 
     public static void handlePutCustomerById(String path, Response res, Request req) throws Exception {
@@ -315,22 +314,22 @@ public class RouterController {
         VillasController vc = new VillasController();
         int rid = extractIdFromPath(path, 1); // paling akhir
         int vid = extractIdFromPath(path, 3); // 2 sebelum itu
-        VillaValidator.checkVillaIdAndRoomTypeId(rid, vid);
+        RoomTypes oldRoomType = GlobalValidator.dataRequireNonNull(vc.getVillaRoomById(rid, vid), "ID Villa atau Room Type tidak ditemukan");
 
         vc.deleteVillaRoomTypes(rid, vid);
 
-        ResponseController.sendJsonResponseWithMessage("Berhasil menghapus roomtype dengan id " + rid + " di villa dengan id " + vid, res);
+        ResponseController.sendJsonResponseWithMessage("Berhasil menghapus roomtype dengan id " + rid + " di villa dengan id " + vid, oldRoomType, res);
     }
 
     public static void handleDeleteVillaById(String path, Response res) throws Exception {
         int id = extractIdFromPath(path, 1);
 
         VillasController vc = new VillasController();
-        GlobalValidator.dataRequireNonNull(vc.getVillaById(id), "Villa dengan id " + id + " tidak ditemukan");
+        Villas oldVilla = GlobalValidator.dataRequireNonNull(vc.getVillaById(id), "Villa dengan id " + id + " tidak ditemukan");
 
         vc.deleteVilla(id);
 
-        ResponseController.sendJsonResponseWithMessage("Berhasil menghapus villa dengan id " + id, res);
+        ResponseController.sendJsonResponseWithMessage("Berhasil menghapus villa dengan id " + id, oldVilla, res);
     }
 
     public static void handleDeleteVoucherById(String path, Response res) {

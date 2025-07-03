@@ -13,21 +13,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class VillaValidator {
-    public static void checkVillaIdAndRoomTypeId(int rid, int vid) throws SQLException, DataNotFoundException {
-        String sql = "SELECT * FROM room_types WHERE id = ? AND villa = ?";
-
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, rid);
-            ps.setInt(2, vid);
-            ResultSet rs = ps.executeQuery();
-
-            if(!rs.next()) {
-                throw new DataNotFoundException("ID Villa atau Room Type tidak ditemukan");
-            }
-        }
-    }
-
     public static Map<String, String> validateQuery (Request req) {
         Map<String, String> rawQuery = req.getQueryParams();
 
