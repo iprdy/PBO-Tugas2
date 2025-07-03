@@ -9,7 +9,7 @@ public class DatabaseBuilder {
     public static final String DB_URL = "jdbc:sqlite:villa_booking.db";
 
     public static void main(String[] args) {
-        // Gunakan konstanta DB_URL di sini
+        // Menggunakan konstanta DB_URL di sini
         try (Connection conn = DriverManager.getConnection(DB_URL);
              Statement stmt = conn.createStatement()) {
 
