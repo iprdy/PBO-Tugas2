@@ -63,6 +63,35 @@ Kondisi ini terjadi jika tidak terdapat data customer sama sekali dalam database
 
 ---
 
+### 📝 POST `/customers`
+
+Menambahkan customer baru. Email dan nomor telepon akan divalidasi untuk format yang benar.
+
+Gunakan format berikut untuk menambahkan customer:
+```json 
+{
+  "name": "Maru",
+  "email": "maru@example.com",
+  "phone": "+6281234567890"
+}
+```
+
+### ✅ 1. Berhasil Menambahkan Customer
+
+Berhasil menambahkan data customer baru.
+
+**Contoh Response:**
+
+
+### ❌ 2. Gagal - Gagal Menambahkan Customer
+
+Kondisi ini terjadi jika ada field yang kosong atau format email atau nomor telepon tidak sesuai.
+
+**Contoh Response:**
+
+
+---
+
 ## 🏡 Villa
 Villa dalam aplikasi pemesanan vila mempresentasikan properti atau penginapan yang tersedia untuk disewa. Vila menyediakan endpoint untuk melihat, menambahkan, mengubah, dan menghapus vila yang tersedia. Setiap vila berisi informasi mengenai:
 
