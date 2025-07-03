@@ -39,7 +39,7 @@ Customer merepresentasikan pengguna yang melakukan pemesanan vila. Customer dapa
 | email | `TEXT`                   | `String`                | Alamat email customer                      |
 | phone | `TEXT`                   | `String`                | Nomor telepon customer                     |
 
-Berikut adalah daftar endpoint yant tersedia untuk entitas `Customer`
+Berikut adalah daftar endpoint yang tersedia untuk entitas `Customer`
 
 ___
 
@@ -314,5 +314,23 @@ Jika nilai yang dikirim tidak valid (misal star < 1 atau > 5 atau title kosong),
 **Contoh Response:**
 
 ![Gagal – Validasi Review](images/img_5.png)
+
+---
+
+## 🎟️ Voucher
+Voucher digunakan untuk memberikan potongan harga kepada pelanggan dengan kode tertentu yang berlaku dalam rentang tanggal tertentu. Setiap voucher berisi informasi mengenai:
+
+| Field       | Tipe Data dalam Database | Tipe Data dalam Program | Keterangan                               |
+|-------------|--------------------------|-------------------------|------------------------------------------|
+| id          | `INT`                    | `Integer`               | Identitas unik dari masing-masing voucher |
+| code        | `TEXT`                   | `String`                | 	Kode unik voucher yang digunakan pelanggan untuk mendapatkan diskon.                                         |
+| description | `TEXT`                   | `String`                | Deskripsi singkat mengenai kegunaan atau syarat dari voucher.                                         |
+| discount    | `REAL`                   | `Double`                | Persentase potongan harga                                         |
+| startDate   | `TEXT`                   | `String`                | Tanggal mulai berlakunya voucher                                         |
+| endDate     | `TEXT`                   | `String`                | Tanggal akhir masa berlaku voucher                                         |
+
+Berikut adalah daftar endpoint yang tersedia untuk entitas `Voucher`
+
+___
 
 ---
