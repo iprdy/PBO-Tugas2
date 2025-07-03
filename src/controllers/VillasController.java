@@ -34,7 +34,7 @@ public class VillasController {
                 villas.add(villa);
             }
         }
-        return villas;
+        return villas.isEmpty() ? null : villas;
     }
 
     // GET /villas/{id} => Menampilkan detail data satu vila
