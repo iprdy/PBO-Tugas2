@@ -310,11 +310,11 @@ public class RouterController {
         int id = extractIdFromPath(path, 1);
 
         VillasController vc = new VillasController();
-        GlobalValidator.dataRequireNonNull(vc.getVillaById(id), "Villa dengan id " + id + " tidak ditemukan");
+        Villas oldVilla = GlobalValidator.dataRequireNonNull(vc.getVillaById(id), "Villa dengan id " + id + " tidak ditemukan");
 
         vc.deleteVilla(id);
 
-        ResponseController.sendJsonResponseWithMessage("Berhasil menghapus villa dengan id " + id, res);
+        ResponseController.sendJsonResponseWithMessage("Berhasil menghapus villa dengan id " + id, oldVilla, res);
     }
 
     public static void handleDeleteVoucherById(String path, Response res) {
