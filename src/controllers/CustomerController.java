@@ -2,7 +2,6 @@ package controllers;
 
 import database.DatabaseBuilder;
 
-
 import models.Customer;
 
 import models.Booking;
@@ -42,7 +41,6 @@ public class CustomerController {
             return bookings;
         }
     }
-
 
 
     // POST /customer/{id}/bookings => Customer melakukan pemesanan vila
@@ -95,8 +93,7 @@ public class CustomerController {
     }
 
 
-
-
+    // GET /customer
     public List<Customer> getAllCustomers() throws SQLException {
         try (Connection conn = DriverManager.getConnection(DatabaseBuilder.DB_URL)) {
             String sql = "SELECT * FROM customers";
@@ -116,7 +113,6 @@ public class CustomerController {
             return customers;
         }
     }
-
 
 
     // GET /customers/{id} -> detail satu customer
@@ -139,7 +135,6 @@ public class CustomerController {
             return customer;
         }
     }
-
 
 
     // POST /customers -> menambahkan customer baru
