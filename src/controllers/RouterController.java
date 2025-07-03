@@ -128,14 +128,14 @@ public class RouterController {
 
     public static void handleGetVoucherById(String path, Response res) throws Exception {
         int id = Integer.parseInt(path.split("/")[2]);
-        VoucherController vc = new VoucherController();
-        Voucher voucher = vc.getVoucherById(id);
 
-        if (voucher != null) {
-                ResponseController.sendJsonResponse(voucher, res);
-        } else {
-            ResponseController.sendErrorResponse(res, "Voucher tidak ditemukan", "ID: " + id, HttpURLConnection.HTTP_NOT_FOUND);
-        }
+        VoucherController vc = new VoucherController();
+        Voucher voucher = GlobalValidator.dataRequireNonNull(
+                vc.getVoucherById(id),
+                "Voucher dengan id " + id + " tidak ditemukan"
+        );
+
+        ResponseController.sendJsonResponse(voucher, res);
     }
 
 
