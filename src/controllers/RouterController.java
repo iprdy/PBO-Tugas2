@@ -299,11 +299,11 @@ public class RouterController {
         VillasController vc = new VillasController();
         int rid = extractIdFromPath(path, 1); // paling akhir
         int vid = extractIdFromPath(path, 3); // 2 sebelum itu
-        GlobalValidator.dataRequireNonNull(vc.getVillaRoomById(rid, vid), "ID Villa atau Room Type tidak ditemukan");
+        RoomTypes oldRoomType = GlobalValidator.dataRequireNonNull(vc.getVillaRoomById(rid, vid), "ID Villa atau Room Type tidak ditemukan");
 
         vc.deleteVillaRoomTypes(rid, vid);
 
-        ResponseController.sendJsonResponseWithMessage("Berhasil menghapus roomtype dengan id " + rid + " di villa dengan id " + vid, res);
+        ResponseController.sendJsonResponseWithMessage("Berhasil menghapus roomtype dengan id " + rid + " di villa dengan id " + vid, oldRoomType, res);
     }
 
     public static void handleDeleteVillaById(String path, Response res) throws Exception {
