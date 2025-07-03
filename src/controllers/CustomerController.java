@@ -1,5 +1,6 @@
 package controllers;
 
+import database.DatabaseBuilder;
 
 import models.Customer;
 
@@ -11,7 +12,7 @@ public class CustomerController {
 
     //GET /customer/{id}/bookings => daftar booking yang telah dilakukan oleh seorang customer
     public List<Booking> getCustomerBookings(int customerId) throws SQLException {
-        try (Connection conn = DriverManager.getConnection(DBConfig.DB_URL)) {
+        try (Connection conn = DriverManager.getConnection(DatabaseBuilder.DB_URL)) {
             String sql = "SELECT * FROM bookings WHERE customer = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, customerId);
@@ -45,7 +46,7 @@ public class CustomerController {
 
     // POST /customer/{id}/bookings => Customer melakukan pemesanan vila
     public void postBookingForCustomer(Booking bookingData, int customerId) throws SQLException {
-        try (Connection conn = DriverManager.getConnection(DBConfig.DB_URL)) {
+        try (Connection conn = DriverManager.getConnection(DatabaseBuilder.DB_URL)) {
             String sql = """
             INSERT INTO bookings (
                 customer, room_type, checkin_date, checkout_date,
@@ -96,7 +97,7 @@ public class CustomerController {
 
 
     public List<Customer> getAllCustomers() throws SQLException {
-        try (Connection conn = DriverManager.getConnection(DBConfig.DB_URL)) {
+        try (Connection conn = DriverManager.getConnection(DatabaseBuilder.DB_URL)) {
             String sql = "SELECT * FROM customers";
             PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
@@ -119,7 +120,7 @@ public class CustomerController {
 
     // GET /customers/{id} -> detail satu customer
     public Customer getCustomerById(int customerId) throws SQLException {
-        try (Connection conn = DriverManager.getConnection(DBConfig.DB_URL)) {
+        try (Connection conn = DriverManager.getConnection(DatabaseBuilder.DB_URL)) {
             Customer customer = new Customer();
             String sql = "SELECT * FROM customers WHERE id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
@@ -127,7 +128,7 @@ public class CustomerController {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                 customer = new Customer(
+                customer = new Customer(
                         rs.getInt("id"),
                         rs.getString("name"),
                         rs.getString("email"),
@@ -142,7 +143,7 @@ public class CustomerController {
 
     // POST /customers -> menambahkan customer baru
     public void postCustomer(Customer customer) throws SQLException {
-        try (Connection conn = DriverManager.getConnection(DBConfig.DB_URL)) {
+        try (Connection conn = DriverManager.getConnection(DatabaseBuilder.DB_URL)) {
             String sql = "INSERT INTO customers (name, email, phone) VALUES (?, ?, ?)";
             PreparedStatement ps = conn.prepareStatement(sql);
 
@@ -161,7 +162,7 @@ public class CustomerController {
 
     // PUT /customers/{id} -> mengubah data customer berdasarkan ID
     public void updateCustomer(Customer updatedCustomer) throws SQLException {
-        try (Connection conn = DriverManager.getConnection(DBConfig.DB_URL)) {
+        try (Connection conn = DriverManager.getConnection(DatabaseBuilder.DB_URL)) {
             String sql = "UPDATE customers SET name = ?, email = ?, phone = ? WHERE id = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, updatedCustomer.getName());
