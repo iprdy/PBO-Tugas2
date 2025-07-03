@@ -98,7 +98,7 @@ Gunakan format berikut saat menambahkan review:
 
 ```json 
 {
-  "star": 5, // Angka dari 1-5
+  "star": 5, 
   "title": "Judul Review",
   "content": "Isi dari Review"
 }
@@ -121,7 +121,7 @@ Jika booking tidak ditemukan atau tidak dimiliki oleh customer dengan ID yang se
 ![Gagal – Booking Tidak Ditemukan atau Bukan Milik Customer](images/img_4.png)
 
 ### ❌ 3. Gagal – Validasi Review
-Jika nilai yang dikirim tidak valid (misal star < 1 atau title kosong), maka sistem akan menolak data.
+Jika nilai yang dikirim tidak valid (misal star < 1 atau > 5 atau title kosong), maka sistem akan menolak data.
 
 **Contoh Response:**
 
