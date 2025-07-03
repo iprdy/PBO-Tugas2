@@ -14,7 +14,7 @@ import java.util.Map;
 
 public class VillaValidator {
     public static void checkVillaIdAndRoomTypeId(int rid, int vid) throws SQLException, DataNotFoundException {
-        String sql = "SELECT * FROM room_types WHERE id = ? AND villa_id = ?";
+        String sql = "SELECT * FROM room_types WHERE id = ? AND villa = ?";
 
         try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
              PreparedStatement ps = conn.prepareStatement(sql)) {

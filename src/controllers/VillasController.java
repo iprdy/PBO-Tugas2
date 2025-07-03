@@ -266,7 +266,6 @@ public class VillasController {
     public void updateVillasRoomTypes(RoomTypes roomtypes) throws SQLException {
         String sql = """
                         UPDATE room_types SET
-                            villa = ?,
                             name = ?,
                             quantity = ?,
                             capacity = ?,
@@ -279,26 +278,26 @@ public class VillasController {
                             has_shower = ?,
                             has_hotwater = ?,
                             has_fridge = ?
-                        WHERE id = ?
+                        WHERE id = ? AND villa = ?
                 """;
 
         try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
         PreparedStatement ps = conn.prepareStatement(sql)) {
             System.out.println("Has connected to the database");
-            ps.setInt(1, roomtypes.getVilla_id());
-            ps.setString(2, roomtypes.getName());
-            ps.setInt(3, roomtypes.getQuantity());
-            ps.setInt(4, roomtypes.getCapacity());
-            ps.setInt(5, roomtypes.getPrice());
-            ps.setString(6, roomtypes.getBed_size());
-            ps.setBoolean(7, roomtypes.getHas_desk());
-            ps.setBoolean(8, roomtypes.getHas_ac());
-            ps.setBoolean(9, roomtypes.getHas_tv());
-            ps.setBoolean(10, roomtypes.getHas_wifi());
-            ps.setBoolean(11, roomtypes.getHas_shower());
-            ps.setBoolean(12, roomtypes.getHas_hotwater());
-            ps.setBoolean(13, roomtypes.getHas_fridge());
-            ps.setInt(14, roomtypes.getId());
+            ps.setString(1, roomtypes.getName());
+            ps.setInt(2, roomtypes.getQuantity());
+            ps.setInt(3, roomtypes.getCapacity());
+            ps.setInt(4, roomtypes.getPrice());
+            ps.setString(5, roomtypes.getBed_size());
+            ps.setBoolean(6, roomtypes.getHas_desk());
+            ps.setBoolean(7, roomtypes.getHas_ac());
+            ps.setBoolean(8, roomtypes.getHas_tv());
+            ps.setBoolean(9, roomtypes.getHas_wifi());
+            ps.setBoolean(10, roomtypes.getHas_shower());
+            ps.setBoolean(11, roomtypes.getHas_hotwater());
+            ps.setBoolean(12, roomtypes.getHas_fridge());
+            ps.setInt(13, roomtypes.getId());
+            ps.setInt(14, roomtypes.getVilla_id());
 
             int affectedRows = ps.executeUpdate();
             if (affectedRows == 0) {
