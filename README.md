@@ -331,6 +331,23 @@ Voucher digunakan untuk memberikan potongan harga kepada pelanggan dengan kode t
 
 Berikut adalah daftar endpoint yang tersedia untuk entitas `Voucher`
 
-___
+---
+
+### 🔍 GET `/vouchers`
+
+Menampilkan seluruh voucher yang terdaftar.
+
+### ✅ 1. Berhasil Menampilkan Seluruh Voucher
+
+Berhasil menampilkan seluruh voucher yang terdaftar.
+
+**Contoh Response:**
+
+
+### ❌ 2. Gagal - Tidak Ada Voucher Pada Database
+
+Kondisi ini terjadi jika tidak terdapat data voucher sama sekali dalam database.
+
+**Contoh Response:**
 
 ---
