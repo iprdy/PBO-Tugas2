@@ -394,6 +394,24 @@ Field `name`, `description`, dan `address` merupakan atribut wajib diisi. Jika s
 ![Tidak Mengisi Nilai pada Field](images/Villa%20-%20Tidak%20Mengisi%20Nilai%20pada%20FIeld.png)
 
 ---
+### 🔍 POST  `/villas/{id}/rooms`
+Endpoint ini digunakan untuk **menambahkan tipe kamar baru** ke dalam sebuah vila tertentu berdasarkan `id`. Data kamar yang ditambahkan mencakup informasi seperti nama kamar, kapasitas, harga, dan fasilitas
+
+### ✅ 1. Kamar Berhasil Ditambahkan
+Jika `id` vila valid dan data kamar yang dikirimkan lengkap dan sesuai, maka sistem akan menambahkan kamar baru ke vila tersebut. Respons akan berisi detail kamar yang baru saja dibuat beserta ID-nya.
+
+**Contoh Response:**
+
+
+### ❌ 2. Gagal - Villa Tidak Ditemukan
+Jika id vila tidak valid atau vila telah dihapus, maka sistem akan memberikan respons error.
+> Hal ini dapat terjadi apabila pengguna memasukkan `id` yang tidak valid atau vila dengan `id` tersebut sudah dihapus atau datanya belum dimasukkan ke sistem..
+
+**Contoh Response:**
+
+
+
+---
 ### 🔄 PUT `/villa/{id}`
 Endpoint ini digunakan untuk **mengubah data vila** yang sudah ada di dalam database berdasarkan `id` vila. Data yang dikirimkan harus dalam format JSON sesuai struktur yang ditentukan.
 
