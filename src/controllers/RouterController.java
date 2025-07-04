@@ -19,8 +19,6 @@ public class RouterController {
     }
 
 
-
-
     //GET
     public static void handleGetSlashVillas(Response res, Request req) throws Exception {
         Map<String, String> query = VillaValidator.validateQuery(req);
@@ -58,7 +56,7 @@ public class RouterController {
     }
 
     public static void handleGetRoomsByVillaId(String path, Response res) throws Exception {
-        int id = extractIdFromPath(path, 1);
+        int id = extractIdFromPath(path, 2);
         VillasController vc = new VillasController();
 
         List<RoomTypes> rt = GlobalValidator.listRequireNotEmpty(
@@ -70,7 +68,7 @@ public class RouterController {
     }
 
     public static void handleGetBookingsByVillaId(String path, Response res) throws Exception {
-        int id = extractIdFromPath(path, 1);
+        int id = extractIdFromPath(path, 2);
         VillasController vc = new VillasController();
 
         List<Booking> bookings = GlobalValidator.listRequireNotEmpty(
@@ -82,7 +80,7 @@ public class RouterController {
     }
 
     public static void handleGetReviewsByVillaId(String path, Response res) throws Exception {
-        int id = extractIdFromPath(path, 1);
+        int id = extractIdFromPath(path, 2);
         ReviewController rc = new ReviewController();
 
         List<Review> reviews = GlobalValidator.listRequireNotEmpty(
@@ -117,7 +115,7 @@ public class RouterController {
     }
 
     public static void handleGetCustomerBookingsById(String path, Response res) throws Exception {
-        int id = extractIdFromPath(path, 1);
+        int id = extractIdFromPath(path, 2);
         CustomerController cc = new CustomerController();
 
         List<Booking> bookings = GlobalValidator.listRequireNotEmpty(
@@ -129,7 +127,7 @@ public class RouterController {
     }
 
     public static void handleGetCustomerReviewsById(String path, Response res) throws Exception {
-        int id = extractIdFromPath(path, 1);
+        int id = extractIdFromPath(path, 2);
         ReviewController rc = new ReviewController();
 
         List<Review> reviews = GlobalValidator.listRequireNotEmpty(
