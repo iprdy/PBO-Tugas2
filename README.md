@@ -670,7 +670,7 @@ Menghapus data voucher dari database berdasarkan id.
 Berhasil menghapus data voucher berdasarkan id.
 
 **Contoh Response:**
-
+![Voucher Delete - Berhasil.png](images/Voucher%20Delete%20-%20Berhasil.png)
 
 ### ❌ 2. Gagal - ID Voucher Tidak Ditemukan
 
