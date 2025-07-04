@@ -9,49 +9,38 @@ public class Router {
         try {
             if (path.equals("/villas")) {
                 RouterController.handleGetSlashVillas(res, req);
-            }
 
-            else if (path.matches("/villas/\\d+$")) {
+            } else if (path.matches("/villas/\\d+$")) {
                 RouterController.handleGetVillaById(path, res);
-            }
 
-            else if (path.matches("/villas/\\d+/rooms$")) {
+            } else if (path.matches("/villas/\\d+/rooms$")) {
                 RouterController.handleGetRoomsByVillaId(path, res);
-            }
 
-            else if (path.matches("/villas/\\d+/bookings$")) {
+            } else if (path.matches("/villas/\\d+/bookings$")) {
                 RouterController.handleGetBookingsByVillaId(path, res);
-            }
 
-            else if (path.matches("/villas/\\d+/reviews")) {
+            } else if (path.matches("/villas/\\d+/reviews$")) {
                 RouterController.handleGetReviewsByVillaId(path, res);
-            }
 
-            else if (path.equals("/customers")) {
+            } else if (path.equals("/customers")) {
                 RouterController.handleGetAllCustomers(res);
-            }
 
-            else if (path.matches("/customers/\\d+")) {
+            } else if (path.matches("/customers/\\d+$")) {
                 RouterController.handleGetCustomerById(path, res);
-            }
 
-            else if (path.matches("/customers/\\d+/bookings")) {
+            } else if (path.matches("/customers/\\d+/bookings$")) {
                 RouterController.handleGetCustomerBookingsById(path, res);
-            }
 
-            else if (path.matches("/customers/\\d+/reviews")) {
+            } else if (path.matches("/customers/\\d+/reviews$")) {
                 RouterController.handleGetCustomerReviewsById(path, res);
-            }
 
-            else if (path.equals("/vouchers")) {
+            } else if (path.equals("/vouchers")) {
                 RouterController.handleGetAllVouchers(res);
-            }
 
-            else if (path.matches("/vouchers/\\d+")) {
+            } else if (path.matches("/vouchers/\\d+$")) {
                 RouterController.handleGetVoucherById(path, res);
-            }
 
-            else {
+            } else {
                 throw new BadRequestException("Path '" + path + "' bukan path yang valid");
             }
         } catch (Exception e) {
@@ -63,32 +52,25 @@ public class Router {
         try {
             if (path.equals("/villas")) {
                 RouterController.handlePostVilla(res,req);
-            }
 
-            else if (path.matches("/villas/\\d+/rooms$")) {
+            } else if (path.matches("/villas/\\d+/rooms$")) {
                 RouterController.handlePostRoomTypeByVillaId(path, res, req);
-            }
 
-            else if (path.matches("/customers")) {
+            } else if (path.matches("/customers")) {
                 RouterController.handlePostCustomer(res, req);
-            }
 
-            else if (path.matches("/customers/\\d+/bookings")) {
+            } else if (path.matches("/customers/\\d+/bookings$")) {
                 RouterController.handlePostBookingByCustomerId(path, res, req);
-            }
 
-            else if (path.matches("/customers/\\d+/bookings/\\d+/reviews")) {
+            } else if (path.matches("/customers/\\d+/bookings/\\d+/reviews$")) {
                 RouterController.handlePostReviewByCustomerAndBookingId(path, res, req);
-            }
 
-            else if (path.matches("/vouchers")) {
+            } else if (path.matches("/vouchers")) {
                 RouterController.handlePostVoucher(res, req);
-            }
 
-            else {
+            } else {
                 throw new BadRequestException("Path '" + path + "' bukan path yang valid");
             }
-
         } catch (Exception e) {
             ExceptionHandler.handleException(e, res);
         }
@@ -98,21 +80,17 @@ public class Router {
         try {
             if (path.matches("/villas/\\d+$")) {
                 RouterController.handlePutVillaById(path, res, req);
-            }
 
-            else if (path.matches("/villas/\\d+/rooms/\\d+$")) {
+            } else if (path.matches("/villas/\\d+/rooms/\\d+$")) {
                 RouterController.handlePutRoomTypeByVillaId(path, res, req);
-            }
 
-            else if (path.matches("/customers/\\d+$")) {
+            } else if (path.matches("/customers/\\d+$")) {
                 RouterController.handlePutCustomerById(path, res, req);
-            }
 
-            else if (path.matches("/vouchers/\\d+$")) {
+            } else if (path.matches("/vouchers/\\d+$")) {
                 RouterController.handlePutVoucherById(path, res, req);
-            }
 
-            else {
+            } else {
                 throw new BadRequestException("Path '" + path + "' bukan path yang valid");
             }
         } catch (Exception e) {
@@ -123,17 +101,14 @@ public class Router {
         try {
             if (path.matches("/villas/\\d+/rooms/\\d+$")) {
                 RouterController.handleDeleteRoomTypeByVillaId(path, res);
-            }
 
-            else if (path.matches("/villas/\\d+$")) {
+            } else if (path.matches("/villas/\\d+$")) {
                 RouterController.handleDeleteVillaById(path, res);
-            }
 
-            else if (path.matches("/vouchers/\\d+$")) {
+            } else if (path.matches("/vouchers/\\d+$")) {
                 RouterController.handleDeleteVoucherById(path, res);
-            }
 
-            else {
+            } else {
                 throw new BadRequestException("Path '" + path + "' bukan path yang valid");
             }
         } catch (Exception e) {
