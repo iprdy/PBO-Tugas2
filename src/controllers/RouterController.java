@@ -400,9 +400,12 @@ public class RouterController {
 
     public static void handleDeleteVillaById(String path, Response res) throws Exception {
         int id = extractIdFromPath(path, 1);
-
         VillasController vc = new VillasController();
-        Villas oldVilla = GlobalValidator.dataRequireNonNull(vc.getVillaById(id), "Villa dengan id " + id + " tidak ditemukan");
+
+        Villas oldVilla = GlobalValidator.dataRequireNonNull(
+                vc.getVillaById(id),
+                "Villa dengan id " + id + " tidak ditemukan"
+        );
 
         vc.deleteVilla(id);
 
