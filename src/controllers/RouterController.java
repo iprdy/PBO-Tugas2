@@ -57,7 +57,11 @@ public class RouterController {
 
     public static void handleGetVillaIdRooms(String path, Response res) throws Exception {
         int id = Integer.parseInt(path.split("/")[2]);
-        List<RoomTypes> rt = new VillasController().getRoomsByVillaId(id);
+
+        List<RoomTypes> rt = GlobalValidator.listRequireNotEmpty(
+                new VillasController().getRoomsByVillaId(id),
+                "Tidak ada data ruangan pada vila dengan id " + id
+        );
 
         ResponseController.sendJsonResponse(rt, res);
     }
