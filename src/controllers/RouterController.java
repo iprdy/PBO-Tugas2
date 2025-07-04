@@ -199,8 +199,10 @@ public class RouterController {
 
     public static void handlePostCustomer(Response res, Request req) throws Exception{
         CustomerController cc = new CustomerController();
+
         String body = req.getBody();
         Customer customer = mapper.readValue(body, Customer.class);
+
         CustomerValidator.validatePostCustomer(customer);
         cc.postCustomer(customer);
 
@@ -209,10 +211,11 @@ public class RouterController {
 
     public static void handlePostBookingByCustomerId(String path, Response res, Request req) throws Exception {
         int id = extractIdFromPath(path, 2);
-
         CustomerController cc = new CustomerController();
+
         String body = req.getBody();
         Booking booking = mapper.readValue(body, Booking.class);
+
         booking.setCustomer(id);
         cc.postBookingForCustomer(booking, id);
 
@@ -220,23 +223,17 @@ public class RouterController {
     }
 
     public static void handlePostReviewByCustomerAndBookingId(String path, Response res, Request req) throws Exception {
-        int bookingId = extractIdFromPath(path, 2);  // /.../bookings/1/reviews
-        int customerId = extractIdFromPath(path, 4); // /customers/1/...
+        int bookingId = extractIdFromPath(path, 2);
+        int customerId = extractIdFromPath(path, 4);
 
-        // Validasi pemesanan memang milik customer
         ReviewValidator.checkBookingBelongsToCustomer(bookingId, customerId);
 
-        // Ambil data review dari body
         String body = req.getBody();
         Review review = mapper.readValue(body, Review.class);
 
-        // Validasi isi review
         ReviewValidator.validatePostReview(review);
-
-        // Set booking ID dari path (bukan dari body)
         review.setBooking(bookingId);
 
-        // Masukkan ke database
         ReviewController rc = new ReviewController();
         rc.postReviewForBooking(review, customerId, bookingId);
 
@@ -251,8 +248,9 @@ public class RouterController {
         String body = req.getBody();
         Voucher voucher = mapper.readValue(body, Voucher.class);
 
-        VoucherController vc = new VoucherController();
         VoucherValidator.validatePostVoucher(voucher);
+
+        VoucherController vc = new VoucherController();
         vc.postVoucher(voucher);
 
         ResponseController.sendJsonResponseWithMessage("Berhasil membuat voucher", voucher, res);
