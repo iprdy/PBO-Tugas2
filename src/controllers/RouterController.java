@@ -130,7 +130,10 @@ public class RouterController {
     }
 
     public static void handleGetAllVouchers(Response res) throws Exception {
-        List<Voucher> vouchers = new VoucherController().getAllVouchers();
+        List<Voucher> vouchers = GlobalValidator.listRequireNotEmpty(
+                new VoucherController().getAllVouchers(),
+                "Tidak ada data voucher yang tersedia"
+                );
 
         ResponseController.sendJsonResponse(vouchers, res);
     }
