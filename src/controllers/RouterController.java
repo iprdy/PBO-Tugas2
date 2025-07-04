@@ -122,7 +122,7 @@ public class RouterController {
     public static void handleGetCustomerIdReviews(String path, Response res) throws Exception {
         int id = Integer.parseInt(path.split("/")[2]);
 
-        List<Review> reviews = GlobalValidator.dataRequireNonNull(
+        List<Review> reviews = GlobalValidator.listRequireNotEmpty(
                 new ReviewController().getReviewsByCustomerId(id),
                 "Belum ada review untuk customer dengan id " + id);
 

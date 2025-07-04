@@ -74,7 +74,7 @@ public class ReviewController {
                 ));
             }
 
-            return reviews.isEmpty() ? null : reviews;
+            return reviews;
         }
     }
 }
