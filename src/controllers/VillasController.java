@@ -24,8 +24,6 @@ public class VillasController {
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
 
-            System.out.println("Connected to the database");
-
             while (rs.next()) {
                 Villas villa = new Villas(
                         rs.getInt("id"),
@@ -45,8 +43,6 @@ public class VillasController {
 
         try (Connection conn = DriverManager.getConnection(DatabaseBuilder.DB_URL);
              PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            System.out.println("Connected to the database");
 
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
@@ -71,8 +67,6 @@ public class VillasController {
 
         try (Connection conn = DriverManager.getConnection(DatabaseBuilder.DB_URL);
              PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            System.out.println("Connected to the database");
 
             ps.setInt(1, villaId);
             ResultSet rs = ps.executeQuery();
@@ -112,7 +106,6 @@ public class VillasController {
         try (Connection conn = DriverManager.getConnection(DatabaseBuilder.DB_URL);
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            System.out.println("Connected to the database");
             ps.setInt(1, villaId);
             ResultSet rs = ps.executeQuery();
 
@@ -211,8 +204,6 @@ public class VillasController {
         try (Connection conn = DriverManager.getConnection(DatabaseBuilder.DB_URL);
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            System.out.println("Connected to the database");
-
             ps.setString(1, villa.getName());
             ps.setString(2, villa.getDescription());
             ps.setString(3, villa.getAddress());
@@ -242,8 +233,6 @@ public class VillasController {
 
         try (Connection conn = DriverManager.getConnection(DatabaseBuilder.DB_URL);
              PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            System.out.println("Connected to the database");
 
             ps.setInt(1, roomtypes.getVilla_id());
             ps.setString(2, roomtypes.getName());
@@ -282,7 +271,6 @@ public class VillasController {
 
         try (Connection conn = DriverManager.getConnection(DatabaseBuilder.DB_URL);
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            System.out.println("Has connected to the database");
 
             ps.setString(1, newVilla.getName());
             ps.setString(2, newVilla.getDescription());
@@ -319,7 +307,7 @@ public class VillasController {
 
         try (Connection conn = DriverManager.getConnection(DatabaseBuilder.DB_URL);
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            System.out.println("Has connected to the database");
+
             ps.setString(1, roomtypes.getName());
             ps.setInt(2, roomtypes.getQuantity());
             ps.setInt(3, roomtypes.getCapacity());
@@ -347,7 +335,6 @@ public class VillasController {
         String sql = "DELETE from room_types WHERE id = ? AND villa = ?";
         try (Connection conn = DriverManager.getConnection(DatabaseBuilder.DB_URL);
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            System.out.println("Has connected to the database");
 
             ps.setInt(1, rid);
             ps.setInt(2, vid);
@@ -360,7 +347,6 @@ public class VillasController {
         String sql = "DELETE FROM villas WHERE id = ?";
         try (Connection conn = DriverManager.getConnection(DatabaseBuilder.DB_URL);
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            System.out.println("Has connected to the database");
 
             ps.setInt(1, id);
             ps.executeUpdate();
