@@ -179,11 +179,17 @@ public class RouterController {
     }
 
     public static void handlePostRoomTypeByVillaId(String path, Response res, Request req) throws Exception {
-        int id = Integer.parseInt(path.split("/")[2]);
+        int id = extractIdFromPath(path, 2);
         VillasController vc = new VillasController();
-        GlobalValidator.dataRequireNonNull(vc.getVillaById(id), "Villa dengan id " + id + " tidak ditemukan");
+
+        GlobalValidator.dataRequireNonNull(
+                vc.getVillaById(id),
+                "Villa dengan id " + id + " tidak ditemukan"
+        );
+
         String body = req.getBody();
         RoomTypes rt = mapper.readValue(body, RoomTypes.class);
+
         VillaValidator.validatePostVillaRooms(rt);
         rt.setVilla_id(id);
         vc.createVillasRooms(rt);
