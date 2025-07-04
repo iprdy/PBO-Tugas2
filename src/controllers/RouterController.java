@@ -409,17 +409,28 @@ public class RouterController {
 
         vc.deleteVilla(id);
 
-        ResponseController.sendJsonResponseWithMessage("Berhasil menghapus villa dengan id " + id, oldVilla, res);
+        ResponseController.sendJsonResponseWithMessage(
+                "Berhasil menghapus villa dengan id " + id,
+                oldVilla,
+                res
+        );
     }
 
     public static void handleDeleteVoucherById(String path, Response res) throws Exception {
         int id = extractIdFromPath(path, 1);
-
         VoucherController vc = new VoucherController();
-        Voucher oldVoucher = GlobalValidator.dataRequireNonNull(vc.getVoucherById(id),"Voucher dengan id " + id + " tidak ditemukan");
+
+        Voucher oldVoucher = GlobalValidator.dataRequireNonNull(
+                vc.getVoucherById(id),
+                "Voucher dengan id " + id + " tidak ditemukan"
+        );
 
         vc.deleteVoucher(id);
 
-        ResponseController.sendJsonResponseWithMessage("Berhasil menghapus voucher dengan id " + id, oldVoucher, res);
+        ResponseController.sendJsonResponseWithMessage(
+                "Berhasil menghapus voucher dengan id " + id,
+                oldVoucher,
+                res
+        );
     }
 }
