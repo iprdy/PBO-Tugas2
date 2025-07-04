@@ -26,19 +26,22 @@ public class RouterController {
         Map<String, String> query = VillaValidator.validateQuery(req);
 
         if (!query.isEmpty()) {
-            handleGetAvaibleVillas(query.get("ci_date"), query.get("co_date"), res);
+            //GET Available Villas
+            List<Villas> availableVillas = GlobalValidator.dataRequireNonNull(
+                    new VillasController().searchAvailableVillas(query.get("ci_date"), query.get("co_date")),
+                    "Tidak ada villa yang tersedia"
+            );
+
+            ResponseController.sendJsonResponse(availableVillas, res);
         } else {
-            handleGetAllVilla(res);
+            //GET All Villas
+            List<Villas> villas = GlobalValidator.dataRequireNonNull(
+                    new VillasController().getAllVillas(),
+                    "Tidak ada data villa yang tersedia"
+            );
+
+            ResponseController.sendJsonResponse(villas, res);
         }
-    }
-
-    public static void handleGetAllVilla(Response res) throws Exception {
-        List<Villas> villa = GlobalValidator.dataRequireNonNull(
-                new VillasController().getAllVillas(),
-                "Tidak ada data villa yang tersedia"
-        );
-
-        ResponseController.sendJsonResponse(villa, res);
     }
 
     public static void handleGetVillaById(String path, Response res) throws Exception {
@@ -75,15 +78,6 @@ public class RouterController {
         );
 
         ResponseController.sendJsonResponse(reviews, res);
-    }
-
-    public static void handleGetAvaibleVillas(String checkIn, String checkOut, Response res) throws Exception {
-        List<Villas> villas = GlobalValidator.dataRequireNonNull(
-                new VillasController().searchAvailableVillas(checkIn, checkOut),
-                "Tidak ada villa yang tersedia"
-        );
-
-        ResponseController.sendJsonResponse(villas, res);
     }
 
     public static void handleGetAllCustomer(Response res) throws Exception {
