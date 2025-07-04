@@ -554,6 +554,64 @@ Kesalahan ini terjadi apabila `id` vila yang diberikan tidak ditemukan di dalam 
 
 ---
 
+### 🛏️ POST `/villas/{id}/rooms`
+Menambahkan tipe kamar (room type) baru ke dalam sebuah vila berdasarkan ID vila.
+Endpoint ini akan menambahkan data kamar ke vila yang sudah ada, dengan menyertakan atribut-atribut kamar seperti kapasitas, harga, ukuran kasur, dan fasilitas lainnya.
+
+### ✅ 1. Kamar Berhasil Ditambahkan
+Jika data valid dan vila dengan ID yang diberikan tersedia, maka sistem akan menambahkan kamar baru ke vila tersebut.
+
+**Contoh Response:**
+
+![Villa - Kamar Berhasil Ditambahkan](images/villa-1.jpeg)
+
+
+### ❌ 2. Gagal – Validasi Data Kamar
+Jika ada field yang kosong, bernilai tidak logis, atau tidak sesuai aturan sistem:
+
+**Contoh Response:**
+![Villa - Validasi](images/villa-2.jpeg)
+
+---
+
+### 🛠️ PUT `/villas/{id}/rooms/{id}`
+Mengubah informasi tipe kamar (room type) yang dimiliki oleh sebuah vila berdasarkan `id` vila dan `id` kamar.
+
+### ✅ 1. Pengubahan Data Tipe Kamar pada Vila
+Jika semua data valid dan kedua ID (vila dan kamar) ditemukan, maka data kamar akan diperbarui sesuai permintaan.
+
+**Contoh Response:**  
+![Villa - Kamar Berhasil Diubah](images/villa-3.jpeg)
+
+---
+
+### ❌ 2. Gagal – Validasi Jenis Input
+Kesalahan terjadi jika input tidak sesuai format yang diminta (misalnya angka negatif, string kosong, atau opsi yang tidak tersedia).
+
+**Contoh Response:**  
+![Villa - Validasi Jenis Input](images/villa-4.jpeg)
+
+---
+
+### 🗑️ DELETE `/villas/{id}/rooms/{id}`
+Menghapus satu kamar tertentu dari sebuah vila berdasarkan ID vila dan ID kamar.
+
+### ✅ 1. Berhasil Menghapus Tipe Kamar
+Jika kamar dengan ID yang dimaksud memang ada pada vila tersebut, maka penghapusan akan dilakukan secara permanen dari database.
+
+**Contoh Response:**  
+![Villa - Berhasil Hapus Kamar](images/villa-5.jpeg)
+
+---
+
+### ❌ 2. Gagal – Data Kamar Tidak Ditemukan
+Jika ID kamar tidak valid atau tidak ditemukan dalam vila dengan ID yang diberikan, maka sistem akan mengembalikan pesan error.
+
+**Contoh Response:**  
+![Villa - Kamar Tidak Ditemukan](images/villa-6.jpeg)
+
+---
+
 ## 📝 Review
 
 Review adalah fitur yang memungkinkan pelanggan untuk memberikan penilaian dan umpan balik setelah melakukan pemesanan vila. Setiap review berisi informasi mengenai:
@@ -772,4 +830,3 @@ Berhasil menghapus data voucher berdasarkan id.
 
 ### ❌ 2. Gagal - ID Voucher Tidak Ditemukan
 
----
