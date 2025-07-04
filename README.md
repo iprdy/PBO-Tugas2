@@ -173,11 +173,16 @@ Gunakan format berikut untuk menambahkan customer:
 Berhasil menambahkan data customer baru.
 
 **Contoh Response:**
+
 ![Customer Add - Berhasil.png](images/Customer%20Add%20-%20Berhasil.png)
 
 ### ❌ 2. Gagal - Gagal Menambahkan Customer
 
 Kondisi ini terjadi jika ada field yang kosong atau format email atau nomor telepon tidak sesuai.
+
+**Contoh Response:**
+
+![Gagal Menambahkan Customer](https://github.com/user-attachments/assets/cb3045ad-c4a7-407a-8fbd-159f44dd8042)
 
 ---
 
@@ -190,11 +195,16 @@ Memperbarui data customer yang sudah ada berdasarkan id.
 Berhasil memperbarui data customer berdasarkan id.
 
 **Contoh Response:**
-![Customer Update - Berhasil.png](images/Customer%20Update%20-%20Berhasil.png)
+
+![Customer Update - Berhasil.png](https://github.com/user-attachments/assets/e37b7fd4-46dd-4b66-890a-5ea24b44ed18)
 
 ### ❌ 2. Gagal - ID Customer Tidak Ditemukan
 
-Kondisi ini terjadi jika tidak terdapat data customer dengan id yang sesuai.
+Kondisi ini terjadi jika tidak terdapat data customer dengan tipe data yang sesuai.
+
+**Contoh Response:**
+
+![Customer Update - Tidak Berhasil](https://github.com/user-attachments/assets/682cc862-793d-4a94-bb3f-f1667bbe7444)
 
 ---
 
