@@ -8,6 +8,9 @@ public class Voucher {
     private String startDate;
     private String endDate;
 
+    // Constructor default
+    public Voucher() {}
+
     // Constructor lengkap
     public Voucher(int id, String code, String description, double discount, String startDate, String endDate) {
         this.id = id;
