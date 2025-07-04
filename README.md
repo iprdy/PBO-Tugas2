@@ -27,7 +27,48 @@ Ini adalah **backend API** sederhana berbasis **Java (tanpa Spring Boot)** yang 
 Data disimpan dalam **SQLite**, dan API dapat diuji menggunakan aplikasi seperti **Postman** melalui alamat: http://localhost:8080
 
 ---
+## 🔧 Panduan Menjalankan Program API Pemesanan Vila
+Program ini dibangun menggunakan **Java 17**. Karena menggunakan fitur modern seperti *switch expressions* dengan panah (`case "GET" ->`), maka wajib dijalankan menggunakan **JDK versi 17** atau lebih tinggi.
 
+### ⚙️ Cara Kompilasi Program
+Jalankan perintah berikut untuk mengompilasi program dari direktori root:
+
+```bash
+javac -d out -cp "lib/*" src/api/*.java src/controllers/*.java src/models/*.java src/exceptions/*.java src/util/*.java src/database/*.java
+```
+**Penjelasan:**  
+- `d out`: menyimpan file hasil kompilasi ke folder out
+- `cp "lib/*"`: menyertakan semua file .jar di dalam folder lib ke classpath
+- `src/...`: menunjuk ke semua file Java di masing-masing package
+
+
+>💡 Pastikan terminal saat menjalankan perintah berada di direktori project `\PBO-Tugas2`
+
+
+### ▶️ Cara Menjalankan Program
+Setelah berhasil dikompilasi, jalankan program sesuai dengan sistem operasi:
+
+- **Windows**
+```bash
+java -cp "out;lib/*" api.API
+```
+- **macOs atau Linux**
+```bash
+java -cp "out:lib/*" api.API
+```
+
+### 📌 Header API Key
+Semua request ke API wajib menyertakan header berikut:
+
+| Key       | Value   |
+|-----------|---------|
+| x-api-key | UNKNOWN |
+Tanpa header ini, server akan membalas dengan status 401 Unauthorized Dan pesan "Invalid API Key"
+
+>📫 Jika menggunakan Postman, tambahkan header ini di tab Headers saat mengirim request.
+
+
+---
 ## Dokumentasi API
 ## 👤 Customer
 Customer merepresentasikan pengguna yang melakukan pemesanan vila. Customer dapat memiliki beberapa pemesanan (booking) dan memberikan review. Setiap vila berisi informasi mengenai:
