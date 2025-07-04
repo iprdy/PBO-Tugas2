@@ -168,16 +168,17 @@ public class RouterController {
     //POST
     public static void handlePostVilla(Response res, Request req) throws Exception {
         VillasController vc = new VillasController();
+
         String body = req.getBody();
         Villas villa = mapper.readValue(body, Villas.class);
+
         VillaValidator.validatePostVilla(villa);
         vc.createVilla(villa);
 
         ResponseController.sendJsonResponseWithMessage("Berhasil membuat villa", villa, res);
     }
 
-
-    public static void handlePostVillaIdRooms(String path, Response res, Request req) throws Exception {
+    public static void handlePostRoomTypeByVillaId(String path, Response res, Request req) throws Exception {
         int id = Integer.parseInt(path.split("/")[2]);
         VillasController vc = new VillasController();
         GlobalValidator.dataRequireNonNull(vc.getVillaById(id), "Villa dengan id " + id + " tidak ditemukan");
@@ -200,7 +201,7 @@ public class RouterController {
         ResponseController.sendJsonResponseWithMessage("Berhasil membuat customer", customer, res);
     }
 
-    public static void handlePostCustomerIdBookings(String path, Response res, Request req) throws Exception {
+    public static void handlePostBookingByCustomerId(String path, Response res, Request req) throws Exception {
         int id = extractIdFromPath(path, 2);
 
         CustomerController cc = new CustomerController();
@@ -212,7 +213,7 @@ public class RouterController {
         ResponseController.sendJsonResponseWithMessage("Berhasil membuat booking di costumer dengan id " + id, booking, res);
     }
 
-    public static void handlePostCustomerIdBookingsIdReviews(String path, Response res, Request req) throws Exception {
+    public static void handlePostReviewByCustomerAndBookingId(String path, Response res, Request req) throws Exception {
         int bookingId = extractIdFromPath(path, 2);  // /.../bookings/1/reviews
         int customerId = extractIdFromPath(path, 4); // /customers/1/...
 
@@ -240,7 +241,7 @@ public class RouterController {
         );
     }
 
-    public static void handlePostVouchers(Response res, Request req) throws Exception {
+    public static void handlePostVoucher(Response res, Request req) throws Exception {
         String body = req.getBody();
         Voucher voucher = mapper.readValue(body, Voucher.class);
 

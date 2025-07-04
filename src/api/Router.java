@@ -66,7 +66,7 @@ public class Router {
             }
 
             else if (path.matches("/villas/\\d+/rooms$")) {
-                RouterController.handlePostVillaIdRooms(path, res, req);
+                RouterController.handlePostRoomTypeByVillaId(path, res, req);
             }
 
             else if (path.matches("/customers")) {
@@ -74,15 +74,15 @@ public class Router {
             }
 
             else if (path.matches("/customers/\\d+/bookings")) {
-                RouterController.handlePostCustomerIdBookings(path, res, req);
+                RouterController.handlePostBookingByCustomerId(path, res, req);
             }
 
             else if (path.matches("/customers/\\d+/bookings/\\d+/reviews")) {
-                RouterController.handlePostCustomerIdBookingsIdReviews(path, res, req);
+                RouterController.handlePostReviewByCustomerAndBookingId(path, res, req);
             }
 
             else if (path.matches("/vouchers")) {
-                RouterController.handlePostVouchers(res, req);
+                RouterController.handlePostVoucher(res, req);
             }
 
             else {
