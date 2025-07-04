@@ -680,7 +680,8 @@ Menampilkan seluruh voucher yang terdaftar.
 Berhasil menampilkan seluruh voucher yang terdaftar.
 
 **Contoh Response:**
-![Voucher All - Berhasil.png](images/Voucher%20All%20-%20Berhasil.png)
+
+![Voucher All - Berhasil](https://github.com/user-attachments/assets/727b1ead-1f33-4828-a892-f52c67d6c0ee)
 
 ### ❌ 2. Gagal - Tidak Ada Voucher Pada Database
 
@@ -698,12 +699,16 @@ Menampilkan informasi detail voucher berdasarkan id.
 Berhasil menampilkan informasi detail voucher berdasarkan id.
 
 **Contoh Response:**
-![Voucher ID - Berhasil.png](images/Voucher%20ID%20-%20Berhasil.png)
+
+![Voucher ID - Berhasil](https://github.com/user-attachments/assets/c39e4802-b7be-4dff-9008-217045d6ff07)
 
 ### ❌ 2. Gagal - ID Voucher Tidak Ditemukan
 
 Kondisi ini terjadi jika tidak terdapat voucher dengan id yang sesuai.
 
+**Contoh Response:**
+
+![Gagal - ID Voucher Tidak Ditemukan](https://github.com/user-attachments/assets/e3629689-55cd-4438-8893-f59b44f65a17)
 
 ---
 
