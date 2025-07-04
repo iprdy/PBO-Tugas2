@@ -68,7 +68,10 @@ public class RouterController {
 
     public static void handleGetVillaIdBookings(String path, Response res) throws Exception {
         int id = Integer.parseInt(path.split("/")[2]);
-        List<Booking> bookings = new VillasController().getBookingsByVillaId(id);
+        List<Booking> bookings = GlobalValidator.listRequireNotEmpty(
+                new VillasController().getBookingsByVillaId(id),
+                "Tidak ada daftar booking pada vila dengan id " + id
+        );
 
         ResponseController.sendJsonResponse(bookings, res);
     }
