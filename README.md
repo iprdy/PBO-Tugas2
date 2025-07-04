@@ -433,10 +433,12 @@ Kesalahan ini terjadi apabila `id` vila yang diberikan tidak ditemukan di dalam 
 
 Review adalah fitur yang memungkinkan pelanggan untuk memberikan penilaian dan umpan balik setelah melakukan pemesanan vila. Setiap review berisi informasi mengenai:
 
-- **Booking ID**: Referensi pemesanan yang diulas
-- **Bintang (star)**: Penilaian antara 1–5
-- **Judul (title)**: Ringkasan kesan pelanggan
-- **Isi (content)**: Ulasan lengkap tentang pengalaman pelanggan
+| **Field**   | **Tipe Data dalam Database** | **Tipe Data dalam Program** | **Keterangan**                                        |
+|-------------|------------------------------|------------------------------|--------------------------------------------------------|
+| booking     | INT                          | Integer                      | ID booking yang menjadi referensi review              |
+| star        | INT                          | Integer                      | Penilaian bintang (nilai antara 1–5)                  |
+| title       | TEXT                         | String                       | Ringkasan singkat kesan pelanggan                     |
+| content     | TEXT                         | String                       | Ulasan lengkap mengenai pengalaman pelanggan          |
 
 > ⚠️ **Fitur review hanya dapat digunakan jika entitas `Customer`, `Villa & Room Type`, dan `Booking` sudah terisi dengan benar.**
 
