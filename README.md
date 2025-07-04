@@ -257,15 +257,14 @@ Jika `id` vila valid dan vila tersebut memiliki riwayat pemesanan, maka sistem a
 ![image](https://github.com/user-attachments/assets/abce1dcb-4545-4af1-9840-8704a08d3b2f)
 
 ### ❌ 2. Gagal - Villa Tidak Ditemukan
-Jika vila dengan `id` tertentu tidak memiliki data kamar yang terdaftar, maka sistem akan mengembalikan respons JSON seperti berikut:
-> Hal ini dapat terjadi apabila pengguna memasukkan `id` yang tidak valid atau vila dengan `id` tersebut sudah dihapus.
+Jika vila dengan `id` yang dimasukkan tidak memiliki riwayat pemesanan, maka sistem akan memberikan respons error.
+> Hal ini dapat terjadi apabila pengguna memasukkan `id` yang tidak valid atau vila dengan `id` tersebut sudah dihapus atau datanya belum dimasukkan ke sistem..
 
 **Contoh Response:**
 
-![informasi kamar suatu villa Tidak Ditemukan](https://github.com/user-attachments/assets/c112c7a8-6082-4923-9640-1309b868b684)
+![informasi kamar suatu villa Tidak Ditemukan](https://github.com/user-attachments/assets/ecbc5d3a-7c52-4294-b649-320f6e42b1b8)
 
 ---
-
 ### 🔍 GET `/villas?ci_date={checkin_date}&co_date={checkout_date}`
 Endpoint ini digunakan untuk mencari vila yang tersedia berdasarkan rentang tanggal `check-in` dan `check-out`.
 
