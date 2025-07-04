@@ -128,6 +128,7 @@ Contoh Response:
 
 Kondisi ini terjadi jika tidak terdapat Customer dengan id yang sesuai.
 
+![Customer ID - Tidak Berhasil](https://github.com/user-attachments/assets/3d511677-b7e7-43cf-aacc-54925943bd39)
 
 ---
 ### 📝 POST `/customers`
