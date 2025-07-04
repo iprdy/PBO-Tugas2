@@ -587,13 +587,12 @@ Menampilkan seluruh voucher yang terdaftar.
 Berhasil menampilkan seluruh voucher yang terdaftar.
 
 **Contoh Response:**
-
+![Voucher Add - Berhasil.png](images/Voucher%20Add%20-%20Berhasil.png)
 
 ### ❌ 2. Gagal - Tidak Ada Voucher Pada Database
 
 Kondisi ini terjadi jika tidak terdapat data voucher sama sekali dalam database.
 
-**Contoh Response:**
 
 ---
 
@@ -611,8 +610,6 @@ Berhasil menampilkan informasi detail voucher berdasarkan id.
 ### ❌ 2. Gagal - ID Voucher Tidak Ditemukan
 
 Kondisi ini terjadi jika tidak terdapat voucher dengan id yang sesuai.
-
-**Contoh Response:**
 
 
 ---
@@ -644,8 +641,6 @@ Berhasil menambahkan data voucher baru.
 
 Kondisi ini terjadi jika ada field yang kosong atau format tidak sesuai.
 
-**Contoh Response:**
-
 
 ---
 
@@ -664,8 +659,6 @@ Berhasil memperbarui data voucher berdasarkan id.
 
 Kondisi ini terjadi jika tidak terdapat data voucher dengan id yang sesuai.
 
-**Contoh Response:**
-
 ---
 
 ### 🗑️ DELETE `/vouchers/{id}`
@@ -680,9 +673,5 @@ Berhasil menghapus data voucher berdasarkan id.
 
 
 ### ❌ 2. Gagal - ID Voucher Tidak Ditemukan
-
-Kondisi ini terjadi jika tidak terdapat data voucher dengan id yang sesuai.
-
-**Contoh Response:**
 
 ---
