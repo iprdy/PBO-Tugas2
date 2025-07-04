@@ -110,7 +110,6 @@ Kondisi ini terjadi jika tidak terdapat data customer sama sekali dalam database
 
 
 ---
-
 ### 🔍 GET `/customers/{id}`
 
 Menampilkan informasi detail customer berdasarkan id.
@@ -128,7 +127,32 @@ Contoh Response:
 
 Kondisi ini terjadi jika tidak terdapat Customer dengan id yang sesuai.
 
+Contoh Response:
+
 ![Customer ID - Tidak Berhasil](https://github.com/user-attachments/assets/3d511677-b7e7-43cf-aacc-54925943bd39)
+
+---
+### 🔍 GET `/customers/{id}/bookings`
+
+Endpoint ini digunakan untuk menampilkan **daftar pemesanan (booking)** yang telah dilakukan oleh seorang customer tertentu berdasarkan `id`.
+
+### ✅ 1. Booking Berhasil Ditampilkan
+
+Jika `id` customer valid dan customer tersebut memiliki riwayat pemesanan, maka sistem akan mengembalikan seluruh daftar booking milik customer tersebut. Informasi yang ditampilkan biasanya mencakup tanggal check-in dan check-out, vila yang dipesan, jumlah tamu, serta status booking.
+
+Contoh Response:
+
+![Booking Berhasil Ditampilkan](https://github.com/user-attachments/assets/7e796266-1f13-47ce-b1d7-079cf5737adf)
+
+
+### ❌ 2. Gagal - Data Booking Tidak Ditemukan
+
+Kondisi ini terjadi jika customer **tidak memiliki riwayat booking**, maka sistem akan memberikan error atau mengembalikan daftar kosong.
+> Ini bisa terjadi jika customer belum pernah memesan vila melalui sistem.
+
+Contoh Response:
+
+![Gagal - Data Booking Tidak Ditemukan](https://github.com/user-attachments/assets/45a949a1-595e-4d65-bf71-8e4c79c43fb7)
 
 ---
 ### 📝 POST `/customers`
