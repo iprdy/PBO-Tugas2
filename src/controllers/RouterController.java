@@ -304,23 +304,33 @@ public class RouterController {
         );
     }
 
-    public static void handlePutVillaIdRoomsId(String path, Response res, Request req) throws Exception {
-        int rid = extractIdFromPath(path, 1); // paling akhir
-        int vid = extractIdFromPath(path, 3); // 2 sebelum itu
+    public static void handlePutRoomTypeByVillaId(String path, Response res, Request req) throws Exception {
+        int rid = extractIdFromPath(path, 1);
+        int vid = extractIdFromPath(path, 3);
         VillasController vc = new VillasController();
-        RoomTypes oldRoomType = GlobalValidator.dataRequireNonNull(vc.getVillaRoomById(rid,vid), "ID Villa atau Room Type tidak ditemukan");
+
+        RoomTypes oldRoomType = GlobalValidator.dataRequireNonNull(
+                vc.getVillaRoomById(rid,vid),
+                "ID Villa atau Room Type tidak ditemukan"
+        );
 
         String body = req.getBody();
         RoomTypes newRoomType = mapper.readValue(body, RoomTypes.class);
+
         newRoomType.setIdAndVillaId(rid, vid);
         vc.updateVillasRoomTypes(newRoomType);
 
-        ResponseController.sendJsonResponseWithMessage("Berhasil mengupdate roomtype dengan id " + rid + " di villa dengan id " + vid, oldRoomType, newRoomType, res);
+        ResponseController.sendJsonResponseWithMessage(
+                "Berhasil mengupdate roomtype dengan id " + rid + " di villa dengan id " + vid,
+                oldRoomType,
+                newRoomType,
+                res
+        );
     }
 
     public static void handlePutCustomerById(String path, Response res, Request req) throws Exception {
-        CustomerController cc = new CustomerController();
         int id = extractIdFromPath(path, 1);
+        CustomerController cc = new CustomerController();
 
         Customer oldCustomer = GlobalValidator.dataRequireNonNull(cc.getCustomerById(id),"Customer dengan id " + id + " tidak ditemukan");
 

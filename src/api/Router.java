@@ -101,7 +101,7 @@ public class Router {
             }
 
             else if (path.matches("/villas/\\d+/rooms/\\d+$")) {
-                RouterController.handlePutVillaIdRoomsId(path, res, req);
+                RouterController.handlePutRoomTypeByVillaId(path, res, req);
             }
 
             else if (path.matches("/customers/\\d+$")) {
