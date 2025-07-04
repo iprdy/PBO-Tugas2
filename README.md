@@ -137,7 +137,7 @@ Gunakan format berikut untuk menambahkan customer:
 Berhasil menambahkan data customer baru.
 
 **Contoh Response:**
-
+![Customer Add - Berhasil.png](images/Customer%20Add%20-%20Berhasil.png)
 
 ### ❌ 2. Gagal - Gagal Menambahkan Customer
 
