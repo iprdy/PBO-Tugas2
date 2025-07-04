@@ -2,11 +2,9 @@ package util;
 
 import api.Request;
 import exceptions.BadRequestException;
-import exceptions.DataNotFoundException;
 import models.RoomTypes;
 import models.Villas;
 
-import java.sql.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.HashMap;

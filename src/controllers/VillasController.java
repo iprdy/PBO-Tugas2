@@ -1,5 +1,7 @@
 package controllers;
 
+import database.DatabaseBuilder;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,11 +20,9 @@ public class VillasController {
         List<Villas> villas = new ArrayList<>();
         String sql = "SELECT * FROM villas";
 
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
+        try (Connection conn = DriverManager.getConnection(DatabaseBuilder.DB_URL);
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
-
-            System.out.println("Connected to the database");
 
             while (rs.next()) {
                 Villas villa = new Villas(
@@ -34,17 +34,15 @@ public class VillasController {
                 villas.add(villa);
             }
         }
-        return villas;
+        return villas.isEmpty() ? null : villas;
     }
 
     // GET /villas/{id} => Menampilkan detail data satu vila
     public Villas getVillaById(int id) throws SQLException {
         String sql = "SELECT * FROM villas WHERE id = ?";
 
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
+        try (Connection conn = DriverManager.getConnection(DatabaseBuilder.DB_URL);
              PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            System.out.println("Connected to the database");
 
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
@@ -67,10 +65,8 @@ public class VillasController {
         List<RoomTypes> rooms = new ArrayList<>();
         String sql = "SELECT * FROM room_types WHERE villa = ?";
 
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
+        try (Connection conn = DriverManager.getConnection(DatabaseBuilder.DB_URL);
              PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            System.out.println("Connected to the database");
 
             ps.setInt(1, villaId);
             ResultSet rs = ps.executeQuery();
@@ -107,10 +103,9 @@ public class VillasController {
             WHERE rt.villa = ?
         """;
 
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
+        try (Connection conn = DriverManager.getConnection(DatabaseBuilder.DB_URL);
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            System.out.println("Connected to the database");
             ps.setInt(1, villaId);
             ResultSet rs = ps.executeQuery();
 
@@ -149,7 +144,7 @@ public class VillasController {
                 )
                 """;
 
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
+        try (Connection conn = DriverManager.getConnection(DatabaseBuilder.DB_URL);
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, checkinDate);
@@ -166,13 +161,13 @@ public class VillasController {
                 available.add(villa);
             }
         }
-        return available.isEmpty() ? null : available;
+        return available;
     }
 
     public RoomTypes getVillaRoomById(int rid, int vid) throws SQLException, DataNotFoundException {
         String sql = "SELECT * FROM room_types WHERE id = ? AND villa = ?";
 
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
+        try (Connection conn = DriverManager.getConnection(DatabaseBuilder.DB_URL);
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, rid);
@@ -201,15 +196,13 @@ public class VillasController {
             }
         }
     }
-    
+
     // POST /villas => Menambahkan data vila
     public void createVilla(Villas villa) throws SQLException {
         String sql = "INSERT INTO villas (name, description, address) VALUES (?, ?, ?)";
 
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
+        try (Connection conn = DriverManager.getConnection(DatabaseBuilder.DB_URL);
              PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            System.out.println("Connected to the database");
 
             ps.setString(1, villa.getName());
             ps.setString(2, villa.getDescription());
@@ -229,7 +222,7 @@ public class VillasController {
             }
         }
     }
-    
+
     // POST /villas/{id}/rooms => Menambahkan tipe kamar pada vila
     public void createVillasRooms(RoomTypes roomtypes) throws SQLException {
         String sql = """
@@ -238,10 +231,8 @@ public class VillasController {
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """;
 
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
+        try (Connection conn = DriverManager.getConnection(DatabaseBuilder.DB_URL);
              PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            System.out.println("Connected to the database");
 
             ps.setInt(1, roomtypes.getVilla_id());
             ps.setString(2, roomtypes.getName());
@@ -278,9 +269,8 @@ public class VillasController {
                 UPDATE villas SET name = ?, description = ?, address = ? WHERE id = ?
                 """;
 
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
-        PreparedStatement ps = conn.prepareStatement(sql)) {
-            System.out.println("Has connected to the database");
+        try (Connection conn = DriverManager.getConnection(DatabaseBuilder.DB_URL);
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, newVilla.getName());
             ps.setString(2, newVilla.getDescription());
@@ -315,9 +305,9 @@ public class VillasController {
                         WHERE id = ? AND villa = ?
                 """;
 
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
-        PreparedStatement ps = conn.prepareStatement(sql)) {
-            System.out.println("Has connected to the database");
+        try (Connection conn = DriverManager.getConnection(DatabaseBuilder.DB_URL);
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
             ps.setString(1, roomtypes.getName());
             ps.setInt(2, roomtypes.getQuantity());
             ps.setInt(3, roomtypes.getCapacity());
@@ -343,9 +333,8 @@ public class VillasController {
     //DELETE /villas/rooms/{id} ==> Menghapus kamar suatu villa
     public void deleteVillaRoomTypes(int rid, int vid) throws SQLException {
         String sql = "DELETE from room_types WHERE id = ? AND villa = ?";
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
+        try (Connection conn = DriverManager.getConnection(DatabaseBuilder.DB_URL);
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            System.out.println("Has connected to the database");
 
             ps.setInt(1, rid);
             ps.setInt(2, vid);
@@ -356,9 +345,8 @@ public class VillasController {
     //DELETE /villas/{id} => Menghapus data suatu villa
     public void deleteVilla(int id) throws SQLException {
         String sql = "DELETE FROM villas WHERE id = ?";
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:villa_booking.db");
-        PreparedStatement ps = conn.prepareStatement(sql)) {
-            System.out.println("Has connected to the database");
+        try (Connection conn = DriverManager.getConnection(DatabaseBuilder.DB_URL);
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, id);
             ps.executeUpdate();

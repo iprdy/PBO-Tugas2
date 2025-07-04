@@ -1,5 +1,7 @@
 package controllers;
 
+import database.DatabaseBuilder;
+
 import models.Voucher;
 import java.sql.*;
 import java.util.ArrayList;
@@ -10,9 +12,9 @@ public class VoucherController {
         List<Voucher> vouchers = new ArrayList<>();
         String sql = "SELECT * FROM vouchers";
 
-        try (Connection conn = DriverManager.getConnection(DBConfig.DB_URL);
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            ResultSet rs = stmt.executeQuery()) {
+        try (Connection conn = DriverManager.getConnection(DatabaseBuilder.DB_URL);
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
                 Voucher voucher = new Voucher(
@@ -32,7 +34,7 @@ public class VoucherController {
     public Voucher getVoucherById(int id) throws SQLException {
         String sql = "SELECT * FROM vouchers WHERE id = ?";
 
-        try (Connection conn = DriverManager.getConnection(DBConfig.DB_URL);
+        try (Connection conn = DriverManager.getConnection(DatabaseBuilder.DB_URL);
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, id);
@@ -56,7 +58,7 @@ public class VoucherController {
     public void postVoucher(Voucher voucher) throws SQLException {
         String sql = "INSERT INTO vouchers (code, description, discount, start_date, end_date) VALUES (?, ?, ?, ?, ?)";
 
-        try (Connection conn = DriverManager.getConnection(DBConfig.DB_URL);
+        try (Connection conn = DriverManager.getConnection(DatabaseBuilder.DB_URL);
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, voucher.getCode());
@@ -72,7 +74,7 @@ public class VoucherController {
     public void updateVoucher(Voucher voucher) throws SQLException {
         String sql = "UPDATE vouchers SET code = ?, description = ?, discount = ?, start_date = ?, end_date = ? WHERE id = ?";
 
-        try (Connection conn = DriverManager.getConnection(DBConfig.DB_URL);
+        try (Connection conn = DriverManager.getConnection(DatabaseBuilder.DB_URL);
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, voucher.getCode());
@@ -89,7 +91,7 @@ public class VoucherController {
     public void deleteVoucher(int id) throws SQLException {
         String sql = "DELETE FROM vouchers WHERE id = ?";
 
-        try (Connection conn = DriverManager.getConnection(DBConfig.DB_URL);
+        try (Connection conn = DriverManager.getConnection(DatabaseBuilder.DB_URL);
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, id);

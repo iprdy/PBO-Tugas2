@@ -1,5 +1,6 @@
 package controllers;
 
+import database.DatabaseBuilder;
 import models.Review;
 
 import java.sql.*;
@@ -7,7 +8,7 @@ import java.util.*;
 
 public class ReviewController {
     public void postReviewForBooking(Review reviewData, int customerId, int bookingId) throws SQLException {
-        try (Connection conn = DriverManager.getConnection(DBConfig.DB_URL)) {
+        try (Connection conn = DriverManager.getConnection(DatabaseBuilder.DB_URL)) {
             String insertSql = "INSERT INTO reviews (booking, star, title, content) VALUES (?, ?, ?, ?)";
             PreparedStatement ps = conn.prepareStatement(insertSql);
             ps.setInt(1, reviewData.getBooking());
@@ -31,7 +32,7 @@ public class ReviewController {
             WHERE rt.villa = ?
         """;
 
-        try (Connection conn = DriverManager.getConnection(DBConfig.DB_URL);
+        try (Connection conn = DriverManager.getConnection(DatabaseBuilder.DB_URL);
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, villaId);
             ResultSet rs = stmt.executeQuery();
@@ -58,7 +59,7 @@ public class ReviewController {
             WHERE b.customer = ?
         """;
 
-        try (Connection conn = DriverManager.getConnection(DBConfig.DB_URL);
+        try (Connection conn = DriverManager.getConnection(DatabaseBuilder.DB_URL);
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, customerId);
             ResultSet rs = stmt.executeQuery();
@@ -73,7 +74,7 @@ public class ReviewController {
                 ));
             }
 
-            return reviews.isEmpty() ? null : reviews;
+            return reviews;
         }
     }
 }
