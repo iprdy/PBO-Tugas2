@@ -12,7 +12,6 @@ import java.net.InetSocketAddress;
 import java.net.URI;
 
 public class Server {
-
     private static class RequestHandler implements HttpHandler {
         public void handle(HttpExchange httpExchange) {
             Server.processHttpExchange(httpExchange);
@@ -32,7 +31,6 @@ public class Server {
         URI uri = httpExchange.getRequestURI();
         String path = uri.getPath();
         String method = req.getRequestMethod();
-
 
         try {
             apiKeyCheck(req);

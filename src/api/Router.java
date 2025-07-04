@@ -54,7 +54,6 @@ public class Router {
             else {
                 throw new BadRequestException("Path '" + path + "' bukan path yang valid");
             }
-
         } catch (Exception e) {
             ExceptionHandler.handleException(e, res);
         }
@@ -116,7 +115,6 @@ public class Router {
             else {
                 throw new BadRequestException("Path '" + path + "' bukan path yang valid");
             }
-
         } catch (Exception e) {
             ExceptionHandler.handleException(e, res);        }
     }
@@ -138,7 +136,6 @@ public class Router {
             else {
                 throw new BadRequestException("Path '" + path + "' bukan path yang valid");
             }
-
         } catch (Exception e) {
             ExceptionHandler.handleException(e, res);        }
     }

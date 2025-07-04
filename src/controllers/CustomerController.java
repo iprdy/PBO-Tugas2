@@ -1,15 +1,13 @@
 package controllers;
 
 import database.DatabaseBuilder;
-
 import models.Customer;
-
 import models.Booking;
+
 import java.sql.*;
 import java.util.*;
 
 public class CustomerController {
-
     //GET /customer/{id}/bookings => daftar booking yang telah dilakukan oleh seorang customer
     public List<Booking> getCustomerBookings(int customerId) throws SQLException {
         try (Connection conn = DriverManager.getConnection(DatabaseBuilder.DB_URL)) {
@@ -41,7 +39,6 @@ public class CustomerController {
             return bookings;
         }
     }
-
 
     // POST /customer/{id}/bookings => Customer melakukan pemesanan vila
     public void postBookingForCustomer(Booking bookingData, int customerId) throws SQLException {
@@ -92,7 +89,6 @@ public class CustomerController {
         }
     }
 
-
     // GET /customer
     public List<Customer> getAllCustomers() throws SQLException {
         try (Connection conn = DriverManager.getConnection(DatabaseBuilder.DB_URL)) {
@@ -113,7 +109,6 @@ public class CustomerController {
             return customers;
         }
     }
-
 
     // GET /customers/{id} -> detail satu customer
     public Customer getCustomerById(int customerId) throws SQLException {
@@ -136,7 +131,6 @@ public class CustomerController {
         }
     }
 
-
     // POST /customers -> menambahkan customer baru
     public void postCustomer(Customer customer) throws SQLException {
         try (Connection conn = DriverManager.getConnection(DatabaseBuilder.DB_URL)) {
@@ -153,8 +147,6 @@ public class CustomerController {
             }
         }
     }
-
-
 
     // PUT /customers/{id} -> mengubah data customer berdasarkan ID
     public void updateCustomer(Customer updatedCustomer) throws SQLException {

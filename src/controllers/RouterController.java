@@ -10,8 +10,6 @@ import util.*;
 import java.util.List;
 import java.util.Map;
 
-
-
 public class RouterController {
     public static ObjectMapper mapper = new ObjectMapper();
 
@@ -20,80 +18,85 @@ public class RouterController {
         return Integer.parseInt(parts[parts.length - positionFromEnd]);
     }
 
+
+
+
     //GET
     public static void handleGetSlashVillas(Response res, Request req) throws Exception {
         Map<String, String> query = VillaValidator.validateQuery(req);
 
         if (!query.isEmpty()) {
-            String ciDate = query.get("ci_date");
-            String coDate = query.get("co_date");
-
-            handleGetAvaibleVillas(ciDate, coDate, res);
-
+            handleGetAvaibleVillas(query.get("ci_date"), query.get("co_date"), res);
         } else {
             handleGetAllVilla(res);
         }
     }
 
     public static void handleGetAllVilla(Response res) throws Exception {
-        VillasController vc = new VillasController();
-        List<Villas> villa = GlobalValidator.dataRequireNonNull(vc.getAllVillas(), "Tidak ada data villa yang tersedia");
+        List<Villas> villa = GlobalValidator.dataRequireNonNull(
+                new VillasController().getAllVillas(),
+                "Tidak ada data villa yang tersedia"
+        );
 
         ResponseController.sendJsonResponse(villa, res);
     }
 
     public static void handleGetVillaById(String path, Response res) throws Exception {
         int id = Integer.parseInt(path.split("/")[2]);
-        VillasController vc = new VillasController();
-        Villas villa = GlobalValidator.dataRequireNonNull(vc.getVillaById(id), "Villa dengan id " + id + " tidak ditemukan");
+
+        Villas villa = GlobalValidator.dataRequireNonNull(
+                new VillasController().getVillaById(id),
+                "Villa dengan id " + id + " tidak ditemukan"
+        );
 
         ResponseController.sendJsonResponse(villa, res);
     }
 
     public static void handleGetVillaIdRooms(String path, Response res) throws Exception {
         int id = Integer.parseInt(path.split("/")[2]);
-        VillasController vc = new VillasController();
-        List<RoomTypes> rt = vc.getRoomsByVillaId(id);
+        List<RoomTypes> rt = new VillasController().getRoomsByVillaId(id);
 
         ResponseController.sendJsonResponse(rt, res);
     }
 
     public static void handleGetVillaIdBookings(String path, Response res) throws Exception {
         int id = Integer.parseInt(path.split("/")[2]);
-        VillasController vc = new VillasController();
-        List<Booking> bookings = vc.getBookingsByVillaId(id);
+        List<Booking> bookings = new VillasController().getBookingsByVillaId(id);
 
         ResponseController.sendJsonResponse(bookings, res);
     }
 
     public static void handleGetVillaIdReviews(String path, Response res) throws Exception {
         int id = Integer.parseInt(path.split("/")[2]);
-        ReviewController rc = new ReviewController();
-        List<Review> reviews = GlobalValidator.dataRequireNonNull(rc.getReviewsByVillaId(id), "Villa dengan id " + id + " tidak ditemukan");
+
+        List<Review> reviews = GlobalValidator.dataRequireNonNull(
+                new ReviewController().getReviewsByVillaId(id),
+                "Villa dengan id " + id + " tidak ditemukan"
+        );
 
         ResponseController.sendJsonResponse(reviews, res);
     }
 
     public static void handleGetAvaibleVillas(String checkIn, String checkOut, Response res) throws Exception {
-        VillasController vc = new VillasController();
-        List<Villas> villas = vc.searchAvailableVillas(checkIn, checkOut);
-        GlobalValidator.dataRequireNonNull(villas, "Tidak ada villa yang tersedia");
+        List<Villas> villas = GlobalValidator.dataRequireNonNull(
+                new VillasController().searchAvailableVillas(checkIn, checkOut),
+                "Tidak ada villa yang tersedia"
+        );
 
         ResponseController.sendJsonResponse(villas, res);
     }
 
     public static void handleGetAllCustomer(Response res) throws Exception {
-        CustomerController cc = new CustomerController();
-        List<Customer> customers = cc.getAllCustomers();
+        List<Customer> customers = new CustomerController().getAllCustomers();
 
         ResponseController.sendJsonResponse(customers, res);
     }
 
     public static void handleGetCustomerById(String path, Response res) throws Exception {
         int id = Integer.parseInt(path.split("/")[2]);
-        CustomerController cc = new CustomerController();
+
         Customer customer = GlobalValidator.dataRequireNonNull(
-                cc.getCustomerById(id),
+                new CustomerController().getCustomerById(id),
                 "Villa dengan id " + id + " tidak ditemukan"
         );
 
@@ -102,23 +105,23 @@ public class RouterController {
 
     public static void handleGetCustomerIdBookings(String path, Response res) throws Exception {
         int id = Integer.parseInt(path.split("/")[2]);
-        CustomerController cc = new CustomerController();
-        List<Booking> bookings = cc.getCustomerBookings(id);
+        List<Booking> bookings = new CustomerController().getCustomerBookings(id);
 
         ResponseController.sendJsonResponse(bookings, res);
     }
 
     public static void handleGetCustomerIdReviews(String path, Response res) throws Exception {
         int id = Integer.parseInt(path.split("/")[2]);
-        ReviewController rc = new ReviewController();
-        List<Review> reviews = GlobalValidator.dataRequireNonNull(rc.getReviewsByCustomerId(id), "Belum ada review untuk customer dengan id " + id);
+
+        List<Review> reviews = GlobalValidator.dataRequireNonNull(
+                new ReviewController().getReviewsByCustomerId(id),
+                "Belum ada review untuk customer dengan id " + id);
 
         ResponseController.sendJsonResponse(reviews, res);
     }
 
     public static void handleGetAllVouchers(Response res) throws Exception {
-        VoucherController vc = new VoucherController();
-        List<Voucher> vouchers = vc.getAllVouchers();
+        List<Voucher> vouchers = new VoucherController().getAllVouchers();
 
         ResponseController.sendJsonResponse(vouchers, res);
     }
@@ -126,9 +129,8 @@ public class RouterController {
     public static void handleGetVoucherById(String path, Response res) throws Exception {
         int id = Integer.parseInt(path.split("/")[2]);
 
-        VoucherController vc = new VoucherController();
         Voucher voucher = GlobalValidator.dataRequireNonNull(
-                vc.getVoucherById(id),
+                new VoucherController().getVoucherById(id),
                 "Voucher dengan id " + id + " tidak ditemukan"
         );
 
