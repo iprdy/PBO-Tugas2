@@ -587,7 +587,7 @@ Menampilkan seluruh voucher yang terdaftar.
 Berhasil menampilkan seluruh voucher yang terdaftar.
 
 **Contoh Response:**
-![Voucher Add - Berhasil.png](images/Voucher%20Add%20-%20Berhasil.png)
+![Voucher All - Berhasil.png](images/Voucher%20All%20-%20Berhasil.png)
 
 ### ❌ 2. Gagal - Tidak Ada Voucher Pada Database
 
@@ -605,7 +605,7 @@ Menampilkan informasi detail voucher berdasarkan id.
 Berhasil menampilkan informasi detail voucher berdasarkan id.
 
 **Contoh Response:**
-
+![Voucher ID - Berhasil.png](images/Voucher%20ID%20-%20Berhasil.png)
 
 ### ❌ 2. Gagal - ID Voucher Tidak Ditemukan
 
