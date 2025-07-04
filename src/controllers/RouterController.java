@@ -317,7 +317,9 @@ public class RouterController {
         String body = req.getBody();
         RoomTypes newRoomType = mapper.readValue(body, RoomTypes.class);
 
+        VillaValidator.validatePostVillaRooms(newRoomType);
         newRoomType.setIdAndVillaId(rid, vid);
+
         vc.updateVillasRoomTypes(newRoomType);
 
         ResponseController.sendJsonResponseWithMessage(
