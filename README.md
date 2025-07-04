@@ -94,7 +94,9 @@ Menampilkan seluruh customer yang terdaftar.
 Berhasil menampilkan seluruh customer yang terdaftar.
 
 **Contoh Response:**
-![Customer All - Berhasil.png](images/Customer%20All%20-%20Berhasil.png)
+
+![Customer All - Berhasil.png](https://github.com/user-attachments/assets/7b4cc1cb-787d-434d-9312-97d328fe7c6e)
+
 
 ### ❌ 2. Gagal - Tidak Ada Customer Pada Database
 
