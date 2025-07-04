@@ -469,6 +469,8 @@ Jika `id` vila valid dan data kamar yang dikirimkan lengkap dan sesuai, maka sis
 
 **Contoh Response:**
 
+![Kamar Berhasil Ditambahkan](https://github.com/user-attachments/assets/848ba9b0-9ac9-4241-9053-f0807cb71e60)
+
 
 ### ❌ 2. Gagal - Villa Tidak Ditemukan
 Jika id vila tidak valid atau vila telah dihapus, maka sistem akan memberikan respons error.
@@ -476,6 +478,7 @@ Jika id vila tidak valid atau vila telah dihapus, maka sistem akan memberikan re
 
 **Contoh Response:**
 
+![Gagal - Villa Tidak Ditemukan](https://github.com/user-attachments/assets/18aab9aa-ac7b-4b45-bae5-a32f4682fa56)
 
 
 ---
