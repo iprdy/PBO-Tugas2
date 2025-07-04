@@ -653,7 +653,7 @@ Memperbarui data voucher yang sudah ada berdasarkan id.
 Berhasil memperbarui data voucher berdasarkan id.
 
 **Contoh Response:**
-
+![Voucher Update - Berhasil.png](images/Voucher%20Update%20-%20Berhasil.png)
 
 ### ❌ 2. Gagal - ID Voucher Tidak Ditemukan
 
