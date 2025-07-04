@@ -353,16 +353,24 @@ public class RouterController {
 
     public static void handlePutVoucherById(String path, Response res, Request req) throws Exception {
         int id = extractIdFromPath(path, 1);
-
         VoucherController vc = new VoucherController();
-        Voucher oldVoucher = GlobalValidator.dataRequireNonNull(vc.getVoucherById(id), "Voucher dengan id " + id + " tidak ditemukan");
+
+        Voucher oldVoucher = GlobalValidator.dataRequireNonNull(
+                vc.getVoucherById(id),
+                "Voucher dengan id " + id + " tidak ditemukan"
+        );
 
         String body = req.getBody();
         Voucher newVoucher = mapper.readValue(body, Voucher.class);
+
         newVoucher.setId(id);
         vc.updateVoucher(newVoucher);
 
-        ResponseController.sendJsonResponseWithMessage("Berhasil mengupdate voucher dengan id " + id, oldVoucher, newVoucher, res);
+        ResponseController.sendJsonResponseWithMessage(
+                "Berhasil mengupdate voucher dengan id " + id,
+                oldVoucher,
+                newVoucher,
+                res);
     }
 
 
