@@ -110,7 +110,11 @@ public class RouterController {
 
     public static void handleGetCustomerIdBookings(String path, Response res) throws Exception {
         int id = Integer.parseInt(path.split("/")[2]);
-        List<Booking> bookings = new CustomerController().getCustomerBookings(id);
+
+        List<Booking> bookings = GlobalValidator.listRequireNotEmpty(
+                new CustomerController().getCustomerBookings(id),
+                "Tidak menemukan data booking pada customer dengan id " + id
+        );
 
         ResponseController.sendJsonResponse(bookings, res);
     }
