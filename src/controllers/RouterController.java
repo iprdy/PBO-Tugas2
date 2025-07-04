@@ -280,16 +280,28 @@ public class RouterController {
 
     //PUT
     public static void handlePutVillaById(String path, Response res, Request req) throws Exception {
-        VillasController vc = new VillasController();
         int id = extractIdFromPath(path, 1);
-        Villas oldVilla = GlobalValidator.dataRequireNonNull(vc.getVillaById(id), "Villa dengan id " + id + " tidak ditemukan");
+        VillasController vc = new VillasController();
+
+        Villas oldVilla = GlobalValidator.dataRequireNonNull(
+                vc.getVillaById(id),
+                "Villa dengan id " + id + " tidak ditemukan"
+        );
+
         String body = req.getBody();
         Villas newVilla = mapper.readValue(body, Villas.class);
+
         VillaValidator.validatePostVilla(newVilla);
         newVilla.setId(id);
+
         vc.updateVilla(newVilla);
 
-        ResponseController.sendJsonResponseWithMessage("Berhasil mengupdate villa dengan id " + id, oldVilla, newVilla, res);
+        ResponseController.sendJsonResponseWithMessage(
+                "Berhasil mengupdate villa dengan id " + id,
+                oldVilla,
+                newVilla,
+                res
+        );
     }
 
     public static void handlePutVillaIdRoomsId(String path, Response res, Request req) throws Exception {
