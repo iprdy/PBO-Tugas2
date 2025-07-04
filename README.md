@@ -110,14 +110,12 @@ Menampilkan informasi detail customer berdasarkan id.
 
 Berhasil menampilkan informasi detail customer berdasarkan id.
 
-**Contoh Response:**
-
+Contoh Response:
+![Customer ID - Berhasil.png](images/Customer%20ID%20-%20Berhasil.png)
 
 ### ❌ 2. Gagal - ID Customer Tidak Ditemukan
 
 Kondisi ini terjadi jika tidak terdapat Customer dengan id yang sesuai.
-
-**Contoh Response:**
 
 
 ---
