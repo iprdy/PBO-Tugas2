@@ -226,6 +226,46 @@ Jika `id` yang dimasukkan pada path tidak sesuai dengan data yang tersedia, maka
 ![Villa Tidak Ditemukan](images/Villa%20-%20Villa%20Tidak%20Ditemukan.png)
 
 ---
+### 🔍 GET `/villas/{id}/rooms`
+Endpoint ini digunakan untuk menampilkan **informasi kamar** yang tersedia pada vila tertentu berdasarkan  `id`, lengkap dengan detail fasilitas dan harga masing-masing kamar di vila tersebut.
+
+### ✅ 1. Data Kamar Berhasil Ditampilkan
+Jika `id` vila valid dan ditemukan dalam database, maka sistem akan menampilkan daftar semua kamar yang terkait dengan vila tersebut, termasuk informasi fasilitas, kapasitas, dan harga masing-masing kamar.
+
+**Contoh Response:**
+
+![informasi kamar suatu villa Berhasil Ditemukan](https://github.com/user-attachments/assets/74e54ccd-c76a-4ed8-8d58-9db50ab8613c)
+
+
+### ❌ 2. Gagal - Villa Tidak Ditemukan
+Jika vila dengan `id` tertentu tidak memiliki data kamar yang terdaftar, maka sistem akan mengembalikan respons JSON seperti berikut:
+> Hal ini dapat terjadi apabila pengguna memasukkan `id` yang tidak valid atau vila dengan `id` tersebut sudah dihapus.
+
+**Contoh Response:**
+
+![informasi kamar suatu villa Tidak Ditemukan](https://github.com/user-attachments/assets/c112c7a8-6082-4923-9640-1309b868b684)
+
+---
+### 🔍 GET `/villas/{id}/bookings`
+Endpoint ini digunakan untuk menampilkan **daftar semua pemesanan (booking)** yang telah dilakukan pada sebuah vila tertentu berdasarkan `id`.
+
+### ✅ 1. Booking Berhasil Ditampilkan
+Jika `id` vila valid dan vila tersebut memiliki riwayat pemesanan, maka sistem akan menampilkan seluruh daftar pemesanan yang pernah dilakukan untuk vila tersebut, termasuk tanggal check-in, check-out, nama customer, jumlah orang, dan status pemesanan.
+
+**Contoh Response:**
+
+![image](https://github.com/user-attachments/assets/abce1dcb-4545-4af1-9840-8704a08d3b2f)
+
+### ❌ 2. Gagal - Villa Tidak Ditemukan
+Jika vila dengan `id` tertentu tidak memiliki data kamar yang terdaftar, maka sistem akan mengembalikan respons JSON seperti berikut:
+> Hal ini dapat terjadi apabila pengguna memasukkan `id` yang tidak valid atau vila dengan `id` tersebut sudah dihapus.
+
+**Contoh Response:**
+
+![informasi kamar suatu villa Tidak Ditemukan](https://github.com/user-attachments/assets/c112c7a8-6082-4923-9640-1309b868b684)
+
+---
+
 ### 🔍 GET `/villas?ci_date={checkin_date}&co_date={checkout_date}`
 Endpoint ini digunakan untuk mencari vila yang tersedia berdasarkan rentang tanggal `check-in` dan `check-out`.
 
