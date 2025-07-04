@@ -27,7 +27,7 @@ public class RouterController {
 
         if (!query.isEmpty()) {
             //GET Available Villas
-            List<Villas> availableVillas = GlobalValidator.dataRequireNonNull(
+            List<Villas> availableVillas = GlobalValidator.listRequireNotEmpty(
                     new VillasController().searchAvailableVillas(query.get("ci_date"), query.get("co_date")),
                     "Tidak ada villa yang tersedia"
             );
@@ -35,7 +35,7 @@ public class RouterController {
             ResponseController.sendJsonResponse(availableVillas, res);
         } else {
             //GET All Villas
-            List<Villas> villas = GlobalValidator.dataRequireNonNull(
+            List<Villas> villas = GlobalValidator.listRequireNotEmpty(
                     new VillasController().getAllVillas(),
                     "Tidak ada data villa yang tersedia"
             );

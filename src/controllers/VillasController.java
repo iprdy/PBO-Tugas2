@@ -168,7 +168,7 @@ public class VillasController {
                 available.add(villa);
             }
         }
-        return available.isEmpty() ? null : available;
+        return available;
     }
 
     public RoomTypes getVillaRoomById(int rid, int vid) throws SQLException, DataNotFoundException {
