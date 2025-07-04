@@ -635,7 +635,7 @@ Gunakan format berikut untuk menambahkan customer:
 Berhasil menambahkan data voucher baru.
 
 **Contoh Response:**
-
+![Voucher Add - Berhasil.png](images/Voucher%20Add%20-%20Berhasil.png)
 
 ### ❌ 2. Gagal - Gagal Menambahkan Voucher
 
