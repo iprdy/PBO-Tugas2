@@ -143,9 +143,6 @@ Berhasil menambahkan data customer baru.
 
 Kondisi ini terjadi jika ada field yang kosong atau format email atau nomor telepon tidak sesuai.
 
-**Contoh Response:**
-
-
 ---
 
 ### ✏️ PUT `/customers/{id}`
@@ -157,13 +154,11 @@ Memperbarui data customer yang sudah ada berdasarkan id.
 Berhasil memperbarui data customer berdasarkan id.
 
 **Contoh Response:**
-
+![Customer Update - Berhasil.png](images/Customer%20Update%20-%20Berhasil.png)
 
 ### ❌ 2. Gagal - ID Customer Tidak Ditemukan
 
 Kondisi ini terjadi jika tidak terdapat data customer dengan id yang sesuai.
-
-**Contoh Response:**
 
 ---
 
