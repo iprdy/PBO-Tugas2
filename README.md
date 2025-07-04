@@ -186,6 +186,38 @@ Kondisi ini terjadi jika ada field yang kosong atau format email atau nomor tele
 
 ---
 
+### 📝 POST `/customers/{id}/bookings`
+
+Endpoint ini digunakan ketika seorang customer melakukan **pemesanan vila**. Sistem akan mencatat informasi pemesanan berdasarkan  `id` customer dan data seperti `villa_id`, tanggal check-in, check-out, jumlah tamu, serta preferensi lainnya.
+
+Gunakan format berikut untuk menambahkan customer:
+```json 
+{
+  "name": "Gerald Hizkia Turnip",
+  "email": "gerald@example.com",
+  "phone": "081234567890"
+}
+```
+
+### ✅ 1. Pemesanan Berhasil Dilakukan
+
+Jika `id` customer valid dan semua data pemesanan lengkap serta vila tersedia, maka sistem akan membuat data pemesanan baru dan mengembalikan informasi booking yang berhasil dilakukan.
+
+**Contoh Response:**
+
+![Pemesanan Berhasil Dilakukan](https://github.com/user-attachments/assets/68fb6982-7b75-4581-8307-dd005026b0f2)
+
+
+### ❌ 2. Gagal - ID Customer Tidak Ditemukan
+
+Jika id customer tidak terdaftar atau tidak valid, sistem akan mengembalikan error karena tidak bisa menautkan pemesanan ke customer manapun.
+
+**Contoh Response:**
+
+![Gagal - ID Customer Tidak Ditemukan](https://github.com/user-attachments/assets/9afdac3c-d090-47a4-832d-1efc842a9f47)
+
+---
+
 ### ✏️ PUT `/customers/{id}`
 
 Memperbarui data customer yang sudah ada berdasarkan id.
@@ -751,9 +783,6 @@ Berhasil menampilkan seluruh voucher yang terdaftar.
 
 ![Voucher All - Berhasil](https://github.com/user-attachments/assets/727b1ead-1f33-4828-a892-f52c67d6c0ee)
 
-### ❌ 2. Gagal - Tidak Ada Voucher Pada Database
-
-Kondisi ini terjadi jika tidak terdapat data voucher sama sekali dalam database.
 
 
 ---
@@ -803,10 +832,6 @@ Berhasil menambahkan data voucher baru.
 **Contoh Response:**
 ![Voucher Add - Berhasil.png](images/Voucher%20Add%20-%20Berhasil.png)
 
-### ❌ 2. Gagal - Gagal Menambahkan Voucher
-
-Kondisi ini terjadi jika ada field yang kosong atau format tidak sesuai.
-
 
 ---
 
@@ -821,9 +846,6 @@ Berhasil memperbarui data voucher berdasarkan id.
 **Contoh Response:**
 ![Voucher Update - Berhasil.png](images/Voucher%20Update%20-%20Berhasil.png)
 
-### ❌ 2. Gagal - ID Voucher Tidak Ditemukan
-
-Kondisi ini terjadi jika tidak terdapat data voucher dengan id yang sesuai.
 
 ---
 
@@ -838,5 +860,5 @@ Berhasil menghapus data voucher berdasarkan id.
 **Contoh Response:**
 ![Voucher Delete - Berhasil.png](images/Voucher%20Delete%20-%20Berhasil.png)
 
-### ❌ 2. Gagal - ID Voucher Tidak Ditemukan
+
 
