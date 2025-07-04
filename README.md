@@ -94,14 +94,11 @@ Menampilkan seluruh customer yang terdaftar.
 Berhasil menampilkan seluruh customer yang terdaftar.
 
 **Contoh Response:**
-
+![Customer All - Berhasil.png](images/Customer%20All%20-%20Berhasil.png)
 
 ### ❌ 2. Gagal - Tidak Ada Customer Pada Database
 
 Kondisi ini terjadi jika tidak terdapat data customer sama sekali dalam database.
-
-**Contoh Response:**
-
 
 ---
 
