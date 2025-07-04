@@ -100,6 +100,13 @@ Berhasil menampilkan seluruh customer yang terdaftar.
 
 Kondisi ini terjadi jika tidak terdapat data customer sama sekali dalam database.
 
+> Meskipun jarang terjadi, skenario ini bisa muncul apabila seluruh data Customer terhapus karena gangguan sistem atau kesalahan pengelolaan database.
+
+**Contoh Response:**
+
+![Tidak Ada Customer yang Tersedia](https://github.com/user-attachments/assets/a2f2f2bd-f18c-4f83-ba8c-f09d777cf0fe)
+
+
 ---
 
 ### 🔍 GET `/customers/{id}`
@@ -111,7 +118,9 @@ Menampilkan informasi detail customer berdasarkan id.
 Berhasil menampilkan informasi detail customer berdasarkan id.
 
 Contoh Response:
-![Customer ID - Berhasil.png](images/Customer%20ID%20-%20Berhasil.png)
+
+![Customer ID - Berhasil.png](https://github.com/user-attachments/assets/182bbf61-900e-46e2-8465-1d4925612940)
+
 
 ### ❌ 2. Gagal - ID Customer Tidak Ditemukan
 
