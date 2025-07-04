@@ -68,6 +68,7 @@ public class RouterController {
 
     public static void handleGetVillaIdBookings(String path, Response res) throws Exception {
         int id = Integer.parseInt(path.split("/")[2]);
+
         List<Booking> bookings = GlobalValidator.listRequireNotEmpty(
                 new VillasController().getBookingsByVillaId(id),
                 "Tidak ada daftar booking pada vila dengan id " + id
@@ -88,7 +89,10 @@ public class RouterController {
     }
 
     public static void handleGetAllCustomer(Response res) throws Exception {
-        List<Customer> customers = new CustomerController().getAllCustomers();
+        List<Customer> customers = GlobalValidator.listRequireNotEmpty(
+                new CustomerController().getAllCustomers(),
+                "Tidak ada data customer yang tersedia"
+        );
 
         ResponseController.sendJsonResponse(customers, res);
     }
