@@ -57,7 +57,7 @@ public class RouterController {
         ResponseController.sendJsonResponse(villa, res);
     }
 
-    public static void handleGetVillaIdRooms(String path, Response res) throws Exception {
+    public static void handleGetRoomsByVillaId(String path, Response res) throws Exception {
         int id = extractIdFromPath(path, 1);
         VillasController vc = new VillasController();
 
@@ -69,7 +69,7 @@ public class RouterController {
         ResponseController.sendJsonResponse(rt, res);
     }
 
-    public static void handleGetVillaIdBookings(String path, Response res) throws Exception {
+    public static void handleGetBookingsByVillaId(String path, Response res) throws Exception {
         int id = extractIdFromPath(path, 1);
         VillasController vc = new VillasController();
 
@@ -81,7 +81,7 @@ public class RouterController {
         ResponseController.sendJsonResponse(bookings, res);
     }
 
-    public static void handleGetVillaIdReviews(String path, Response res) throws Exception {
+    public static void handleGetReviewsByVillaId(String path, Response res) throws Exception {
         int id = extractIdFromPath(path, 1);
         ReviewController rc = new ReviewController();
 
@@ -93,7 +93,7 @@ public class RouterController {
         ResponseController.sendJsonResponse(reviews, res);
     }
 
-    public static void handleGetAllCustomer(Response res) throws Exception {
+    public static void handleGetAllCustomers(Response res) throws Exception {
         CustomerController cc = new CustomerController();
 
         List<Customer> customers = GlobalValidator.listRequireNotEmpty(
@@ -110,13 +110,13 @@ public class RouterController {
 
         Customer customer = GlobalValidator.dataRequireNonNull(
                 cc.getCustomerById(id),
-                "Villa dengan id " + id + " tidak ditemukan"
+                "Customer dengan id " + id + " tidak ditemukan"
         );
 
         ResponseController.sendJsonResponse(customer, res);
     }
 
-    public static void handleGetCustomerIdBookings(String path, Response res) throws Exception {
+    public static void handleGetCustomerBookingsById(String path, Response res) throws Exception {
         int id = extractIdFromPath(path, 1);
         CustomerController cc = new CustomerController();
 
@@ -128,7 +128,7 @@ public class RouterController {
         ResponseController.sendJsonResponse(bookings, res);
     }
 
-    public static void handleGetCustomerIdReviews(String path, Response res) throws Exception {
+    public static void handleGetCustomerReviewsById(String path, Response res) throws Exception {
         int id = extractIdFromPath(path, 1);
         ReviewController rc = new ReviewController();
 

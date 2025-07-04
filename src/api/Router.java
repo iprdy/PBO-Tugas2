@@ -16,19 +16,19 @@ public class Router {
             }
 
             else if (path.matches("/villas/\\d+/rooms$")) {
-                RouterController.handleGetVillaIdRooms(path, res);
+                RouterController.handleGetRoomsByVillaId(path, res);
             }
 
             else if (path.matches("/villas/\\d+/bookings$")) {
-                RouterController.handleGetVillaIdBookings(path, res);
+                RouterController.handleGetBookingsByVillaId(path, res);
             }
 
             else if (path.matches("/villas/\\d+/reviews")) {
-                RouterController.handleGetVillaIdReviews(path, res);
+                RouterController.handleGetReviewsByVillaId(path, res);
             }
 
             else if (path.equals("/customers")) {
-                RouterController.handleGetAllCustomer(res);
+                RouterController.handleGetAllCustomers(res);
             }
 
             else if (path.matches("/customers/\\d+")) {
@@ -36,11 +36,11 @@ public class Router {
             }
 
             else if (path.matches("/customers/\\d+/bookings")) {
-                RouterController.handleGetCustomerIdBookings(path, res);
+                RouterController.handleGetCustomerBookingsById(path, res);
             }
 
             else if (path.matches("/customers/\\d+/reviews")) {
-                RouterController.handleGetCustomerIdReviews(path, res);
+                RouterController.handleGetCustomerReviewsById(path, res);
             }
 
             else if (path.equals("/vouchers")) {
