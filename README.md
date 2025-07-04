@@ -63,6 +63,7 @@ Semua request ke API wajib menyertakan header berikut:
 | Key       | Value   |
 |-----------|---------|
 | x-api-key | UNKNOWN |
+
 Tanpa header ini, server akan membalas dengan status 401 Unauthorized Dan pesan "Invalid API Key"
 
 >📫 Jika menggunakan Postman, tambahkan header ini di tab Headers saat mengirim request.
