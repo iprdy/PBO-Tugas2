@@ -332,14 +332,23 @@ public class RouterController {
         int id = extractIdFromPath(path, 1);
         CustomerController cc = new CustomerController();
 
-        Customer oldCustomer = GlobalValidator.dataRequireNonNull(cc.getCustomerById(id),"Customer dengan id " + id + " tidak ditemukan");
+        Customer oldCustomer = GlobalValidator.dataRequireNonNull(
+                cc.getCustomerById(id),
+                "Customer dengan id " + id + " tidak ditemukan"
+        );
 
         String body = req.getBody();
         Customer newCustomer = mapper.readValue(body, Customer.class);
+
         newCustomer.setId(id);
         cc.updateCustomer(newCustomer);
 
-        ResponseController.sendJsonResponseWithMessage("Berhasil mengupdate customer dengan id " + id, oldCustomer, newCustomer, res);
+        ResponseController.sendJsonResponseWithMessage(
+                "Berhasil mengupdate customer dengan id " + id,
+                oldCustomer,
+                newCustomer,
+                res
+        );
     }
 
     public static void handlePutVoucherById(String path, Response res, Request req) throws Exception {
